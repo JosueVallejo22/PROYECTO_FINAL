@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} MENU ADMIN {% endblock %}
+
+{% block content %}
+<main style="padding-bottom: 4rem;">
+  <section>
+    <div class="container-fluid p-4">
+      <div class="row mt-5 justify-content-center">
+        <div class="col-md-3 mb-3 justify-content-center">
+          <div class="card shadow-sm">
+            <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+              <h1 class="fs-5">MÓDULO USUARIOS</h1>
+            </div>
+            <div class="card-body text-center">
+              <img src="{% static 'img/person-gear.svg' %}" alt="icono_usuarios" class="img-fluid" style="width: 70px; height: 70px;">
+            </div>
+            <div class="card-footer text-center">
+              <a href="{% url 'paneladmin:menu_modulo_usuarios' %}" class="btn btn-success fw-bold">Ingresar</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3 justify-content-center">
+          <div class="card shadow-sm">
+            <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+              <h1 class="fs-5">SUBMODULOS APLICATIVO</h1>
+            </div>
+            <div class="card-body text-center">
+              <img src="{% static 'img/gear.svg' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
+            </div>
+            <div class="card-footer text-center">
+              <a href=" {% url 'submodulos:menu_submodulos' %}" class="btn btn-success fw-bold">Ingresar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

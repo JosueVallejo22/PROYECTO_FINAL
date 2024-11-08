@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicativo Web para realizar un análisis del rendimiento deportivo de los futbolistas en un club.">
+    <meta name="keywords" content="futbol, valoraciones, plantillas, jugadores">
+    <meta name="author" content="Josue Vallejo, Robert Vera">
+    <title>RECUPERAR CONTRASEÑA</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        .input-group {
+            width: 100%; /* Asegura que la entrada ocupe todo el ancho disponible */
+        }
+        .error-message {
+            font-size: 0.875rem; /* Tamaño de fuente para mensajes de error */
+        }
+        .valid {
+            color: green;
+        }
+        .invalid {
+            color: red;
+        }
+    </style>
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
+    <main>
+        <section>
+            <form method="POST" id="reset-password-form">
+                {% csrf_token %}
+                <input type="hidden" name="token" value="{{ request.GET.token }}">
+                <div class="bg-white p-5 rounded-5">
+                    <div class="d-flex justify-content-center">
+                        <h1 class="text-center fs-1 fw-bold">RESTABLECER CONTRASEÑA</h1>
+                    </div>
+
+                    <!-- Mostrar errores de forma global -->
+                    {% for message in messages %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+
+                    <div class="input-group mt-4">
+                        <div class="input-group-text bg-success rounded-3">
+                            <img src="{% static 'img/key.svg' %}" alt="clave_icono">
+                        </div>
+                        <input class="form-control rounded-3" type="password" name="nueva_clave" id="nueva_clave" placeholder="INGRESE SU NUEVA CONTRASEÑA" required>
+                        <button type="button" id="toggle-password" class="btn btn-outline-secondary rounded-3">
+                            <img src="{% static 'img/eye-fill.svg' %}" alt="Ver contraseña" id="eye-icon">
+                        </button>
+                    </div>
+                    <div id="password-requirements" class="mt-2">
+                        <ul>
+                            <li id="length" class="invalid">Al menos 8 caracteres</li>
+                            <li id="uppercase" class="invalid">Al menos una letra mayúscula</li>
+                            <li id="lowercase" class="invalid">Al menos una letra minúscula</li>
+                            <li id="number" class="invalid">Al menos un número</li>
+                            <li id="special" class="invalid">Al menos un carácter especial (!@#$%^&*)</li>
+                        </ul>
+                    </div>
+
+                    <div class="input-group mt-4 mb-2">
+                        <div class="input-group-text bg-success rounded-3">
+                            <img src="{% static 'img/key.svg' %}" alt="clave_icono">
+                        </div>
+                        <input class="form-control rounded-3" type="password" name="confirmar_clave" id="confirmar_clave" placeholder="INGRESE DE NUEVO SU NUEVA CONTRASEÑA" required>
+                        <button type="button" id="toggle-confirm-password" class="btn btn-outline-secondary rounded-3">
+                            <img src="{% static 'img/eye-fill.svg' %}" alt="Ver contraseña" id="eye-icon-confirm">
+                        </button>
+                    </div>
+                    {% if form.confirmar_clave.errors %}
+                        <div class="text-danger error-message mt-2">
+                            {% for error in form.confirmar_clave.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-success w-100 mt-4 rounded-5">CONTINUAR</button>
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer class="footer d-flex fixed-bottom" id="footer">
+        <div class="container text-center">
+            <p class="mb-0 text-white">© 2024 VV Enterprises. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        // Función para mostrar requisitos visuales en tiempo real
+        function checkPasswordStrength() {
+            const password = document.getElementById('nueva_clave').value;
+            
+            // Requisitos
+            const length = document.getElementById('length');
+            const uppercase = document.getElementById('uppercase');
+            const lowercase = document.getElementById('lowercase');
+            const number = document.getElementById('number');
+            const special = document.getElementById('special');
+
+            // Comprobar requisitos visuales
+            length.className = password.length >= 8 ? 'valid' : 'invalid';
+            uppercase.className = /[A-Z]/.test(password) ? 'valid' : 'invalid';
+            lowercase.className = /[a-z]/.test(password) ? 'valid' : 'invalid';
+            number.className = /[0-9]/.test(password) ? 'valid' : 'invalid';
+            special.className = /[!@#$%^&*]/.test(password) ? 'valid' : 'invalid';
+        }
+
+        // Agregar evento de entrada al campo de contraseña
+        document.getElementById('nueva_clave').addEventListener('input', checkPasswordStrength);
+        
+        // Alternar visibilidad de la contraseña
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('nueva_clave');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.src = '{% static "img/eye-slash-fill.svg" %}'; // Cambia el icono a "ocultar"
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.src = '{% static "img/eye-fill.svg" %}'; // Cambia el icono a "mostrar"
+            }
+        });
+
+        // Alternar visibilidad de la contraseña de confirmación
+        document.getElementById('toggle-confirm-password').addEventListener('click', function() {
+            const confirmPasswordInput = document.getElementById('confirmar_clave');
+            const eyeIconConfirm = document.getElementById('eye-icon-confirm');
+            if (confirmPasswordInput.type === 'password') {
+                confirmPasswordInput.type = 'text';
+                eyeIconConfirm.src = '{% static "img/eye-slash-fill.svg" %}'; // Cambia el icono a "ocultar"
+            } else {
+                confirmPasswordInput.type = 'password';
+                eyeIconConfirm.src = '{% static "img/eye-fill.svg" %}'; // Cambia el icono a "mostrar"
+            }
+        });
+    </script>
+</body>
+</html>

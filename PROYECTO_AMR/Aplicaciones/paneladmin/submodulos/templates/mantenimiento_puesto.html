@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} MANTENIMIENTO PUESTOS {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Tarjeta para el formulario de creación o edición -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">
+                        {% if object %}Editar Puesto{% else %}Registrar Nuevo Puesto{% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% if object %}{% url 'submodulos:editar_puesto' object.pk %}{% else %}{% url 'submodulos:registrar_puesto' %}{% endif %}">
+                        {% csrf_token %}
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <ul>
+                                    {% for field, errors in form.errors.items %}
+                                        <li>{{ field.label }}: {{ errors|join:", " }}</li>
+                                    {% endfor %}
+                                    {% if form.non_field_errors %}
+                                        <li>{{ form.non_field_errors|join:", " }}</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group mb-3">
+                            <label for="id_puesto">Nombre del Puesto</label>
+                            {{ form.puesto }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_abreviatura">Abreviatura</label>
+                            {{ form.abreviatura }}
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="id_posicion">Posición</label>
+                            {{ form.posicion }}
+                            {% if form.posicion.errors %}
+                                <div class="alert alert-danger mt-2">{{ form.posicion.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">
+                            {% if object %}Actualizar{% else %}Registrar{% endif %}
+                        </button>
+                        {% if object %}
+                            <a href="{% url 'submodulos:mantenimiento_puesto' %}" class="btn btn-danger btn-block">Cancelar</a>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 mb-3">
+            <div class="card mb-5">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Puestos Registrados</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Puesto</th>
+                                    <th>Abreviatura</th>
+                                    <th>Posición</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for puesto in puestos %}
+                                <tr>
+                                    <td>{{ puesto.puesto }}</td>
+                                    <td>{{ puesto.abreviatura }}</td>
+                                    <td>{{ puesto.posicion }}</td>
+                                    <td>{% if puesto.estado %}Activo{% else %}Inactivo{% endif %}</td>
+                                    <td>
+                                        <a href="{% url 'submodulos:editar_puesto' puesto.id %}" class="btn btn-primary btn-sm">Editar</a>
+                                        {% if puesto.estado %}
+                                            <a href="{% url 'submodulos:activar-inactivar-puesto' puesto.id %}" class="btn btn-warning btn-sm">Inactivar</a>
+                                        {% else %}
+                                            <a href="{% url 'submodulos:activar-inactivar-puesto' puesto.id %}" class="btn btn-success btn-sm">Activar</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

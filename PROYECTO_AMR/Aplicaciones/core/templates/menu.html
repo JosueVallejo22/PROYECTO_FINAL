@@ -1,0 +1,44 @@
+{% extends 'base.html' %} <!--ESTA LINEA DE CODIGO HEREDA LA PLANTILLA COMPLETA QUE SE ENCUENTRA EN ESE DIRECTORIO-->
+{% load static %} 
+{% block title %} Menu Principal {% endblock %} <!--ESTA LINEA DE CODIGO COLOCA EL TITULO A LA NUEVA PAGINA-->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/menu.css' %}">
+{% endblock %} 
+
+{% block content %}
+<main style="padding-bottom: 4rem;">
+    <section>
+      <div class="container-fluid p-4">
+        <div class="row mt-5 justify-content-center">
+          <div class="col-md-3 mb-3 justify-content-center">
+            <div class="card shadow-sm">
+              <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+                  <h1 class="fs-5">MÓDULO JUGADORES</h1>
+              </div>
+              <div class="card-body text-center">
+                  <img src="{% static 'img/icono_j.png' %}" alt="icono_usuarios" class="img-fluid" style="width: 70px; height: 70px;">
+              </div>
+              <div class="card-footer text-center">
+                  <a href="{% url 'core:listjugadores' %}" class="btn btn-success fw-bold">Ingresar</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3 justify-content-center">
+          <div class="card shadow-sm">
+            <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+              <h1 class="fs-5">MODULO VALORACIONES</h1>
+            </div>
+            <div class="card-body text-center">
+              <img src="{% static 'img/icono_v.png' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
+            </div>
+            <div class="card-footer text-center">
+              <a href="{% url 'core:listvaloraciones' %}" class="btn btn-success fw-bold">Ingresar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+<br>
+  
+{% endblock %}

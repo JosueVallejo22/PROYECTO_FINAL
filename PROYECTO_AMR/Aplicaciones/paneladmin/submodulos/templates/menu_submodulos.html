@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Menú Submodulos {% endblock %}
+
+{% block content %}
+<main style="padding-bottom: 4rem;">
+    <section>
+        <div class="container-fluid p-4">
+            <div class="row mt-5 justify-content-center align-items-center">
+                <div class="col-md-3 mb-3 justify-content-center">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+                            <h1 class="fs-5">MANTENIMIENTO PAISES</h1>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="{% static 'img/bandera.svg' %}" alt="icono_usuarios" class="img-fluid" style="width: 70px; height: 70px;">
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'submodulos:mantenimiento_paises' %}" class="btn btn-success fw-bold">Ingresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 justify-content-center">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+                            <h1 class="fs-5">MANTENIMIENTO CUALIDADES</h1>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="{% static 'img/gear.svg' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href=" {% url 'submodulos:mantenimiento_cualidades' %}" class="btn btn-success fw-bold">Ingresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 justify-content-center">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+                            <h1 class="fs-5">MANTENIMIENTO ESTADISTICAS</h1>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="{% static 'img/gear.svg' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href=" {% url 'submodulos:mantenimiento_estadisticas' %}" class="btn btn-success fw-bold">Ingresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 justify-content-center">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+                            <h1 class="fs-5">MANTENIMIENTO POSICION</h1>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="{% static 'img/gear.svg' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href=" {% url 'submodulos:mantenimiento_posicion' %}" class="btn btn-success fw-bold">Ingresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 justify-content-center">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+                            <h1 class="fs-5">MANTENIMIENTO PUESTO</h1>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="{% static 'img/gear.svg' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href=" {% url 'submodulos:mantenimiento_puesto' %}" class="btn btn-success fw-bold">Ingresar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 justify-content-center">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-center text-white fw-bold rounded-top">
+                            <h1 class="fs-5">CUALIDAD - PUESTO</h1>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="{% static 'img/gear.svg' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href=" {% url 'submodulos:mantenimiento_puesto_cualidad' %}" class="btn btn-success fw-bold">Ingresar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

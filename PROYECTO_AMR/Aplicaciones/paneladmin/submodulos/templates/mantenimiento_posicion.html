@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} MANTENIMIENTO PAISES {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Tarjeta para el formulario de creación o edición -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">{% if object %}Editar Posicion{% else %}Registrar Posicion{% endif %}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% if object %}{% url 'submodulos:editar_posicion' object.pk %}{% else %}{% url 'submodulos:registrar_posicion' %}{% endif %}">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+                        <div class="form-group mb-3">
+                            {{ form.posicion.label_tag }}
+                            {{ form.posicion }}
+                            {% if form.posicion.errors %}
+                                <div class="alert alert-danger">{{ form.posicion.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">{% if object %}Actualizar{% else %}Registrar{% endif %}</button>
+                        {% if object %} <!-- Solo muestra el botón de cancelar si se está editando -->
+                            <a href="{% url 'submodulos:mantenimiento_posicion' %}" class="btn btn-danger btn-block">Cancelar</a>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de paises -->
+        <div class="col-md-8 mb-3">
+            <div class="card mb-5">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Posiciones Registradas</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Posicion</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for posicion in posiciones %}
+                                <tr>
+                                    <td>{{ posicion.posicion }}</td>
+                                    <td>{% if posicion.estado %}Activo{% else %}Inactivo{% endif %}</td>
+                                    <td>
+                                        <a href="{% url 'submodulos:editar_posicion' posicion.id %}" class="btn btn-primary btn-sm">Editar</a>
+                                        {% if posicion.estado %}
+                                            <a href="{% url 'submodulos:activar-inactivar-posicion' posicion.id %}" class="btn btn-warning btn-sm">Inactivar</a>
+                                        {% else %}
+                                            <a href="{% url 'submodulos:activar-inactivar-posicion' posicion.id %}" class="btn btn-success btn-sm">Activar</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

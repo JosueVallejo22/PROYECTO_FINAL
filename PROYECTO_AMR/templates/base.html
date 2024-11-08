@@ -1,0 +1,68 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicativo Web para realizar un análisis del rendimiento deportivo de los futbolistas en un club.">
+    <meta name="keywords" content="futbol, valoraciones, plantillas, jugadores">
+    <meta name="author" content="Josue Vallejo Suarez, Robert Vera Medina">
+    <meta http-equiv="refresh" content="#">
+    <title>{% block title %}{% endblock %}</title>
+    {% block extra_css %} {% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg" id="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'core:menu' %}">LOGO</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <span class="nav-link fw-bold text-warning"> {{ usuario.nombre_usuario }}</span>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'Login:cambiar_contrasena' %}" class="nav-link">Cambiar Contraseña</a>
+              </li>
+            <li class="nav-item">
+              {% if request.session.user_id %}
+                  <li><a href="{% url 'Login:logout_usuario' %}" class="nav-link">Cerrar sesión</a></li>
+              {% else %}
+                  <li><a href="{% url 'Login:login_usuario' %}" class="nav-link">Iniciar sesión</a></li>
+              {% endif %}
+            </li>
+          </ul>      
+        </div>
+      </div>
+    </nav>
+  </header>
+
+
+  {% block content %}
+
+
+  {% endblock %}
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <footer class="footer d-flex fixed-bottom" id="footer">
+    <div class="container text-center">
+      <p class="mb-0 text-white">© 2024 VV Enterprises. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% block js %}{% endblock %}
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

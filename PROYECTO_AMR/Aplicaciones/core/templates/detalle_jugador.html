@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Detalles del Jugador {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Detalles del Jugador</h2>
+                </div>
+                <div class="card-body">
+                    <h5><strong>Nombre:</strong> {{ detjugadores.nombre }}</h5>
+                    <h5><strong>Apellido:</strong> {{ detjugadores.apellido }}</h5>
+                    <h5><strong>Nacionalidad:</strong> {{ detjugadores.pais }}</h5>
+                    <h5><strong>Fecha de Nacimiento:</strong> {{ detjugadores.fecha_nac }}</h5>
+                    <h5><strong>Correo:</strong> {{ detjugadores.correo }}</h5>
+                    <h5><strong>Puesto:</strong> {{ detjugadores.puesto }}</h5>
+                    <h5><strong>Pierna Habil:</strong> {{ detjugadores.get_pierna_habil_display }}</h5>
+                    <h5><strong>Peso:</strong> {{ detjugadores.peso }}</h5>
+                    <h5><strong>Altura:</strong> {{ detjugadores.altura }}</h5>
+                    <h5><strong>Foto:</strong></h5>
+                    {% if detjugadores.foto %}
+                    <img src="{{ detjugadores.foto.url }}" alt="Foto de {{ detjugadores.nombre }}" style="width: 150px; height: auto;">
+                    {% else %}
+                        <p>No hay foto disponible</p>
+                    {% endif %}
+                    <h5><strong>Estado:</strong> {% if detjugadores.estado %}Activo{% else %}Inactivo{% endif %}</h5>
+                    <h5><strong>Fecha de Creación:</strong> {{ detjugadores.fecha_creacion }}</h5>
+                    <h5><strong>Última Actualización:</strong> {{ detjugadores.fecha_actualizacion }}</h5>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'core:listjugadores' %}" class="btn btn-primary">Volver a la lista</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

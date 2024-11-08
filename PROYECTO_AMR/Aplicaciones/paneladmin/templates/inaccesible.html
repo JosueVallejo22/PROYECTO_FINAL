@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} MENÚ ADMIN {% endblock %}
+
+{% block content %}
+<main class="d-flex justify-content-center align-items-center">
+    <div class="container-fluid">
+        <div class="card mt-5">
+            <div class="card-header bg-danger text-white">
+                <h1 class="mb-0 text-center">Acceso Denegado</h1>
+            </div>
+            <div class="card-body text-center">
+                <p>No tienes permiso para acceder a esta página.</p>
+                <a href="{% url 'core:menu' %}" class="btn btn-success fw-bold">Regresar al Menu</a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ usuario.nombre_usuario|default:"Agregar Usuario" }} {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">{{ usuario.nombre_usuario|default:"Agregar Usuario" }}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <!-- Campos del formulario organizados según el nuevo orden -->
+                        <div class="form-group">
+                            {{ form.nombre.label_tag }}
+                            {{ form.nombre }}
+                            {% if form.nombre.errors %}
+                                <div class="alert alert-danger">{{ form.nombre.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.apellido.label_tag }}
+                            {{ form.apellido }}
+                            {% if form.apellido.errors %}
+                                <div class="alert alert-danger">{{ form.apellido.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.nombre_usuario.label_tag }}
+                            {{ form.nombre_usuario }}
+                            {% if form.nombre_usuario.errors %}
+                                <div class="alert alert-danger">{{ form.nombre_usuario.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <!-- Eliminado el campo de la clave -->
+                        <div class="form-group">
+                            {{ form.correo.label_tag }}
+                            {{ form.correo }}
+                            {% if form.correo.errors %}
+                                <div class="alert alert-danger">{{ form.correo.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.numero_telefono.label_tag }}
+                            {{ form.numero_telefono }}
+                            {% if form.numero_telefono.errors %}
+                                <div class="alert alert-danger">{{ form.numero_telefono.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.fecha_nacimiento.label_tag }}
+                            {{ form.fecha_nacimiento }}
+                            {% if form.fecha_nacimiento.errors %}
+                                <div class="alert alert-danger">{{ form.fecha_nacimiento.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.sexo.label_tag }}
+                            {{ form.sexo }}
+                            {% if form.sexo.errors %}
+                                <div class="alert alert-danger">{{ form.sexo.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.rol.label_tag }}
+                            {{ form.rol }}
+                            {% if form.rol.errors %}
+                                <div class="alert alert-danger">{{ form.rol.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <a href="{% url 'paneladmin:mantenimiento_usuarios' %}" class="btn btn-danger">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

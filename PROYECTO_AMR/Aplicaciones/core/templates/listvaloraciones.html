@@ -1,0 +1,76 @@
+{% extends 'sidebar_admin.html' %}
+{% load static %}
+
+{% block title %}VALORACIONES {% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card mb-5">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">valoraciones de jugadores</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>#</th> 
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Puesto</th>
+                                <th>Foto</th>
+                                <th>valoracion</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for jugador in jugadores %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ jugador.nombre }}</td>
+                                    <td>{{ jugador.apellido }}</td>
+                                    <td>{{ jugador.pais }}</td>
+                                    <td>{{ jugador.puesto }}</td>
+                                    <td>{{ jugador.fecha_nac }}</td>
+                                    <td>{{ jugador.altura }}</td>
+                                    <td>{{ jugador.peso }}</td>
+                                    <td>{{ jugador.estado }}</td>
+                                    <td>
+                                        {% if jugador.foto %}
+                                            <img src="{{ jugador.foto.url }}" alt="{{ jugador.nombre }}" style="width: 50px; height: auto;">
+                                        {% else %}
+                                            Sin foto
+                                        {% endif %}
+                                    </td>
+                                    <td> 
+                                        <a href="" class="btn-success"> editar</a>
+                                        <a href="" class="btn-success"> eliminar</a>
+                                    </td>
+                                    <td>
+                                        
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="10">No hay jugadores registrados.</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> 
+                    <div class="text-center">
+                        <a href="{{ crear_url }}" class=" btn btn-success btn-sm">
+                            Actualizar valoraciones
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+{% endblock %}
