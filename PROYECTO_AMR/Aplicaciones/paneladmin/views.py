@@ -135,7 +135,7 @@ class UsuarioListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['roles'] = Rol.objects.all().order_by('rol')
+        context['roles'] = Rol.objects.filter(estado=True).order_by('rol')
         return context
 
 

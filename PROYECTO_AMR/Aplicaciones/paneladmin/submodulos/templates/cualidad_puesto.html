@@ -68,10 +68,10 @@
                 <div class="card-body">
                     <form method="get" class="form-inline mb-3">
                         <input type="text" name="search" class="form-control mb-2 mr-sm-2" placeholder="Buscar por puesto o cualidad" value="{{ request.GET.search }}">
-                        <select name="rol" class="form-control mb-2 mr-sm-2">
-                            <option value="">Filtrar por rol</option>
-                            {% for rol in roles %}
-                                <option value="{{ rol.id }}" {% if request.GET.rol == rol.id|stringformat:"s" %}selected{% endif %}>{{ rol.rol }}</option>
+                        <select name="puesto" class="form-control mb-2 mr-sm-2">
+                            <option value="">Filtrar por puestos</option>
+                            {% for puesto in puestos %}
+                                <option value="{{ puesto.id }}" {% if request.GET.rol == puesto.id|stringformat:"s" %}selected{% endif %}>{{ puesto.puesto }}</option>
                             {% endfor %}
                         </select>
                         <button type="submit" class="btn btn-primary">Buscar</button>
