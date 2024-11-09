@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView
+from django.shortcuts import render, redirect, get_object_or_404 # type: ignore
+from django.urls import reverse_lazy # type: ignore
+from django.utils.decorators import method_decorator # type: ignore
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView # type: ignore
 from Aplicaciones.core.models import Jugador
 from Aplicaciones.core.forms import JugadorForm
 from Aplicaciones.Login.models import Usuario
@@ -77,6 +77,10 @@ class jugadoresUpdateView(UpdateView):
         context['is_editing'] = True
         return context
 
+@method_decorator(login_required, name='dispatch')   
+class JugadoresDeleteView(DeleteView):
+    model = Jugador
+    success_url = reverse_lazy('core:listjugadores')
 
 ##########################################################################################
 @method_decorator(login_required, name='dispatch')
