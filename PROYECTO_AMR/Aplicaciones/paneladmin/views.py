@@ -50,12 +50,11 @@ class RolListView(ListView):
     model = Rol
     template_name = 'mantenimiento_roles.html'
     context_object_name = 'roles'
-    queryset = Rol.objects.all().order_by('-estado')
     paginate_by = 3
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        queryset = Rol.objects.all().order_by('-estado')
+        queryset = Rol.objects.all().order_by('id','-estado')
         if query:
             queryset = queryset.filter(
                 Q(rol__icontains=query) | Q(estado__icontains=query)
@@ -105,6 +104,7 @@ class ActivarInactivarRol(View):
         rol = get_object_or_404(Rol, pk=pk)
         rol.estado = not rol.estado
         rol.save()
+        messages.success(request, "Estado del rol actualizado exitosamente.")
         return redirect('paneladmin:mantenimiento_roles')
 
 ############################################################################################

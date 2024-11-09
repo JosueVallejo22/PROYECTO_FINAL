@@ -6,6 +6,8 @@ from django.views.generic import *
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.db.models import Q
+
 
 
 # Create your views here.
@@ -36,6 +38,15 @@ class PaisListView(ListView):
     context_object_name = 'paises'
     queryset = Pais.objects.all().order_by('pais')
     paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        queryset = Pais.objects.all().order_by('pais')
+        if query:
+            queryset = queryset.filter(
+                Q(pais__icontains=query)
+            )
+        return queryset
 
 @method_decorator(admin_required, name='dispatch')
 class PaisCreateView(CreateView):
@@ -71,6 +82,7 @@ class ActivarInactivarPais(View):
         pais = get_object_or_404(Pais, pk = pk)
         pais.estado = not pais.estado
         pais.save()
+        messages.success(request, "Estado del pais actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_paises')
 
 ###############################################################################################################
@@ -81,10 +93,24 @@ class CualidadListView(ListView):
     model = Cualidad
     template_name = 'mantenimiento_cualidades.html'
     context_object_name = 'cualidades'
-    queryset = Cualidad.objects.all().order_by('cualidad')
+    queryset = Cualidad.objects.all().order_by('-estado','cualidad')
+    paginate_by = 2
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        queryset = Cualidad.objects.all().order_by('-estado', 'cualidad')
+        if query:
+            queryset = queryset.filter(
+                Q(cualidad__icontains=query)
+            )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['q'] = self.request.GET.get('q', '')  # Pasar la búsqueda al contexto para mantenerla en la vista
+        return context
 
 
-    
 @method_decorator(admin_required, name='dispatch')
 class CualidadCreateView(CreateView):
     model = Cualidad
@@ -118,8 +144,9 @@ class CualidadUpdateView(UpdateView):
 class ActivarInactivarCualidad(View):
     def get(self, request, pk):
         cualidad = get_object_or_404(Cualidad, pk=pk)
-        cualidad.estado = not cualidad.estado
+        cualidad.estado = not cualidad.estado  # Invierte el valor de estado
         cualidad.save()
+        messages.success(request, "Estado del rol actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_cualidades')
 
 ###############################################################################################
@@ -130,11 +157,30 @@ class EstadisticasListView(ListView):
     template_name = 'mantenimiento_estadisticas.html'
     context_object_name = 'estadisticas'
     queryset = Estadistica.objects.all().order_by('cualidad')
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('search', '')
+        cualidad_filter = self.request.GET.get('cualidad', '')
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(estadistica__icontains=search_query)  # Cambia 'nombre' al campo adecuado en el modelo Estadistica
+            )
+
+        if cualidad_filter:
+            queryset = queryset.filter(cualidad__id=cualidad_filter)
+
+        return queryset
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = EstadisticaForm()
+        context['cualidades'] = Cualidad.objects.all().order_by('cualidad')  # Para el select de cualidades
+        context['search'] = self.request.GET.get('search', '')
+        context['cualidad_selected'] = self.request.GET.get('cualidad', '')
         return context
 
 
@@ -264,6 +310,7 @@ class ActivarInactivarPuesto(View):
         puesto = get_object_or_404(Puesto, pk=pk)
         puesto.estado = not puesto.estado
         puesto.save()
+        messages.success
         return redirect('submodulos:mantenimiento_puesto')
 
 
@@ -275,7 +322,23 @@ class PuestoCualidadListView(ListView):
     model = PuestoCualidad
     template_name = 'cualidad_puesto.html'
     context_object_name = 'puestos_cualidades'
-    queryset = PuestoCualidad.objects.all().order_by('puesto', 'cualidad')
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('search', '')
+        puesto_filter = self.request.GET.get('puesto', '')
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(cualidad__cualidad__icontains=search_query) |
+                Q(puesto__puesto__icontains=search_query)
+            )
+
+        if puesto_filter:
+            queryset = queryset.filter(puesto__id=puesto_filter)
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

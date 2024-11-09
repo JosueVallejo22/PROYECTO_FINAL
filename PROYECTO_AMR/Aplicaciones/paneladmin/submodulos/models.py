@@ -77,6 +77,9 @@ class PuestoCualidad(models.Model):
         return f"{self.puesto} {self.estadistica} - {self.estado}"
     
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['puesto', 'cualidad'], name='unique_puesto_cualidad')
+        ]
         verbose_name_plural = "Puestos - Estadisticas"
 
     

@@ -32,7 +32,7 @@ class CualidadForm(forms.ModelForm):
         }
     def clean_cualidad(self):
         cualidad = self.cleaned_data['cualidad'].upper()
-        if Cualidad.objects.filter(cualidad=cualidad).exists().exclude(pk=self.instance.pk).exists():
+        if Cualidad.objects.filter(cualidad=cualidad).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError('LA CUALIDAD INGRESADA YA EXISTE.')
         return cualidad
     
