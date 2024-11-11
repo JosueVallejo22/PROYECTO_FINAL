@@ -341,6 +341,12 @@ class PuestoCreateView(CreateView):
         context['puestos'] = Puesto.objects.all().order_by('posicion')
         return context
     
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
+        messages.success(self.request, 'Puesto registrado exitosamente.')
+        return response
+    
 @method_decorator(admin_required, name='dispatch')
 class PuestoUpdateView(UpdateView):
     model = Puesto
@@ -353,13 +359,20 @@ class PuestoUpdateView(UpdateView):
         context['puestos'] = Puesto.objects.all().order_by('posicion')
         return context
     
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Puesto modificado exitosamente.')
+        return response
+    
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarPuesto(View):
     def get(self, request, pk):
         puesto = get_object_or_404(Puesto, pk=pk)
         puesto.estado = not puesto.estado
         puesto.save()
-        messages.success
+        save_audit(self.request, puesto, action='E')
+        messages.success(self.request, 'Estado del puesto actualizado exitosamente.')
         return redirect('submodulos:mantenimiento_puesto')
 
 
@@ -406,10 +419,12 @@ class PuestoCualidadCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['puestos_cualidades'] = PuestoCualidad.objects.all().order_by('puesto', 'cualidad')
         return context
-
+    
     def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
         messages.success(self.request, 'Puesto-Cualidad creado exitosamente.')
-        return super().form_valid(form)
+        return response
 
 @method_decorator(admin_required, name='dispatch')
 class PuestoCualidadUpdateView(UpdateView):
@@ -424,13 +439,17 @@ class PuestoCualidadUpdateView(UpdateView):
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, 'Puesto-Cualidad actualizado exitosamente.')
-        return super().form_valid(form)
-
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Puesto-Cualidad modificado exitosamente.')
+        return response
+    
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarPuestoCualidad(View):
     def get(self, request, pk):
         puesto_cualidad = get_object_or_404(PuestoCualidad, pk=pk)
         puesto_cualidad.estado = not puesto_cualidad.estado
         puesto_cualidad.save()
+        save_audit(self.request, puesto_cualidad, action='E')
+        messages.success(self.request, 'Estado del Puesto-Cualidad actualizado exitosamente.')
         return redirect('submodulos:mantenimiento_puesto_cualidad')
