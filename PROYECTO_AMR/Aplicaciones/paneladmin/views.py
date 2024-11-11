@@ -99,6 +99,12 @@ class RolUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['roles'] = Rol.objects.all().order_by('-estado')
         return context
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Rol Modificado exitosamente.')
+        return response
 
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarRol(View):
