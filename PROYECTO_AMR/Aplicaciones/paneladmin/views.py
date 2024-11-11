@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator
+from Aplicaciones.Auditoria.utils import save_audit
 
 # Decorador para verificar si el usuario es administrador
 def admin_required(view_func):
@@ -76,8 +77,10 @@ class RolCreateView(CreateView):
     success_url = reverse_lazy('paneladmin:mantenimiento_roles')
 
     def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
         messages.success(self.request, 'Rol creado exitosamente.')
-        return super().form_valid(form)
+        return response
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

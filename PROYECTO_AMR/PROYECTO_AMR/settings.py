@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Aplicaciones.core',
     'Aplicaciones.paneladmin',
     'Aplicaciones.paneladmin.submodulos',
+    'Aplicaciones.Auditoria',
 ]
 
 MIDDLEWARE = [
