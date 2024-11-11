@@ -1,3 +1,5 @@
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from Aplicaciones.paneladmin.submodulos.models import *
 from Aplicaciones.Login.models import *
@@ -7,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import Q
+from Aplicaciones.Auditoria.utils import save_audit
 
 
 
@@ -24,12 +27,16 @@ def admin_required(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
+##
+
 @method_decorator(admin_required, name='dispatch')
 class MenuSubmodulos(View):
     
     def get(self, request):
         usuario_logueado = get_object_or_404(Usuario, id=request.session['user_id'])
         return render(request, 'menu_submodulos.html', {'usuario': usuario_logueado})
+
+##
 
 @method_decorator(admin_required, name='dispatch')
 class PaisListView(ListView):
@@ -56,8 +63,10 @@ class PaisCreateView(CreateView):
     success_url = reverse_lazy('submodulos:mantenimiento_paises')
 
     def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
         messages.success(self.request, 'Pais registrado exitosamente.')
-        return super().form_valid(form)
+        return response
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,6 +84,12 @@ class PaisUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['paises'] = Pais.objects.all().order_by('pais')
         return context
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Pais Modificado exitosamente.')
+        return response
 
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarPais(View):
@@ -82,6 +97,7 @@ class ActivarInactivarPais(View):
         pais = get_object_or_404(Pais, pk = pk)
         pais.estado = not pais.estado
         pais.save()
+        save_audit(self.request, pais, action='E')
         messages.success(request, "Estado del pais actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_paises')
 
@@ -119,8 +135,10 @@ class CualidadCreateView(CreateView):
     success_url = reverse_lazy('submodulos:mantenimiento_cualidades')
 
     def form_valid(self, form):
+        response =  super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
         messages.success(self.request, 'Cualidad creada exitosamente.')
-        return super().form_valid(form)
+        return response
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -138,6 +156,12 @@ class CualidadUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['cualidades'] = Cualidad.objects.all().order_by('cualidad')
         return context
+    
+    def form_valid(self, form):
+        response =  super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Cualidad modificada exitosamente.')
+        return response
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -146,6 +170,7 @@ class ActivarInactivarCualidad(View):
         cualidad = get_object_or_404(Cualidad, pk=pk)
         cualidad.estado = not cualidad.estado  # Invierte el valor de estado
         cualidad.save()
+        save_audit(self.request, cualidad, action='E')
         messages.success(request, "Estado del rol actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_cualidades')
 
@@ -196,6 +221,12 @@ class EstadisticasCreateView(CreateView):
         context['estadisticas'] = Estadistica.objects.all().order_by('cualidad')
         return context
     
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
+        messages.success(self.request, 'Estadistica registrada exitosamente')
+        return response
+    
 @method_decorator(admin_required, name='dispatch')
 class EstadisticaUpdateView(UpdateView):
     model = Estadistica
@@ -207,6 +238,12 @@ class EstadisticaUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['estadisticas'] = Estadistica.objects.all().order_by('cualidad')
         return context
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Estadistica modificada exitosamente')
+        return response
 
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarEstadistica(View):
@@ -214,6 +251,8 @@ class ActivarInactivarEstadistica(View):
         estadistica = get_object_or_404(Estadistica, pk=pk)
         estadistica.estado = not estadistica.estado
         estadistica.save()
+        save_audit(self.request, estadistica, action='E')
+        messages.success(request, "Estado de la Estadistica actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_estadisticas')
 
 ###################################################################
@@ -240,8 +279,10 @@ class PosicionCreateView(CreateView):
     success_url = reverse_lazy('submodulos:mantenimiento_posicion')
 
     def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
         messages.success(self.request, 'Posicion registrada exitosamente.')
-        return super().form_valid(form)
+        return response
     
 
 @method_decorator(admin_required, name='dispatch')
@@ -255,6 +296,12 @@ class PosicionUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['posiciones'] = Posicion.objects.all()
         return context
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Posicion modificada exitosamente.')
+        return response
 
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarPosicion(View):
@@ -262,6 +309,8 @@ class ActivarInactivarPosicion(View):
         posicion = get_object_or_404(Posicion, pk = pk)
         posicion.estado = not posicion.estado
         posicion.save()
+        save_audit(self.request, posicion, action='E')
+        messages.success(self.request, 'Estado de la Posicion actualizado exitosamente.')
         return redirect('submodulos:mantenimiento_posicion')
 
 ###############################################################################

@@ -171,7 +171,6 @@ class CrearUsuarios(CreateView):
         clave_temporal = usuario.generar_contrasena_temporal()
         usuario.clave = clave_temporal
         usuario.save()
-
         save_audit(self.request, usuario, action='A')
         self.enviar_correo_bienvenida(usuario.correo, usuario.nombre_usuario, clave_temporal)
         return super().form_valid(form)
