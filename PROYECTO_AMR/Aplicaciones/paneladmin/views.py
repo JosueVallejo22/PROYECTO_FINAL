@@ -113,6 +113,7 @@ class ActivarInactivarRol(View):
         rol = get_object_or_404(Rol, pk=pk)
         rol.estado = not rol.estado
         rol.save()
+        save_audit(self.request, rol, action='E')
         messages.success(request, "Estado del rol actualizado exitosamente.")
         return redirect('paneladmin:mantenimiento_roles')
 
@@ -170,6 +171,8 @@ class CrearUsuarios(CreateView):
         clave_temporal = usuario.generar_contrasena_temporal()
         usuario.clave = clave_temporal
         usuario.save()
+
+        save_audit(self.request, usuario, action='A')
         self.enviar_correo_bienvenida(usuario.correo, usuario.nombre_usuario, clave_temporal)
         return super().form_valid(form)
 
@@ -196,6 +199,12 @@ class ActualizarUsuario(UpdateView):
     template_name = 'form_usuario.html'
     success_url = reverse_lazy('paneladmin:mantenimiento_usuarios')
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Usuario Modificado exitosamente.')
+        return response
+
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarUsuario(View):
     """Vista para activar/inactivar un usuario"""
@@ -210,9 +219,9 @@ class ActivarInactivarUsuario(View):
             messages.error(request, "No puedes inactivar tu propia cuenta.")
             return redirect('paneladmin:mantenimiento_usuarios')
 
-        # Solo cambiar el estado si no es el usuario actual
         usuario.estado = not usuario.estado
         usuario.save()
+        save_audit(self.request, usuario, action='E')
         messages.success(request, "Estado del usuario actualizado exitosamente.")
         return redirect('paneladmin:mantenimiento_usuarios')
 
