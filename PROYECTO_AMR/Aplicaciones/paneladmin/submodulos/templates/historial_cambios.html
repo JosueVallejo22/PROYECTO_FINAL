@@ -31,7 +31,6 @@
                         <button type="submit" class="btn btn-primary">Buscar</button>
                         <a href="{% url 'submodulos:lista_cambios' %}" class="btn btn-warning">Limpiar</a>
                     </form>
-                    
 
                     <!-- Tabla de auditoría -->
                     <div class="table-responsive">
@@ -43,6 +42,7 @@
                                     <th class="py-1 px-2">Acción</th>
                                     <th class="py-1 px-2">Fecha</th>
                                     <th class="py-1 px-2">Hora</th>
+                                    <th class="py-1 px-2">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -61,13 +61,16 @@
                                     </td>
                                     <td>{{ registro.fecha }}</td>
                                     <td>{{ registro.hora }}</td>
+                                    <td>
+                                        <a href="?detalle={{ registro.id }}" class="btn btn-info btn-sm fw-bold">Detalles</a>
+                                    </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="4" class="text-center">No hay registros de auditoría.</td>
+                                    <td colspan="6" class="text-center">No hay registros de auditoría.</td>
                                 </tr>
                                 {% endfor %}
-                            </tbody>                                                      
+                            </tbody>
                         </table>
 
                         <!-- Paginación -->
@@ -99,11 +102,56 @@
                                 </ul>
                             </nav>
                             {% endif %}
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{% if detalle_auditoria %}
+<div class="position-fixed top-50 start-50 translate-middle p-4" style="z-index: 1050; max-width: 500px; width: 100%;">
+    <div class="bg-light rounded shadow-lg border border-secondary">
+        <div class="card-header bg-success text-white text-center py-3">
+            <h3 class="mb-0 fw-bold">Detalles de la Actividad</h3>
+        </div>
+        <div class="card-body px-4 py-3">
+            <div class="mb-2">
+                <span class="fw-bold text-muted">Usuario:</span> {{ detalle_auditoria.usuario }}
+            </div>
+            <div class="mb-2">
+                <span class="fw-bold text-muted">Fecha:</span> {{ detalle_auditoria.fecha }}
+            </div>
+            <div class="mb-2">
+                <span class="fw-bold text-muted">Hora:</span> {{ detalle_auditoria.hora }}
+            </div>
+            <div class="mb-2">
+                <span class="fw-bold text-muted">Modelo:</span> {{ detalle_auditoria.tabla }}
+            </div>
+            <div class="mb-2">
+                <span class="fw-bold text-muted">ID del Registro:</span> {{ detalle_auditoria.registroid }}
+            </div>
+            <div class="mb-2">
+                <span class="fw-bold text-muted">Estación:</span> {{ detalle_auditoria.estacion }}
+            </div>
+            <div class="mb-2">
+                <span class="fw-bold text-muted">Acción:</span>
+                {% if detalle_auditoria.accion == "A" %}
+                    Adición
+                {% elif detalle_auditoria.accion == "M" %}
+                    Modificación
+                {% elif detalle_auditoria.accion == "E" %}
+                    Eliminación o Cambio de Estado
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-footer text-center py-3">
+            <a href="{% url 'submodulos:lista_cambios' %}" class="btn btn-outline-secondary fw-bold">Cerrar</a>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
 {% endblock %}

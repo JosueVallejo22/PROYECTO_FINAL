@@ -557,7 +557,7 @@ class ListaCambios(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().order_by('-fecha', '-hora')
         search_query = self.request.GET.get('search', '')
         usuario_filter = self.request.GET.get('usuario', '')
 
@@ -574,5 +574,9 @@ class ListaCambios(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['usuarios'] = Usuario.objects.all()  # Pasa la lista de usuarios al contexto para el filtro
+        context['usuarios'] = Usuario.objects.all()
+        detalle_id = self.request.GET.get('detalle')
+        if detalle_id:
+            context['detalle_auditoria'] = get_object_or_404(AuditoriaUsuario, pk=detalle_id)
+        
         return context

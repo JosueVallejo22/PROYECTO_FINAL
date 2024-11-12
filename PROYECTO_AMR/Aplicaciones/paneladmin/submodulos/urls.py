@@ -43,5 +43,5 @@ urlpatterns = [
     path('editar_jugadores/<int:pk>/', JugadorUpdateView.as_view(), name='editar_jugador_admin'),
     path('act-inact-jugadores/<int:pk>/', ActivarInactivarJugadorAd.as_view(), name='act-inact-jugadores-admin'),
     #HISTORIAL CAMBIOS
-    path('lista_cambios/', ListaCambios.as_view(), name='lista_cambios')
+    path('lista_cambios/', ListaCambios.as_view(), name='lista_cambios'),
 ]
