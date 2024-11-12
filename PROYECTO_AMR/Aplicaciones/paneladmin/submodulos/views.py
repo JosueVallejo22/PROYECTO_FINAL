@@ -470,7 +470,8 @@ class ListarJugador(ListView):
     model = Jugador
     template_name = 'lista_jugadores_admin.html'
     context_object_name = 'listjugadores'
-    queryset = Jugador.objects.all().order_by('nombre', '-estado')
+    queryset = Jugador.objects.filter(estado=False).order_by('nombre')
+
 
 @method_decorator(admin_required, name='dispatch')
 class DetalleJugadores(DetailView):
