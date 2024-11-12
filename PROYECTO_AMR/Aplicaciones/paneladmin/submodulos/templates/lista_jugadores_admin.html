@@ -59,9 +59,9 @@
                                     <td>{% if jugador.estado %}Activo{% else %}Inactivo{% endif %}</td>
                                     <td class="text-center"> 
                                         <div class="d-flex justify-content-center gap-2"> 
-                                            <a href="{% url 'core:editjugadores' jugador.pk %}" class="btn btn-warning btn-sm fw-bold">Editar</a>
+                                            <a href="{% url 'submodulos:editar_jugador_admin' jugador.pk %}" class="btn btn-warning btn-sm fw-bold">Editar</a>
                                             <a href="{% url 'submodulos:detalle_jugador_admin' jugador.pk %}" class="btn btn-info btn-sm fw-bold">Detalles</a>
-                                            <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-{{ jugador.estado|yesno:'danger,success' }} btn-sm">
+                                            <a href="{% url 'submodulos:act-inact-jugadores-admin' jugador.pk %}" class="btn btn-{{ jugador.estado|yesno:'danger,success' }} btn-sm">
                                                 {% if jugador.estado %}Inactivar{% else %}Activar{% endif %}
                                             </a>
                                             <!-- <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-danger btn-sm fw-bold">Eliminar</a> -->
@@ -77,7 +77,7 @@
                         </table>
                     </div>
                     <div class="text-center">
-                        <a href="{% url 'core:crearjugador' %}" class=" btn btn-success btn-sm">
+                        <a href="{% url 'submodulos:crear_jugador_admin' %}" class=" btn btn-success btn-sm">
                             Crear nuevo jugador
                         </a>
                     </div>

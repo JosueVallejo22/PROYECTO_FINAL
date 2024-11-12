@@ -216,6 +216,7 @@ class EstadisticasCreateView(CreateView):
     form_class = EstadisticaForm
     template_name = 'mantenimiento_estadisticas.html'
     success_url = reverse_lazy('submodulos:mantenimiento_estadisticas')
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -278,6 +279,12 @@ class PosicionCreateView(CreateView):
     form_class = PosicionForm
     template_name = 'mantenimiento_posicion.html'
     success_url = reverse_lazy('submodulos:mantenimiento_posicion')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posiciones'] = Posicion.objects.all()
+        return context
+    
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -472,5 +479,67 @@ class DetalleJugadores(DetailView):
     template_name = 'det_jugadores_admin.html'
     context_object_name = 'detjugadores'
 
-# @method_decorator(admin_required, name='dispatch')
+@method_decorator(admin_required, name='dispatch')
+class JugadorCreateView(CreateView):
+    """vista para crear un nuevo jugador"""
+    template_name = 'form_jugador_admin.html'
+    model = Jugador
+    form_class = JugadorADForm
+    success_url = reverse_lazy('submodulos:listar_jugador_admin')
 
+    def form_valid(self, form):
+        jugador = form.save(commit=False)
+
+        user_id = self.request.session.get('user_id')
+        usuario = get_object_or_404(Usuario, id=user_id)
+        jugador.usuario = usuario.nombre_usuario
+
+        jugador.save()
+
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='A')
+        messages.success(self.request, 'Jugador registrado exitosamente.')
+        return response
+
+@method_decorator(admin_required, name='dispatch')
+class JugadorUpdateView(UpdateView):
+    """Vista para actualizar un jugador existente"""
+    template_name = 'form_jugador_admin.html'
+    model = Jugador
+    form_class = JugadorADForm
+    success_url = reverse_lazy('submodulos:listar_jugador_admin')
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_editing'] = True
+        return context
+    
+    def form_valid(self, form):
+        jugador = form.save(commit=False)
+
+        user_id = self.request.session.get('user_id')
+        usuario = get_object_or_404(Usuario, id=user_id)
+        jugador.usuario = usuario.nombre_usuario
+
+        jugador.save()
+        response = super().form_valid(form)
+        save_audit(self.request, self.object, action='M')
+        messages.success(self.request, 'Jugador modificado exitosamente.')
+        return response
+
+@method_decorator(admin_required, name='dispatch')
+class ActivarInactivarJugadorAd(View):
+    """Vista para activar/inactivar un rol"""
+    def get(self, request, pk):
+        jugador = get_object_or_404(Jugador, pk=pk)
+        jugador.estado = not jugador.estado
+        
+        user_id = self.request.session.get('user_id')
+        usuario = get_object_or_404(Usuario, id=user_id)
+        jugador.usuario = usuario.nombre_usuario
+
+        jugador.save()
+        save_audit(self.request, jugador, action='E')
+        messages.success(request, "Estado del jugador actualizado exitosamente.")
+        return redirect('submodulos:listar_jugador_admin')
