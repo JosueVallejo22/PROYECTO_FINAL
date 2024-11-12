@@ -29,7 +29,7 @@
         <div class="col-md-12 mb-4">
             <div class="card mb-5">
                 <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Lista de Jugadores</h2>
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Lista de Jugadores Admin</h2>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive" >
@@ -41,6 +41,7 @@
                                     <th class="py-1 px-2">Nombre</th>
                                     <th class="py-1 px-2">Apellido</th>
                                     <th class="py-1 px-2">Puesto</th>
+                                    <th class="py-1 px-2">Estado</th>
                                     
                                     <th>Acciones</th>
                                 </tr>
@@ -55,11 +56,15 @@
                                     <td>{{ jugador.nombre }}</td>
                                     <td>{{ jugador.apellido }}</td>
                                     <td>{{ jugador.puesto }}</td>
+                                    <td>{% if jugador.estado %}Activo{% else %}Inactivo{% endif %}</td>
                                     <td class="text-center"> 
                                         <div class="d-flex justify-content-center gap-2"> 
                                             <a href="{% url 'core:editjugadores' jugador.pk %}" class="btn btn-warning btn-sm fw-bold">Editar</a>
-                                            <a href="{% url 'core:detjugadores' jugador.pk %}" class="btn btn-info btn-sm fw-bold">Detalles</a>
-                                            <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-danger btn-sm fw-bold">Eliminar</a>
+                                            <a href="{% url 'submodulos:detalle_jugador_admin' jugador.pk %}" class="btn btn-info btn-sm fw-bold">Detalles</a>
+                                            <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-{{ jugador.estado|yesno:'danger,success' }} btn-sm">
+                                                {% if jugador.estado %}Inactivar{% else %}Activar{% endif %}
+                                            </a>
+                                            <!-- <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-danger btn-sm fw-bold">Eliminar</a> -->
                                         </div> 
                                     </td>      
                                 </tr>

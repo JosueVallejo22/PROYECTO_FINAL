@@ -12,7 +12,7 @@ urlpatterns = [
     path('detjugadores/<int:pk>/', JugadoresDetailView.as_view(), name='detjugadores'),
     path('crearjugador/', jugadoresCreateView.as_view(),name='crearjugador'),
     path('editjugadores/<int:pk>', jugadoresUpdateView.as_view(), name='editjugadores'),
-    path('jugador/<int:pk>/eliminar/', JugadoresDeleteView.as_view(), name='eliminar_jugador'),
+    path('eliminar/<int:pk>/', ActivarInactivarJugador.as_view(), name='eliminar_jugador'),
 
     
     path('listvaloraciones/', listvaloracionesView.as_view(), name='listvaloraciones'),

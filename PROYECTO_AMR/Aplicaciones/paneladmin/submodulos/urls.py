@@ -36,4 +36,10 @@ urlpatterns = [
     path('cualidad_puesto/crear/', PuestoCualidadCreateView.as_view(), name='registrar_puesto_cualidad'),
     path('cualidad_puesto/editar/<int:pk>/', PuestoCualidadUpdateView.as_view(), name='editar_puesto_cualidad'),
     path('cualidad_puesto/activar-inactivar/<int:pk>/', ActivarInactivarPuestoCualidad.as_view(), name='activar-inactivar-puesto-cualidad'),
+    #JUGADORES ADMIN
+    path('lista_jugadores/', ListarJugador.as_view(), name='listar_jugador_admin'),
+    path('detalle_jugadores/<int:pk>/', DetalleJugadores.as_view(), name='detalle_jugador_admin'),
+    # path('editar_juugadores/', DetalleJugadores.as_view(), name='detalle_jugador_admin'),
+    # path('detalle_jugadores/', DetalleJugadores.as_view(), name='detalle_jugador_admin'),
+
 ]

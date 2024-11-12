@@ -8,8 +8,7 @@ def obtener_usuario(request):
     
     try:
         return Usuario.objects.get(id=user_id)
-    except: 
-        Usuario.DoesNotExist
+    except Usuario.DoesNotExist:
         return None
 
 def save_audit(request, model, action):
@@ -38,8 +37,8 @@ def ip_client_address(request):
     try:
         #case para servidor externo
         client_address = request.META['HTTP_X_FORWARDED_FOR']
-    except:
+    except KeyError:
         #case para localhost/servidor local
         client_address = request.META['REMOTE_ADDR']
     
-        return client_address
+    return client_address

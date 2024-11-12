@@ -10,6 +10,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import Q
 from Aplicaciones.Auditoria.utils import save_audit
+from Aplicaciones.core.models import Jugador
 
 
 
@@ -453,3 +454,23 @@ class ActivarInactivarPuestoCualidad(View):
         save_audit(self.request, puesto_cualidad, action='E')
         messages.success(self.request, 'Estado del Puesto-Cualidad actualizado exitosamente.')
         return redirect('submodulos:mantenimiento_puesto_cualidad')
+
+
+
+###### 
+@method_decorator(admin_required, name='dispatch')
+class ListarJugador(ListView):
+    model = Jugador
+    template_name = 'lista_jugadores_admin.html'
+    context_object_name = 'listjugadores'
+    queryset = Jugador.objects.all().order_by('nombre', '-estado')
+
+@method_decorator(admin_required, name='dispatch')
+class DetalleJugadores(DetailView):
+    """Vista para mostrar detalles de un jugador"""
+    model = Jugador
+    template_name = 'det_jugadores_admin.html'
+    context_object_name = 'detjugadores'
+
+# @method_decorator(admin_required, name='dispatch')
+
