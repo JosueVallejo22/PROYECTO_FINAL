@@ -20,41 +20,45 @@
                         {% endif %}
 
                         <!-- Campos del formulario organizados según el nuevo orden -->
-                        <div class="form-group">
-                            {{ form.nombre.label_tag }}
-                            {{ form.nombre }}
-                            {% if form.nombre.errors %}
-                                <div class="alert alert-danger">{{ form.nombre.errors }}</div>
-                            {% endif %}
+                        <div class=" row">
+                            <div class="col-6 form-group">
+                                {{ form.nombre.label_tag }}
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}
+                                    <div class="alert alert-danger">{{ form.nombre.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-6 form-group">
+                                {{ form.apellido.label_tag }}
+                                {{ form.apellido }}
+                                {% if form.apellido.errors %}
+                                    <div class="alert alert-danger">{{ form.apellido.errors }}</div>
+                                {% endif %}
+                            </div>
                         </div>
-                        <div class="form-group">
-                            {{ form.apellido.label_tag }}
-                            {{ form.apellido }}
-                            {% if form.apellido.errors %}
-                                <div class="alert alert-danger">{{ form.apellido.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.nombre_usuario.label_tag }}
-                            {{ form.nombre_usuario }}
-                            {% if form.nombre_usuario.errors %}
-                                <div class="alert alert-danger">{{ form.nombre_usuario.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <!-- Eliminado el campo de la clave -->
-                        <div class="form-group">
-                            {{ form.correo.label_tag }}
-                            {{ form.correo }}
-                            {% if form.correo.errors %}
-                                <div class="alert alert-danger">{{ form.correo.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.numero_telefono.label_tag }}
-                            {{ form.numero_telefono }}
-                            {% if form.numero_telefono.errors %}
-                                <div class="alert alert-danger">{{ form.numero_telefono.errors }}</div>
-                            {% endif %}
+                        <div class="row">
+                            <div class="col-4 form-group">
+                                {{ form.nombre_usuario.label_tag }}
+                                {{ form.nombre_usuario }}
+                                {% if form.nombre_usuario.errors %}
+                                    <div class="alert alert-danger">{{ form.nombre_usuario.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <!-- Eliminado el campo de la clave -->
+                            <div class="col-4 form-group">
+                                {{ form.correo.label_tag }}
+                                {{ form.correo }}
+                                {% if form.correo.errors %}
+                                    <div class="alert alert-danger">{{ form.correo.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-4 form-group">
+                                {{ form.numero_telefono.label_tag }}
+                                {{ form.numero_telefono }}
+                                {% if form.numero_telefono.errors %}
+                                    <div class="alert alert-danger">{{ form.numero_telefono.errors }}</div>
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="form-group">
                             {{ form.fecha_nacimiento.label_tag }}

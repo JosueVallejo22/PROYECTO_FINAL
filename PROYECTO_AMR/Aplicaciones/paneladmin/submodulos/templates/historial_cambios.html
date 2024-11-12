@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Historial de Auditoría{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <h1 class="text-center p-3 text-white fw-bold">Historial de Auditoría</h1>
+        <div class="col-md-12 mb-3 text-right">
+            <a href="{% url 'submodulos:menu_submodulos' %}" class="btn btn-danger fw-bold">Regresar</a>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Historial de Actividades</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Formulario de búsqueda y filtros -->
+                    <form method="get" class="form-inline mb-3">
+                        <input type="text" name="search" class="form-control mb-2 mr-sm-2" placeholder="Buscar por usuario o tabla" value="{{ request.GET.search }}">
+                        <select name="usuario" class="form-control mb-2 mr-sm-2">
+                            <option value="">Filtrar por usuario</option>
+                            {% for usuario in usuarios %}
+                                <option value="{{ usuario.id }}" {% if request.GET.usuario == usuario.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ usuario.nombre_usuario }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <a href="{% url 'submodulos:lista_cambios' %}" class="btn btn-warning">Limpiar</a>
+                    </form>
+                    
+
+                    <!-- Tabla de auditoría -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-sm">
+                            <thead class="text-center">
+                                <tr>
+                                    <th class="py-1 px-2">Usuario</th>
+                                    <th class="py-1 px-2">Tabla</th>
+                                    <th class="py-1 px-2">Acción</th>
+                                    <th class="py-1 px-2">Fecha</th>
+                                    <th class="py-1 px-2">Hora</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registro in auditoria %}
+                                <tr class="fst-italic fs-6">
+                                    <td>{{ registro.usuario.nombre_usuario }}</td>
+                                    <td>{{ registro.tabla }}</td>
+                                    <td>
+                                        {% if registro.accion == "A" %}
+                                            Adición
+                                        {% elif registro.accion == "M" %}
+                                            Modificación
+                                        {% elif registro.accion == "E" %}
+                                            Eliminación
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ registro.fecha }}</td>
+                                    <td>{{ registro.hora }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No hay registros de auditoría.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>                                                      
+                        </table>
+
+                        <!-- Paginación -->
+                        <div class="d-flex justify-content-center">
+                            {% if is_paginated %}
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&usuario={{ request.GET.usuario }}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                        
+                                    {% for object in paginator.page_range %}
+                                    <li class="page-item {% if object == page_obj.number %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ object }}&search={{ request.GET.search }}&usuario={{ request.GET.usuario }}">{{ object }}</a>
+                                    </li>
+                                    {% endfor %}
+                        
+                                    {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&usuario={{ request.GET.usuario }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                            {% endif %}
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

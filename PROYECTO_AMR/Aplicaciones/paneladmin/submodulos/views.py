@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.db.models import Q
 from Aplicaciones.Auditoria.utils import save_audit
 from Aplicaciones.core.models import Jugador
+from Aplicaciones.Auditoria.models import *
 
 
 
@@ -544,3 +545,34 @@ class ActivarInactivarJugadorAd(View):
         save_audit(self.request, jugador, action='E')
         messages.success(request, "Estado del jugador actualizado exitosamente.")
         return redirect('submodulos:listar_jugador_admin')
+    
+###########################################################################################################################################
+
+@method_decorator(admin_required, name='dispatch')
+class ListaCambios(ListView):
+    """Vista para listar registros de auditoría con filtros y búsqueda"""
+    model = AuditoriaUsuario
+    template_name = 'historial_cambios.html'
+    context_object_name = 'auditoria'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('search', '')
+        usuario_filter = self.request.GET.get('usuario', '')
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(usuario__nombre_usuario__icontains=search_query) |
+                Q(tabla__icontains=search_query)
+            )
+
+        if usuario_filter:
+            queryset = queryset.filter(usuario__id=usuario_filter)
+        
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['usuarios'] = Usuario.objects.all()  # Pasa la lista de usuarios al contexto para el filtro
+        return context
