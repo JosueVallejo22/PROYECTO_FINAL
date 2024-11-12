@@ -83,15 +83,15 @@ WSGI_APPLICATION = 'PROYECTO_AMR.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-     'default': {
-         'ENGINE': 'mssql',
-         'NAME': 'PROYECTO_AMR',
-         'USER':'',
-         'PASSWORD':'',
-         'HOST':'localhost',
-         'PORT':'',
-         'OPTIONS':{'driver': 'ODBC Driver 17 for SQL Server'}
-     }
+    'default': {
+        'ENGINE': 'mssql',
+        'NAME': 'PROYECTO_AMR',
+        'USER':'',
+        'PASSWORD':'',
+        'HOST':'localhost',
+        'PORT':'',
+        'OPTIONS':{'driver': 'ODBC Driver 17 for SQL Server'}
+    }
 }
 
 

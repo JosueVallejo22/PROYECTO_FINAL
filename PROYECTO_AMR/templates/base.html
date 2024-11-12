@@ -8,12 +8,11 @@
     <meta name="description" content="Aplicativo Web para realizar un análisis del rendimiento deportivo de los futbolistas en un club.">
     <meta name="keywords" content="futbol, valoraciones, plantillas, jugadores">
     <meta name="author" content="Josue Vallejo Suarez, Robert Vera Medina">
-    <meta http-equiv="refresh" content="#">
     <title>{% block title %}{% endblock %}</title>
-    {% block extra_css %} {% endblock %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 <body>
   <header>
@@ -26,16 +25,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <span class="nav-link fw-bold text-warning"> {{ usuario.nombre_usuario }}</span>
+              <span class="nav-link fw-bold text-warning">{{ usuario.nombre_usuario }}</span>
             </li>
             <li class="nav-item">
                 <a href="{% url 'Login:cambiar_contrasena' %}" class="nav-link">Cambiar Contraseña</a>
-              </li>
+            </li>
             <li class="nav-item">
               {% if request.session.user_id %}
-                  <li><a href="{% url 'Login:logout_usuario' %}" class="nav-link">Cerrar sesión</a></li>
+                  <a href="{% url 'Login:logout_usuario' %}" class="nav-link">Cerrar sesión</a>
               {% else %}
-                  <li><a href="{% url 'Login:login_usuario' %}" class="nav-link">Iniciar sesión</a></li>
+                  <a href="{% url 'Login:login_usuario' %}" class="nav-link">Iniciar sesión</a>
               {% endif %}
             </li>
           </ul>      
@@ -44,30 +43,70 @@
     </nav>
   </header>
 
-  
-  {% block content %}
 
-
-  <!-- Mensajes de éxito o error -->
-  <div class="col-md-12 mb-4">
-    {% if messages %}
-        <div id="alert-container">
+{% block messages %}
+  {% if messages %}
+    <div class="position-fixed top-50 start-50 translate-middle p-4 fade-out" style="z-index: 1050; max-width: 400px; width: 100%;" id="alert-container">
+        <div class="bg-white rounded shadow-lg border border-secondary">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    <strong>{{ message.tags|capfirst }}!</strong> {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="alert alert-{{ message.tags }} rounded-3 small d-flex align-items-center mb-0 p-3" role="alert">
+                    <!-- Icono según el tipo de mensaje -->
+                    {% if message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill text-success me-2 fs-4"></i>
+                    {% elif message.tags == 'error' %}
+                        <i class="bi bi-exclamation-triangle-fill text-danger me-2 fs-4"></i>
+                    {% elif message.tags == 'warning' %}
+                        <i class="bi bi-exclamation-circle-fill text-warning me-2 fs-4"></i>
+                    {% elif message.tags == 'info' %}
+                        <i class="bi bi-info-circle-fill text-info me-2 fs-4"></i>
+                    {% else %}
+                        <i class="bi bi-bell-fill text-secondary me-2 fs-4"></i>
+                    {% endif %}
+                    
+                    <!-- Mensaje de alerta -->
+                    <div>
+                        <strong>{{ message.tags|capfirst }}!</strong> {{ message }}
+                    </div>
+                    
+                    <!-- Botón de cierre -->
+                    <button type="button" class="btn-close ms-auto" onclick="this.closest('#alert-container').style.display='none'" aria-label="Close"></button>
                 </div>
             {% endfor %}
         </div>
-    {% endif %}
-  </div>
-  {% endblock %}
+    </div>
 
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
+    <!-- CSS para el efecto de desvanecimiento -->
+    <style>
+        /* Añadimos una animación de desvanecimiento */
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease-out forwards; /* 0.5s es la duración de la animación */
+            animation-delay: 2s; /* La animación empieza después de 3 segundos */
+        }
+    </style>
+  {% endif %}
+{% endblock messages %}
+
+
+
+
+
+  <div class="container mt-3">
+    {% block content %}
+    
+    
+    {% endblock content %}
+  </div>
+
+  <!-- Bloque separado para mensajes de notificación -->
+  
+
+
+
   <footer class="footer d-flex fixed-bottom" id="footer">
     <div class="container text-center">
       <p class="mb-0 text-white">© 2024 VV Enterprises. Todos los derechos reservados.</p>
