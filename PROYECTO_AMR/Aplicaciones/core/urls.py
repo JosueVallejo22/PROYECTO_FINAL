@@ -16,4 +16,5 @@ urlpatterns = [
 
     
     path('listvaloraciones/', listvaloracionesView.as_view(), name='listvaloraciones'),
+    path('crearvaloraciones/', valoracionescreateview.as_view(), name='crearvaloraciones'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

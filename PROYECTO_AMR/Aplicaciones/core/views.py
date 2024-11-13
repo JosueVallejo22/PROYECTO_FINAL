@@ -91,10 +91,6 @@ class jugadoresUpdateView(UpdateView):
         messages.success(self.request, 'Jugador modificado exitosamente.')
         return response
 
-# @method_decorator(login_required, name='dispatch')   
-# class JugadoresDeleteView(DeleteView):
-#     model = Jugador
-#     success_url = reverse_lazy('core:listjugadores')
 
 @method_decorator(login_required, name='dispatch')
 class ActivarInactivarJugador(View):
@@ -114,15 +110,25 @@ class ActivarInactivarJugador(View):
 
 ##########################################################################################
 @method_decorator(login_required, name='dispatch')
-class listvaloracionesView(TemplateView):
+class listvaloracionesView(ListView):
+    model = Jugador
     template_name = 'listvaloraciones.html'
+    context_object_name = 'listvaloraciones'
+    queryset = Jugador.objects.filter(estado=True).order_by('nombre')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+
+@method_decorator(login_required, name='dispatch')
+class valoracionescreateview(TemplateView):
+    template_name = 'form_valoraciones.html'
+    context_object_name = 'crearvaloraciones'
+
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
         
-        # Obtener el usuario logueado y agregarlo al contexto
-        user_id = self.request.session.get('user_id')
-        usuario = get_object_or_404(Usuario, id=user_id)
-        context['usuario'] = usuario
+    #     # Obtener el usuario logueado y agregarlo al contexto
+    #     user_id = self.request.session.get('user_id')
+    #     usuario = get_object_or_404(Usuario, id=user_id)
+    #     context['usuario'] = usuario
         
-        return context
+    #     return context
