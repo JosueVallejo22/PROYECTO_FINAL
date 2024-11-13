@@ -27,6 +27,7 @@
                                     <th class="py-1 px-2">Foto</th>
                                     <th class="py-1 px-2">Nombre</th>
                                     <th class="py-1 px-2">Apellido</th>
+                                    <th class="py-1 px-2">Edad</th>
                                     <th class="py-1 px-2">Puesto</th>
                                     
                                     <th>Acciones</th>
@@ -34,13 +35,14 @@
                             </thead>
                             <tbody>
                                 {% for jugador in listjugadores %}
-                                <tr>
+                                <tr style="height: 100px;" class="text-center">
                                     <td>{{ forloop.counter }}</td>
                                     <td> 
-                                        <img src="{{ jugador.imagen.url }}" alt="Imagen de {{ jugador.nombre }}">
+                                        <img src="{{ jugador.imagen.url }}" alt="Imagen de {{ jugador.nombre }} " style="width: 10px; height: auto;">
                                     </td>
                                     <td>{{ jugador.nombre }}</td>
                                     <td>{{ jugador.apellido }}</td>
+                                    <td>{{ jugador.calcular_edad }}</td>
                                     <td>{{ jugador.puesto }}</td>
                                     <td class="text-center"> 
                                         <div class="d-flex justify-content-center gap-2"> 
@@ -69,7 +71,5 @@
     </div>
     
 </div>
-
-
 
 {% endblock %}

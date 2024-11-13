@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 from Aplicaciones.paneladmin.submodulos.models import *
 # Create your models here.
 
@@ -17,3 +18,11 @@ class Jugador(models.Model):
     usuario = models.CharField(max_length=50)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    def calcular_edad(self):
+        """Calcula la edad del jugador a partir de su fecha de nacimiento."""
+        hoy = date.today()
+        edad = hoy.year - self.fecha_nac.year
+        if (hoy.month, hoy.day) < (self.fecha_nac.month, self.fecha_nac.day):
+            edad -= 1
+        return edad

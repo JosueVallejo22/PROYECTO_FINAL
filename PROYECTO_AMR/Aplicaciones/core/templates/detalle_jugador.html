@@ -12,25 +12,47 @@
                     <h2 class="mb-0 fw-bold text-center mt-2 text-white">Detalles del Jugador</h2>
                 </div>
                 <div class="card-body">
-                    <h5><strong>Nombre:</strong> {{ detjugadores.nombre }}</h5>
-                    <h5><strong>Apellido:</strong> {{ detjugadores.apellido }}</h5>
-                    <h5><strong>Nacionalidad:</strong> {{ detjugadores.pais }}</h5>
-                    <h5><strong>Fecha de Nacimiento:</strong> {{ detjugadores.fecha_nac }}</h5>
-                    <h5><strong>Correo:</strong> {{ detjugadores.correo }}</h5>
-                    <h5><strong>Puesto:</strong> {{ detjugadores.puesto }}</h5>
-                    <h5><strong>Pierna Habil:</strong> {{ detjugadores.get_pierna_habil_display }}</h5>
-                    <h5><strong>Peso:</strong> {{ detjugadores.peso }} Kg</h5>
-                    <h5><strong>Altura:</strong> {{ detjugadores.altura }} cm</h5>
-                    <h5><strong>Foto:</strong></h5>
-                    {% if detjugadores.foto %}
-                    <img src="{{ detjugadores.foto.url }}" alt="Foto de {{ detjugadores.nombre }}" style="width: 150px; height: auto;">
-                    {% else %}
-                        <p>No hay foto disponible</p>
-                    {% endif %}
-                    <h5><strong>Ultima modificacion por:</strong> {{ detjugadores.usuario}}</h5>
-                    <h5><strong>Estado:</strong> {% if detjugadores.estado %}Activo{% else %}Inactivo{% endif %}</h5>
-                    <h5><strong>Fecha de Creación:</strong> {{ detjugadores.fecha_creacion }}</h5>
-                    <h5><strong>Última Actualización:</strong> {{ detjugadores.fecha_actualizacion }}</h5>
+                    <div class="row mt-3">
+                        <div class="col-4 offset-md-1">
+                            <h5><strong>Foto:</strong></h5>
+                            {% if detjugadores.foto %}
+                            <img src="{{ detjugadores.foto.url }}" alt="Foto de {{ detjugadores.nombre }}" style="width: 220px; height: auto;">
+                            {% else %}
+                                <p>No hay foto disponible</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            <div class="row mt-2">
+                                <h5 class="col-md-auto mt-2"><strong>Nombre:</strong> {{ detjugadores.nombre }}</h5>
+                                <h5 class="col-md-auto mt-2"><strong>Apellido:</strong> {{ detjugadores.apellido }}</h5>
+                                <h5 class="mt-2"><strong>Nacionalidad:</strong> {{ detjugadores.pais }}</h5>
+                                <h5 class="col-md-auto mt-2"><strong>Edad:</strong> {{ detjugadores.calcular_edad }}</h5>
+                            </div>
+                            <div class="row">
+                                
+                                
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col">    
+                                    <h5 class="mt-2"><strong>Puesto:</strong> {{ detjugadores.puesto }}</h5>
+                                    <h5 class="mt-2"><strong>Pierna Habil:</strong> {{ detjugadores.get_pierna_habil_display }}</h5>
+                                </div>
+                            
+                                <div class="col">
+                                    <h5 class="mt-2"><strong>Peso:</strong> {{ detjugadores.peso }} KG</h5>
+                                    <h5 class="mt-2 "><strong>Altura:</strong> {{ detjugadores.altura }} CM</h5>
+                                </div>
+                            </div>
+                            <h5 class="col-md-auto mt-2"><strong>Fecha de Nacimiento:</strong> {{ detjugadores.fecha_nac }}</h5>
+                            <h5 class="col-md-auto mt-2"><strong>Correo:</strong> {{ detjugadores.correo }}</h5>   
+                            <h5 class="col-md-auto mt-2"><strong>Estado:</strong> {% if detjugadores.estado %}Activo{% else %}Inactivo{% endif %}</h5>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    
                 </div>
                 <div class="card-footer text-center">
                     <a href="{% url 'core:listjugadores' %}" class="btn btn-primary">Volver a la lista</a>
