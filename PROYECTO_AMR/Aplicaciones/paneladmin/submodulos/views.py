@@ -99,7 +99,7 @@ class ActivarInactivarPais(View):
         pais = get_object_or_404(Pais, pk = pk)
         pais.estado = not pais.estado
         pais.save()
-        save_audit(self.request, pais, action='E')
+        save_audit(self.request, pais, action='M')
         messages.success(request, "Estado del pais actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_paises')
 
@@ -172,7 +172,7 @@ class ActivarInactivarCualidad(View):
         cualidad = get_object_or_404(Cualidad, pk=pk)
         cualidad.estado = not cualidad.estado  # Invierte el valor de estado
         cualidad.save()
-        save_audit(self.request, cualidad, action='E')
+        save_audit(self.request, cualidad, action='M')
         messages.success(request, "Estado del rol actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_cualidades')
 
@@ -254,7 +254,7 @@ class ActivarInactivarEstadistica(View):
         estadistica = get_object_or_404(Estadistica, pk=pk)
         estadistica.estado = not estadistica.estado
         estadistica.save()
-        save_audit(self.request, estadistica, action='E')
+        save_audit(self.request, estadistica, action='M')
         messages.success(request, "Estado de la Estadistica actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_estadisticas')
 
@@ -318,7 +318,7 @@ class ActivarInactivarPosicion(View):
         posicion = get_object_or_404(Posicion, pk = pk)
         posicion.estado = not posicion.estado
         posicion.save()
-        save_audit(self.request, posicion, action='E')
+        save_audit(self.request, posicion, action='M')
         messages.success(self.request, 'Estado de la Posicion actualizado exitosamente.')
         return redirect('submodulos:mantenimiento_posicion')
 
@@ -380,7 +380,7 @@ class ActivarInactivarPuesto(View):
         puesto = get_object_or_404(Puesto, pk=pk)
         puesto.estado = not puesto.estado
         puesto.save()
-        save_audit(self.request, puesto, action='E')
+        save_audit(self.request, puesto, action='M')
         messages.success(self.request, 'Estado del puesto actualizado exitosamente.')
         return redirect('submodulos:mantenimiento_puesto')
 
@@ -459,7 +459,7 @@ class ActivarInactivarPuestoCualidad(View):
         puesto_cualidad = get_object_or_404(PuestoCualidad, pk=pk)
         puesto_cualidad.estado = not puesto_cualidad.estado
         puesto_cualidad.save()
-        save_audit(self.request, puesto_cualidad, action='E')
+        save_audit(self.request, puesto_cualidad, action='M')
         messages.success(self.request, 'Estado del Puesto-Cualidad actualizado exitosamente.')
         return redirect('submodulos:mantenimiento_puesto_cualidad')
 
@@ -542,7 +542,7 @@ class ActivarInactivarJugadorAd(View):
         jugador.usuario = usuario.nombre_usuario
 
         jugador.save()
-        save_audit(self.request, jugador, action='E')
+        save_audit(self.request, jugador, action='M')
         messages.success(request, "Estado del jugador actualizado exitosamente.")
         return redirect('submodulos:listar_jugador_admin')
     

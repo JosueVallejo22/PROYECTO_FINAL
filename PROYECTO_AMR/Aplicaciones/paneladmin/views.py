@@ -113,7 +113,7 @@ class ActivarInactivarRol(View):
         rol = get_object_or_404(Rol, pk=pk)
         rol.estado = not rol.estado
         rol.save()
-        save_audit(self.request, rol, action='E')
+        save_audit(self.request, rol, action='M')
         messages.success(request, "Estado del rol actualizado exitosamente.")
         return redirect('paneladmin:mantenimiento_roles')
 
@@ -220,7 +220,7 @@ class ActivarInactivarUsuario(View):
 
         usuario.estado = not usuario.estado
         usuario.save()
-        save_audit(self.request, usuario, action='E')
+        save_audit(self.request, usuario, action='M')
         messages.success(request, "Estado del usuario actualizado exitosamente.")
         return redirect('paneladmin:mantenimiento_usuarios')
 
