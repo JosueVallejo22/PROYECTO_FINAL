@@ -109,26 +109,3 @@ class ActivarInactivarJugador(View):
         return redirect('core:listjugadores')
 
 ##########################################################################################
-@method_decorator(login_required, name='dispatch')
-class listvaloracionesView(ListView):
-    model = Jugador
-    template_name = 'listvaloraciones.html'
-    context_object_name = 'listvaloraciones'
-    queryset = Jugador.objects.filter(estado=True).order_by('nombre')
-
-
-@method_decorator(login_required, name='dispatch')
-class valoracionescreateview(TemplateView):
-    template_name = 'form_valoraciones.html'
-    context_object_name = 'crearvaloraciones'
-
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-        
-    #     # Obtener el usuario logueado y agregarlo al contexto
-    #     user_id = self.request.session.get('user_id')
-    #     usuario = get_object_or_404(Usuario, id=user_id)
-    #     context['usuario'] = usuario
-        
-    #     return context

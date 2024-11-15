@@ -138,7 +138,7 @@ class PuestoCualidadForm(forms.ModelForm):
         labels = {
             'puesto': 'Puesto',
             'cualidad': 'Cualidad',
-            'peso': 'Peso',
+            'peso': 'Peso (%)',
         }
 
     def clean_peso(self):

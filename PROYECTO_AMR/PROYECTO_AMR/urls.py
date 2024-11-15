@@ -23,4 +23,6 @@ urlpatterns = [
     path('',include('Aplicaciones.core.urls')),
     path('',include('Aplicaciones.paneladmin.urls')),
     path('',include('Aplicaciones.paneladmin.submodulos.urls')),
+    path('',include('Aplicaciones.paneladmin.submodulos.urls')),
+    path('', include('Aplicaciones.core.valoraciones.urls')),
 ]

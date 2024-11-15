@@ -14,7 +14,4 @@ urlpatterns = [
     path('editjugadores/<int:pk>', jugadoresUpdateView.as_view(), name='editjugadores'),
     path('eliminar/<int:pk>/', ActivarInactivarJugador.as_view(), name='eliminar_jugador'),
 
-    
-    path('listvaloraciones/', listvaloracionesView.as_view(), name='listvaloraciones'),
-    path('crearvaloraciones/', valoracionescreateview.as_view(), name='crearvaloraciones'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
