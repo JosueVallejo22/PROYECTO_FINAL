@@ -42,24 +42,8 @@ def calcular_promedio_tiro(valores):
     
     return promedio
 
-
-valores_tiro = {
-    'goles_anotados': 10,
-    'tiros_totales': 10,
-    'tiros_al_arco': 10,
-    'penales_anotados': 4,
-    'penales_ejecutados': 4
-}
-
-# Llamada a la función y guardado del resultado
-promedio_tiro = calcular_promedio_tiro(valores_tiro)
-
-# Imprimimos el resultado para ver el promedio calculado
-print("El promedio de tiro es:", promedio_tiro)
-
-
 ###########################################################################################################################
-# calculos.py
+###########################################################################################################################
 
 def calcular_promedio_pase(valores):
     """
@@ -99,24 +83,9 @@ def calcular_promedio_pase(valores):
     
     return promedio
 
-# Diccionario de ejemplo con valores de estadísticas
-valores_pase = {
-    'pases_acertados': 30,
-    'pases_totales': 40,
-    'centros_acertados': 15,
-    'centros_totales': 20
-}
-
-# Llamada a la función y guardado del resultado
-promedio_pase = calcular_promedio_pase(valores_pase)
-
-# Imprimimos el resultado para ver el promedio calculado
-print("El promedio de pase es:", promedio_pase)
-
-
+################################################################################################################################
 ################################################################################################################################
 
-# calculos.py
 
 def calcular_promedio_velocidad(valores):
     """
@@ -148,19 +117,8 @@ def calcular_promedio_velocidad(valores):
     
     return promedio
 
-valores_velocidad = {
-    'sprint_kmh': 36,
-    'aceleracion_kmh': 30
-}
-
-# Llamada a la función y guardado del resultado
-promedio_velocidad = calcular_promedio_velocidad(valores_velocidad)
-
-# Imprimimos el resultado para ver el promedio calculado
-print("El promedio de velocidad es:", promedio_velocidad)
-
-############################################################################################################################################################
-
+################################################################################################################################
+################################################################################################################################
 def calcular_promedio_regate(valores):
     """
     Calcula el promedio de regate basado en las estadísticas provistas y limita el resultado a un máximo de 100.
@@ -198,19 +156,9 @@ def calcular_promedio_regate(valores):
         promedio = 100
     
     return promedio
-valores_regate = {
-    'regates_exitosos': 18,
-    'regates_intentos': 20,
-    'duelos_ganados': 15,
-    'duelos_intentos': 20
-}
 
-# Llamada a la función y guardado del resultado
-promedio_regate = calcular_promedio_regate(valores_regate)
-
-# Imprimimos el resultado para ver el promedio calculado
-print("El promedio de regate es:", promedio_regate)
-############################################################################################################################################################
+################################################################################################################################
+################################################################################################################################
 
 def calcular_promedio_defensa(valores):
     """
@@ -250,20 +198,9 @@ def calcular_promedio_defensa(valores):
     
     return promedio
 
-valores_defensa = {
-    'intercepciones_exitosas': 15,
-    'intercepciones_intentos': 20,
-    'despejes_exitosos': 10,
-    'despejes_intentos': 12
-}
+################################################################################################################################
+################################################################################################################################
 
-# Llamada a la función y guardado del resultado
-promedio_defensa = calcular_promedio_defensa(valores_defensa)
-
-# Imprimimos el resultado para ver el promedio calculado
-print("El promedio de defensa es:", promedio_defensa)
-
-############################################################################################################################################################
 def calcular_promedio_fisico(valores):
     """
     Calcula el promedio físico basado en las estadísticas provistas y limita el resultado a un máximo de 100.
@@ -306,23 +243,10 @@ def calcular_promedio_fisico(valores):
     
     return promedio
 
-valores_fisico = {
-    'salto_evaluado': 90,
-    'distancia_recorrida': 800,
-    'sprints_realizados': 12,
-    'fuerza_explosiva_evaluada': 180,
-    'fuerza_isometrica_evaluada': 150,
-    'resistencia_evaluada': 20
-}
+################################################################################################################################
+################################################################################################################################
 
-# Llamada a la función y guardado del resultado
-promedio_fisico = calcular_promedio_fisico(valores_fisico)
-
-# Imprimimos el resultado para ver el promedio calculado
-print("El promedio físico es:", promedio_fisico)
-
-############################################################################################################################################################
-
+#ESTADISTICAS PARA ARQUERO
 def calcular_promedio_reflejos(valores):
     """
     Calcula el promedio de reflejos basado en las estadísticas provistas y limita el resultado a un máximo de 100.
@@ -436,36 +360,3 @@ def calcular_promedio_saque(valores):
     ) / 2 * 100
     
     return min(promedio, 100)  # Limitar a 100
-
-valores_reflejos = {
-    'penales_atajados': 3,
-    'penales_recibidos': 5,
-    '1v1_ganados': 7,
-    '1v1_intentos': 10,
-    'atajadas_criticas': 4,
-    'tiros_bloqueados': 6
-}
-valores_manejo = {
-    'tiros_bloqueados': 10,
-    'tiros_al_arco': 15,
-    'despejes_exitosos': 8,
-    'despejes_totales': 10,
-    'atrapes_sin_rebote': 6,
-    'balones_atrapados': 8
-}
-valores_saque = {
-    'saques_largos_exitosos': 5,
-    'saques_largos_totales': 8,
-    'saques_cortos_exitosos': 4,
-    'saques_cortos_totales': 6
-}
-
-# Llamada a las funciones y resultado
-promedio_reflejos = calcular_promedio_reflejos(valores_reflejos)
-promedio_manejo = calcular_promedio_manejo(valores_manejo)
-promedio_saque = calcular_promedio_saque(valores_saque)
-
-# Imprimimos los resultados
-print("Promedio Reflejos:", promedio_reflejos)
-print("Promedio Manejo:", promedio_manejo)
-print("Promedio Saque:", promedio_saque)
