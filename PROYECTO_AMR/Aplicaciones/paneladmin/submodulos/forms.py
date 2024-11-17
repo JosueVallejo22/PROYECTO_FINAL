@@ -43,21 +43,32 @@ class EstadisticaForm(forms.ModelForm):
         model = Estadistica
         fields = [
             'estadistica',
-            'cualidad',
         ]
         widgets = {
-            'estadistica': forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Ingrese el nombre de la estadistica.'}),
-            'cualidad': forms.Select(attrs={'class':'form-control'}),
+            'estadistica': forms.Select(choices=Estadistica.ESTADISTICA_CHOICES, attrs={'class':'form-control'}),
         }
 
         labels = {
             'estadistica': 'ESTADISTICA',
-            'cualidad': 'CUALIDAD'
         }
 
     def __init__(self, *args, **kwargs):
         super(EstadisticaForm, self).__init__(*args, **kwargs)
-        self.fields['cualidad'].queryset = Cualidad.objects.filter(estado=True)
+
+        # Obtener estadísticas ya registradas
+        registered_stats = Estadistica.objects.values_list('estadistica', flat=True)
+
+        # Filtrar estadísticas disponibles
+        available_stats = [
+            (stat[0], stat[1]) for stat in Estadistica.ESTADISTICA_CHOICES
+            if stat[0] not in registered_stats
+        ]
+
+        # Actualizar opciones del campo estadistica
+        self.fields['estadistica'].widget.choices = available_stats
+
+        self.fields['estadistica'].label = "Seleccione la Estadística"
+
 
         
     def clean_estadistica(self):
@@ -65,7 +76,6 @@ class EstadisticaForm(forms.ModelForm):
         if self.instance and Estadistica.objects.filter(estadistica=estadistica).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError('LA ESTADISTICA INGRESADA YA EXISTE.')
         return estadistica
-
 
 ######
 #MANTENIMIENTO POSICION

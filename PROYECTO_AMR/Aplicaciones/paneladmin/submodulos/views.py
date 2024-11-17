@@ -112,7 +112,7 @@ class CualidadListView(ListView):
     template_name = 'mantenimiento_cualidades.html'
     context_object_name = 'cualidades'
     queryset = Cualidad.objects.all().order_by('-estado','cualidad')
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         query = self.request.GET.get('q')
@@ -173,11 +173,14 @@ class ActivarInactivarCualidad(View):
         cualidad.estado = not cualidad.estado  # Invierte el valor de estado
         cualidad.save()
         save_audit(self.request, cualidad, action='M')
-        messages.success(request, "Estado del rol actualizado exitosamente.")
+        messages.success(request, "Estado de la cualidad actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_cualidades')
 
 ###############################################################################################
 ### MANTENIMIENTO ESTADISTICAS ###
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+
 @method_decorator(admin_required, name='dispatch')
 class EstadisticasListView(ListView):
     model = Estadistica
@@ -193,7 +196,7 @@ class EstadisticasListView(ListView):
 
         if search_query:
             queryset = queryset.filter(
-                Q(estadistica__icontains=search_query)  # Cambia 'nombre' al campo adecuado en el modelo Estadistica
+                Q(estadistica__icontains=search_query)
             )
 
         if cualidad_filter:
@@ -201,11 +204,10 @@ class EstadisticasListView(ListView):
 
         return queryset
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = EstadisticaForm()
-        context['cualidades'] = Cualidad.objects.all().order_by('cualidad')  # Para el select de cualidades
+        context['form'] = EstadisticaForm()  # Formulario actualizado
+        context['cualidades'] = Cualidad.objects.all().order_by('id')  # Para el select de cualidades
         context['search'] = self.request.GET.get('search', '')
         context['cualidad_selected'] = self.request.GET.get('cualidad', '')
         return context
@@ -217,19 +219,19 @@ class EstadisticasCreateView(CreateView):
     form_class = EstadisticaForm
     template_name = 'mantenimiento_estadisticas.html'
     success_url = reverse_lazy('submodulos:mantenimiento_estadisticas')
-    
+
+    def form_valid(self, form):
+        # No necesitas manejar `cualidad` aquí, ya que se asigna automáticamente en el modelo.
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['estadisticas'] = Estadistica.objects.all().order_by('cualidad')
+        context['form'] = self.get_form()
+        context['cualidades'] = Cualidad.objects.all().order_by('id')  # Select de cualidades
         return context
-    
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        save_audit(self.request, self.object, action='A')
-        messages.success(self.request, 'Estadistica registrada exitosamente')
-        return response
-    
+
+
 @method_decorator(admin_required, name='dispatch')
 class EstadisticaUpdateView(UpdateView):
     model = Estadistica
@@ -237,16 +239,16 @@ class EstadisticaUpdateView(UpdateView):
     template_name = 'mantenimiento_estadisticas.html'
     success_url = reverse_lazy('submodulos:mantenimiento_estadisticas')
 
+    def form_valid(self, form):
+        # La asignación automática de `cualidad` ya está manejada en el modelo.
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['estadisticas'] = Estadistica.objects.all().order_by('cualidad')
+        context['form'] = self.get_form()
+        context['cualidades'] = Cualidad.objects.all().order_by('id')  # Select de cualidades
         return context
-    
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        save_audit(self.request, self.object, action='M')
-        messages.success(self.request, 'Estadistica modificada exitosamente')
-        return response
 
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarEstadistica(View):
@@ -254,9 +256,10 @@ class ActivarInactivarEstadistica(View):
         estadistica = get_object_or_404(Estadistica, pk=pk)
         estadistica.estado = not estadistica.estado
         estadistica.save()
-        save_audit(self.request, estadistica, action='M')
-        messages.success(request, "Estado de la Estadistica actualizado exitosamente.")
+        save_audit(request, estadistica, action='M')
+        messages.success(request, "Estado de la Estadística actualizado exitosamente.")
         return redirect('submodulos:mantenimiento_estadisticas')
+
 
 ###################################################################
 # MANTENIMIENTO POSICION
@@ -554,7 +557,7 @@ class ListaCambios(ListView):
     model = AuditoriaUsuario
     template_name = 'historial_cambios.html'
     context_object_name = 'auditoria'
-    paginate_by = 10
+    paginate_by = 15
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('-fecha', '-hora')

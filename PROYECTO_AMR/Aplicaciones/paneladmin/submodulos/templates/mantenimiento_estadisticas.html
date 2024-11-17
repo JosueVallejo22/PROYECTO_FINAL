@@ -12,15 +12,12 @@
             <a href="{% url 'submodulos:menu_submodulos' %}" class="btn btn-danger mb-3 fw-bold">REGRESAR</a>
         </div>
 
-
-
-        
         <!-- Tarjeta para el formulario de creación o edición -->
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header bg-success">
                     <h2 class="mb-0 fw-bold text-center mt-2 text-white">
-                        {% if object %}Editar Estadistica{% else %}Registrar Nueva Estadistica{% endif %}
+                        {% if object %}Editar Estadística{% else %}Registrar Nueva Estadística{% endif %}
                     </h2>
                 </div>
                 <div class="card-body">
@@ -38,19 +35,19 @@
                                 </ul>
                             </div>
                         {% endif %}
-                    
 
+                        <!-- Select de estadísticas -->
                         <div class="form-group mb-3">
-                            <label for="id_estadistica">Nombre de la Estadistica</label>
+                            <label for="id_estadistica">Seleccione una Estadística</label>
                             {{ form.estadistica }}
-                        </div>                        
+                        </div>
+
+                        <!-- Input para mostrar la cualidad asociada -->
                         <div class="form-group mb-3">
-                            <label for="id_cualidad">Cualidad</label>
-                            {{ form.cualidad }}
-                            {% if form.cualidad.errors %}
-                                <div class="alert alert-danger mt-2">{{ form.cualidad.errors }}</div>
-                            {% endif %}
-                        </div>                        
+                            <label>Cualidad Asociada</label>
+                            <input type="text" id="cualidadInput" class="form-control" readonly>
+                        </div>
+
                         <button type="submit" class="btn btn-success btn-block">
                             {% if object %}Actualizar{% else %}Registrar{% endif %}
                         </button>
@@ -62,10 +59,11 @@
             </div>
         </div>
 
+        <!-- Tabla de estadísticas registradas -->
         <div class="col-md-8 mb-3">
             <div class="card mb-5">
                 <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Estadisticas Registrados</h2>
+                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Estadísticas Registradas</h2>
                 </div>
                 <div class="card-body">
                     <!-- Formulario de búsqueda y filtro -->
@@ -89,11 +87,12 @@
                         </div>
                     </form>
 
+                    <!-- Tabla de estadísticas -->
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Estadistica</th>
+                                    <th>Estadística</th>
                                     <th>Cualidad</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
@@ -117,41 +116,123 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <!-- Paginación -->
-                        <div class="d-flex justify-content-center">
-                            {% if is_paginated %}
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination">
-                                    {% if page_obj.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                    {% endif %}
+                    </div>
 
-                                    {% for object in paginator.page_range %}
-                                    <li class="page-item {% if object == page_obj.number %}active{% endif %}">
-                                        <a class="page-link" href="?page={{ object }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}">{{ object }}</a>
-                                    </li>
-                                    {% endfor %}
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center">
+                        {% if is_paginated %}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
 
-                                    {% if page_obj.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </nav>
-                            {% endif %}
-                        </div>
+                                {% for object in paginator.page_range %}
+                                <li class="page-item {% if object == page_obj.number %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ object }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}">{{ object }}</a>
+                                </li>
+                                {% endfor %}
 
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- JavaScript para cargar la cualidad automáticamente usando constantes -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mapeo de estadísticas a cualidades de forma estática
+        const estadisticasCualidades = {
+            // Cualidad Tiro
+            'TIROS TOTALES': 'Tiro',
+            'TIROS AL ARCO': 'Tiro',
+            'GOLES ANOTADOS': 'Tiro',
+            'PENALES EJECUTADOS': 'Tiro',
+            'PENALES ANOTADOS': 'Tiro',
+            
+            // Cualidad Pase
+            'PASES TOTALES': 'Pase',
+            'PASES ACERTADOS': 'Pase',
+            'CENTROS TOTALES': 'Pase',
+            'CENTROS ACERTADOS': 'Pase',
+            
+            // Cualidad Velocidad
+            'SPRINT': 'Velocidad',
+            'ACELERACION': 'Velocidad',
+            
+            // Cualidad Regate
+            'REGATES TOTALES': 'Regate',
+            'REGATES EXITOSOS': 'Regate',
+            'DUELOS TOTALES': 'Regate',
+            'DUELOS EXITOSOS': 'Regate',
+            
+            // Cualidad Defensa
+            'INTERCEPCIONES INTENTOS': 'Defensa',
+            'INTERCEPCIONES EXITOSAS': 'Defensa',
+            'DESPEJES INTENTOS': 'Defensa',
+            'DESPEJES EXITOSOS': 'Defensa',
+            'DUELOS DEFENSIVOS TOTALES': 'Defensa',
+            'DUELOS DEFENSIVOS GANADOS': 'Defensa',
+            
+            // Cualidad Fisico
+            'SALTO EVALUADO': 'Fisico',
+            'DISTANCIA RECORRIDA': 'Fisico',
+            'SPRINTS REALIZADOS': 'Fisico',
+            'FUERZA EXPLOSIVA EVALUADA': 'Fisico',
+            'FUERZA ISOMETRICA EVALUADA': 'Fisico',
+            'FUERZA RESISTENCIA EVALUADA': 'Fisico',
+            
+            // Cualidad Manejo
+            'TIROS TOTALES RECIBIDOS': 'Manejo',
+            'TIROS BLOQUEADOS MANEJO': 'Manejo',
+            'DESPEJES TOTALES': 'Manejo',
+            'DESPEJES EXITOSOS': 'Manejo',
+            'BALONES ATRAPADOS': 'Manejo',
+            'ATRAPES SIN REBOTE': 'Manejo',
+            
+            // Cualidad Reflejo
+            'PENALES RECIBIDOS': 'Reflejos',
+            'PENALES ATAJADOS': 'Reflejos',
+            '1V1 TOTALES': 'Reflejos',
+            '1V1 GANADOS': 'Reflejos',
+            'TIROS BLOQUEADOS REFLEJOS': 'Reflejos',
+            'ATAJADAS CRITICAS REFLEJOS': 'Reflejos',
+
+            // Cualidad Saque
+            'SAQUES LARGOS INTENTOS': 'Saque',
+            'SAQUES LARGOS EXITOSOS': 'Saque',
+            'SAQUES CORTOS INTENTOS': 'Saque',
+            'SAQUES CORTOS EXITOSOS': 'Saque',
+            // Agrega más estadísticas aquí si es necesario
+        };
+
+        const estadisticaSelect = document.getElementById('id_estadistica');
+        const cualidadInput = document.getElementById('cualidadInput');
+
+        // Escuchar cambios en el select de estadísticas
+        estadisticaSelect.addEventListener('change', function() {
+            const estadisticaSeleccionada = estadisticaSelect.value;
+            cualidadInput.value = estadisticasCualidades[estadisticaSeleccionada] || '';
+        });
+
+        // Inicializar el campo de cualidad con la estadística seleccionada al cargar
+        cualidadInput.value = estadisticasCualidades[estadisticaSelect.value] || '';
+    });
+</script>
 {% endblock %}

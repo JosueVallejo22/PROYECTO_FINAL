@@ -26,3 +26,6 @@ class Jugador(models.Model):
         if (hoy.month, hoy.day) < (self.fecha_nac.month, self.fecha_nac.day):
             edad -= 1
         return edad
+    
+    def __str__(self):
+        return self.nombre
