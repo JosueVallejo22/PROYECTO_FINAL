@@ -65,7 +65,7 @@ class CargarCualidadesView(View):
             puesto = jugador.puesto  # Obtener el puesto del jugador
 
             # Verificar si el jugador tiene puesto y posición asociados
-            puesto_nombre = puesto.puesto if puesto else "Sin puesto asignado"
+            puesto_nombre = puesto.abreviatura if puesto else "Sin puesto asignado"
             posicion_nombre = puesto.posicion.posicion if puesto and puesto.posicion else "Sin posición asignada"
 
             # Filtrar cualidades asociadas al puesto del jugador
