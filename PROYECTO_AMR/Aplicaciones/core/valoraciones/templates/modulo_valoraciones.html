@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 {% block title %} Modulo Valoraciones {% endblock %}
@@ -6,7 +7,7 @@
     <div class="row">
         <!-- Botón para agregar un nuevo registro-->
         <div class="col-md-12 mb-3 text-right">
-            <a href="{% url 'valoraciones:formulario_valoraciones' %}" class="btn btn-success fw-bold">GENERAR NUEVA VALORACION</a>
+            <a href="{% url 'valoraciones:generar_valoracion' %}" class="btn btn-success fw-bold">GENERAR NUEVA VALORACION</a>
             
             <a href="{% url 'core:menu' %}" class="btn btn-danger fw-bold">REGRESAR</a>
             

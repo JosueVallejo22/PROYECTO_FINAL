@@ -1,62 +1,94 @@
 from django.shortcuts import render
-from django.views.generic import *
+from django.views.generic import TemplateView, View
 from Aplicaciones.core.models import Jugador
 from Aplicaciones.core.valoraciones.models import *
 from Aplicaciones.paneladmin.submodulos.models import *
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from Aplicaciones.core.valoraciones.forms import *
-# Create your views here.
+from django.utils.timezone import now
 
-class SeleccionJugadorView(FormView):
-    """
-    Vista para seleccionar un jugador.
-    """
-    template_name = "form_valoraciones.html"
-    form_class = SeleccionJugadorForm
+# Vista para el módulo principal de valoraciones
+class ModuloValoracionesView(TemplateView):
+    template_name = "modulo_valoraciones.html"
 
-    def form_valid(self, form):
-        jugador_id = form.cleaned_data["jugador"].id
-        return redirect("valoracion_jugador", jugador_id=jugador_id)
+class GenerarValoracionView(TemplateView):
+    template_name = "valoracion_formulario.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-def valorar_jugador(request, jugador_id):
-    """
-    Vista para mostrar las estadísticas y cualidades relacionadas con el jugador seleccionado.
-    """
-    jugador = get_object_or_404(Jugador, id=jugador_id)
+        # Obtener jugadores activos
+        jugadores = Jugador.objects.filter(estado=True)
 
-    # Obtener las cualidades asociadas al puesto del jugador
-    puesto = jugador.puesto
-    cualidades = PuestoCualidad.objects.filter(puesto=puesto).select_related("cualidad")
+        # Obtener la fecha actual
+        fecha_actual = now().date()
 
-    # Obtener las estadísticas asociadas a esas cualidades
-    estadisticas = Estadistica.objects.filter(cualidad__in=cualidades.values_list("cualidad", flat=True))
+        # Procesar cualidades y estadísticas relacionadas
+        cualidades = []
+        max_estadisticas = 0
 
-    if request.method == "POST":
-        form = EstadisticasValoracionForm(request.POST, estadisticas=estadisticas)
-        if form.is_valid():
-            # Crear la valoración
-            valoracion = Valoracion.objects.create(jugador=jugador, descripcion="Valoración generada")
+        for pc in PuestoCualidad.objects.all():
+            estadisticas = list(
+                Estadistica.objects.filter(cualidad=pc.cualidad, estado=True)
+                .values_list('estadistica', flat=True)
+            )
+            cualidades.append({
+                "cualidad": pc.cualidad.cualidad,
+                "estadisticas": estadisticas
+            })
+            max_estadisticas = max(max_estadisticas, len(estadisticas))
 
-            # Guardar los detalles de la valoración
-            for field_name, valor in form.cleaned_data.items():
-                if field_name.startswith("estadistica_") and valor is not None:
-                    estadistica_id = int(field_name.split("_")[1])
-                    estadistica = get_object_or_404(Estadistica, id=estadistica_id)
-                    ValoracionDetalle.objects.create(
-                        valoracion=valoracion,
-                        estadistica=estadistica,
-                        valor=valor,
-                    )
+        # Crear una estructura de filas para la tabla
+        filas = []
+        for i in range(max_estadisticas):
+            fila = []
+            for cualidad in cualidades:
+                if i < len(cualidad['estadisticas']):
+                    fila.append(cualidad['estadisticas'][i])
+                else:
+                    fila.append(None)
+            filas.append(fila)
 
-            return redirect("valoracion_exitosa")  # Redirige a una página de éxito
-    else:
-        form = EstadisticasValoracionForm(estadisticas=estadisticas)
+        # Agregar datos al contexto
+        context.update({
+            'jugadores': jugadores,
+            'fecha_actual': fecha_actual,
+            'cualidades': cualidades,
+            'filas': filas,  # Fila organizada con estadísticas
+        })
+        return context
 
-    context = {
-        "jugador": jugador,
-        "cualidades": cualidades,
-        "form": form,
-    }
-    return render(request, "form_valoraciones_detalle.html", context)
+class CargarCualidadesView(View):
+    def get(self, request, jugador_id):
+        try:
+            # Obtener el jugador seleccionado
+            jugador = Jugador.objects.get(id=jugador_id, estado=True)
+            puesto = jugador.puesto  # Obtener el puesto del jugador
+
+            # Verificar si el jugador tiene puesto y posición asociados
+            puesto_nombre = puesto.puesto if puesto else "Sin puesto asignado"
+            posicion_nombre = puesto.posicion.posicion if puesto and puesto.posicion else "Sin posición asignada"
+
+            # Filtrar cualidades asociadas al puesto del jugador
+            puesto_cualidades = PuestoCualidad.objects.filter(puesto=puesto, estado=True)
+
+            # Preparar las cualidades y las estadísticas asociadas
+            cualidades = []
+            for pc in puesto_cualidades:
+                estadisticas = Estadistica.objects.filter(cualidad=pc.cualidad, estado=True)
+                cualidades.append({
+                    "cualidad": pc.cualidad.cualidad,  # Nombre de la cualidad
+                    "estadisticas": [
+                        {"nombre": est.estadistica} for est in estadisticas
+                    ],  # Lista de estadísticas asociadas
+                })
+
+            # Preparar respuesta JSON
+            data = {
+                "puesto": f"{puesto_nombre} - {posicion_nombre}",
+                "cualidades": cualidades,
+            }
+            return JsonResponse(data)
+        except Jugador.DoesNotExist:
+            return JsonResponse({"error": "Jugador no encontrado."}, status=404)
+        except Exception as e:
+            return JsonResponse({"error": f"Error inesperado: {str(e)}"}, status=500)

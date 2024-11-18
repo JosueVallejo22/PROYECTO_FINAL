@@ -1,10 +1,11 @@
 from django.urls import path
 from Aplicaciones.core.valoraciones.views import *
 
-app_name = 'valoraciones'
+app_name = "valoraciones"
 
 urlpatterns = [
-    # path('modulo_valoraciones/', ValoracionesView.as_view(), name='valoraciones'),
-    path('formulario-valoracion/', FormularioValoracionView.as_view(), name='formulario_valoracion'),
+    path('menu/valoraciones/', ModuloValoracionesView.as_view(), name='modulo_valoraciones'),
+    path('menu/valoraciones/nueva/', GenerarValoracionView.as_view(), name='generar_valoracion'),
+    path('cargar-cualidades/<int:jugador_id>/', CargarCualidadesView.as_view(), name='cargar_cualidades'),
 
 ]

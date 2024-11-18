@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Formulario de Valoración{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-success text-white text-center">
+            <h4>Formulario de Valoración</h4>
+        </div>
+        <div class="card-body">
+            <form id="valoracion-form" method="post">
+                {% csrf_token %}
+
+                <!-- Cabecera del formulario -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="jugador" class="form-label">Jugador</label>
+                        <select id="jugador" class="form-control">
+                            <option value="">-- Seleccione un jugador --</option>
+                            {% for jugador in jugadores %}
+                                <option value="{{ jugador.id }}">{{ jugador.nombre }} {{ jugador.apellido }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="puesto" class="form-label">Puesto</label>
+                        <input type="text" id="puesto" class="form-control" placeholder="Puesto del jugador" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fecha" class="form-label">Fecha</label>
+                        <input type="text" id="fecha" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="hora" class="form-label">Hora</label>
+                        <input type="text" id="hora" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <!-- Cabecera para cualidades -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <div class="row" id="cualidades-container">
+                            <p class="text-center">Seleccione un jugador para ver sus cualidades.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cabecera para las estadísticas -->
+                <div class="card mt-4">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5>Detalle de Estadísticas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="accordionEstadisticas">
+                            <p class="text-center">Seleccione un jugador para cargar las estadísticas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-success btn-lg fw-bold" id="guardar-btn" disabled>Guardar Valoración</button>
+                        <a href="{% url 'valoraciones:modulo_valoraciones' %}" class="btn btn-danger btn-lg fw-bold">Regresar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/valoracion.js' %}"></script>
+{% endblock %}
