@@ -1,106 +1,21 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}Formulario de Valoración{% endblock %}
+{% extends "base.html" %}
+{% block title %}Seleccionar Jugador{% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <!-- Cabecera del formulario -->
-    <div class="card mb-4">
-        <div class="card-header bg-success">
-            <h2 class="mb-0 fw-bold text-center mt-2 text-white">Formulario de Valoración</h2>
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h2>Seleccionar Jugador</h2>
         </div>
         <div class="card-body">
-            <div class="row mb-3">
-                <!-- Campo de búsqueda o selección de jugador -->
-                <div class="col-md-4">
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="mb-3">
                     <label for="jugador" class="form-label fw-bold">Jugador</label>
-                    <input type="text" class="form-control" id="jugador" placeholder="Buscar jugador por nombre">
-                    <!-- Alternativa: <select class="form-control" id="jugador_select"> -->
+                    {{ form.jugador }}
                 </div>
-                
-                <!-- Campo de fecha de creación (solo lectura) -->
-                <div class="col-md-4">
-                    <label for="fecha_creacion" class="form-label fw-bold">Fecha de Creación</label>
-                    <input type="text" class="form-control" id="fecha_creacion" value="14/11/2024" readonly>
-                </div>
-
-                <!-- Campo de fecha de actualización (solo lectura) -->
-                <div class="col-md-4">
-                    <label for="fecha_actualizacion" class="form-label fw-bold">Fecha de Actualización</label>
-                    <input type="text" class="form-control" id="fecha_actualizacion" value="14/11/2024" readonly>
-                </div>
-            </div>
-
-            <!-- Campos de cualidades (solo lectura) -->
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label for="promedio_tiro" class="form-label fw-bold">Promedio Tiro</label>
-                    <input type="text" class="form-control" id="promedio_tiro" value="-" readonly>
-                </div>
-                <div class="col-md-3">
-                    <label for="promedio_pase" class="form-label fw-bold">Promedio Pase</label>
-                    <input type="text" class="form-control" id="promedio_pase" value="-" readonly>
-                </div>
-                <div class="col-md-3">
-                    <label for="promedio_velocidad" class="form-label fw-bold">Promedio Velocidad</label>
-                    <input type="text" class="form-control" id="promedio_velocidad" value="-" readonly>
-                </div>
-                <div class="col-md-3">
-                    <label for="promedio_total" class="form-label fw-bold">Promedio Total</label>
-                    <input type="text" class="form-control" id="promedio_total" value="-" readonly>
-                </div>
-            </div>
+                <button type="submit" class="btn btn-primary">Continuar</button>
+            </form>
         </div>
-    </div>
-
-    <!-- Detalle del formulario (estadísticas a llenar) -->
-    <div class="card mb-5">
-        <div class="card-header bg-success">
-            <h3 class="mb-0 fw-bold text-center mt-2 text-white">Detalle de Estadísticas</h3>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr class="text-center">
-                            <th class="py-1 px-2">#</th>
-                            <th class="py-1 px-2">Cualidad</th>
-                            <th class="py-1 px-2">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Datos quemados de ejemplo para las cualidades -->
-                        <tr class="text-center">
-                            <td>1</td>
-                            <td>Tiros Totales</td>
-                            <td><input type="number" class="form-control" placeholder="Ingresar valor"></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td>2</td>
-                            <td>Goles Anotados</td>
-                            <td><input type="number" class="form-control" placeholder="Ingresar valor"></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td>3</td>
-                            <td>Pases Totales</td>
-                            <td><input type="number" class="form-control" placeholder="Ingresar valor"></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td>4</td>
-                            <td>Pases Acertados</td>
-                            <td><input type="number" class="form-control" placeholder="Ingresar valor"></td>
-                        </tr>
-                        <!-- Agrega más filas de cualidades según sea necesario -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Botón de guardar al final del formulario -->
-    <div class="col-md-12 text-center">
-        <button class="btn btn-success btn-lg fw-bold">Guardar Valoración</button>        
-        <a href="{% url 'core:menu' %}" class="btn btn-danger fw-bold">REGRESAR</a>
-        
     </div>
 </div>
 {% endblock %}

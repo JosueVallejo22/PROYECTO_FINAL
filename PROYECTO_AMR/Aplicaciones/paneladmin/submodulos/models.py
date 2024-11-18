@@ -213,12 +213,12 @@ class PuestoCualidad(models.Model):
     estado = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.puesto} {self.estadistica} - {self.estado}"
+        return f"{self.puesto} {self.cualidad} - {self.estado}"
     
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['puesto', 'cualidad'], name='unique_puesto_cualidad')
         ]
-        verbose_name_plural = "Puestos - Estadisticas"
+        verbose_name_plural = "Puestos - Cualidades"
 
     
