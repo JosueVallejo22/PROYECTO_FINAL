@@ -7,5 +7,4 @@ urlpatterns = [
     path('menu/valoraciones/', ModuloValoracionesView.as_view(), name='modulo_valoraciones'),
     path('menu/valoraciones/nueva/', GenerarValoracionView.as_view(), name='generar_valoracion'),
     path('cargar-cualidades/<int:jugador_id>/', CargarCualidadesView.as_view(), name='cargar_cualidades'),
-
 ]
