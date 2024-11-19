@@ -46,33 +46,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Función para actualizar los campos de la cabecera con los cálculos
-    function actualizarCabecera(cualidades) {
-        cualidades.forEach(cualidad => {
-            const input = document.getElementById(`calculo_${cualidad.cualidad}`);
-            if (input) {
-                input.value = cualidad.valor.toFixed(2); // Mostrar valor con dos decimales
-            }
+    function actualizarCabecera() {
+        const valores = {};
+
+        // Obtener las estadísticas ingresadas
+        document.querySelectorAll('.estadistica-input').forEach(input => {
+            // Solo agregar valores numéricos
+            valores[input.name] = parseFloat(input.value) || 0;
         });
+
+        const calculoPase = calcularPromedioPase(valores);
+        const calculoTiro = calcularPromedioTiro(valores);
+
+        // Actualizar cabecera con los valores calculados
+        document.getElementById("calculo_PASE").value = calculoPase.toFixed(2);
+        document.getElementById("calculo_TIROS").value = calculoTiro.toFixed(2);
     }
 
     // Evento para manejar el ingreso de las estadísticas
     document.getElementById("valoracion-form").addEventListener("input", function () {
-        let valores = {};
-
-        // Obtener las estadísticas ingresadas
-        document.querySelectorAll('.estadistica-input').forEach(input => {
-            valores[input.name] = parseFloat(input.value) || 0;
-        });
-
-        // Realizar los cálculos para cada cualidad
-        const cualidades = [
-            { cualidad: "Pase", valor: calcularPromedioPase(valores) },
-            { cualidad: "Tiro", valor: calcularPromedioTiro(valores) }
-            // Agregar más cualidades según sea necesario
-        ];
-
-        // Actualizar la cabecera con los valores calculados
-        actualizarCabecera(cualidades);
+        actualizarCabecera();
     });
 
     // Manejar cambios al seleccionar un jugador

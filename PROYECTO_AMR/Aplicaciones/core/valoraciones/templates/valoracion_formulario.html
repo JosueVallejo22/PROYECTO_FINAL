@@ -19,6 +19,8 @@
                             <option value="">-- Seleccione un jugador --</option>
                             {% for jugador in jugadores %}
                                 <option value="{{ jugador.id }}">{{ jugador.nombre }} {{ jugador.apellido }}</option>
+                            {% empty %}
+                                <option value="">No hay jugadores disponibles</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -28,24 +30,24 @@
                     </div>
                     <div class="col-md-3">
                         <label for="fecha" class="form-label">Fecha</label>
-                        <input type="text" id="fecha" class="form-control" readonly>
+                        <input type="text" id="fecha" class="form-control" readonly value="{{ fecha_actual }}">
                     </div>
                     <div class="col-md-3">
                         <label for="hora" class="form-label">Hora</label>
-                        <input type="text" id="hora" class="form-control" readonly>
+                        <input type="text" id="hora" class="form-control" readonly value="{{ hora_actual }}">
                     </div>
                 </div>
 
-                <!-- Cabecera para cualidades -->
+                <!-- Cálculos dinámicos en la cabecera -->
                 <div class="card mt-4">
                     <div class="card-body">
-                        <div class="row" id="cualidades-container">
-                            <p class="text-center">Seleccione un jugador para ver sus cualidades.</p>
+                        <div class="row" id="calculos-container">
+                            <p class="text-center">Seleccione un jugador para cargar los cálculos.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Cabecera para las estadísticas -->
+                <!-- Detalle de estadísticas -->
                 <div class="card mt-4">
                     <div class="card-header bg-success text-white text-center">
                         <h5>Detalle de Estadísticas</h5>
@@ -68,5 +70,5 @@
         </div>
     </div>
 </div>
-<script src="{% static 'js/valoracion.js' %}"></script>
+<script src="{% static 'js/calculos_estadisticas.js' %}"></script>
 {% endblock %}

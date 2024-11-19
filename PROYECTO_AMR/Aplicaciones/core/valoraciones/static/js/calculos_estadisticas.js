@@ -1,120 +1,237 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Función para calcular el promedio de tiro
-    function calcularPromedioTiro(valores) {
-        const { 'GOLES ANOTADOS': goles_anotados, 'TIROS TOTALES': tiros_totales, 'TIROS AL ARCO': tiros_al_arco, 'PENALES ANOTADOS': penales_anotados, 'PENALES EJECUTADOS': penales_ejecutados } = valores;
+    // Funciones de cálculo para cada cualidad
+    // Cálculo de Tiro
+function calcularPromedioTiro(valores) {
+    const { 'GOLES ANOTADOS': goles, 'TIROS TOTALES': tirosTotales, 'TIROS AL ARCO': tirosArco, 'PENALES ANOTADOS': penalesAnotados, 'PENALES EJECUTADOS': penalesTotales } = valores;
+    if (!tirosTotales || !tirosArco || !penalesTotales) return 0;
 
-        if (tiros_totales === 0 || tiros_al_arco === 0 || penales_ejecutados === 0) return 0;
+    let promedio = (
+        (goles / tirosTotales) +
+        (tirosArco / tirosTotales) +
+        ((goles / tirosArco) * 1.1) +
+        (penalesAnotados / penalesTotales)
+    ) / 4 * 100;
 
-        let promedio = (( 
-            (goles_anotados / tiros_totales) +
-            (tiros_al_arco / tiros_totales) +
-            ((goles_anotados / tiros_al_arco) * 1.1) +
-            (penales_anotados / penales_ejecutados)
-        ) / 4 ) * 100;
+    return Math.min(promedio, 100);
+}
 
-        return Math.min(promedio, 100);
+// Cálculo de Pase
+function calcularPromedioPase(valores) {
+    const { 'PASES ACERTADOS': pasesAcertados, 'PASES TOTALES': pasesTotales, 'CENTROS ACERTADOS': centrosAcertados, 'CENTROS TOTALES': centrosTotales } = valores;
+    if (!pasesTotales || !centrosTotales) return 0;
+
+    let promedio = (
+        (pasesAcertados / pasesTotales) +
+        (centrosAcertados / centrosTotales)
+    ) / 2 * 100;
+
+    return Math.min(promedio, 100);
+}
+
+// Cálculo de Velocidad
+function calcularPromedioVelocidad(valores) {
+    const { 'SPRINT': sprint, 'ACELERACION': aceleracion } = valores;
+
+    let promedio = (
+        (sprint / 42) +
+        (aceleracion / 35.28)
+    ) / 2 * 100;
+
+    return Math.min(promedio, 100);
+}
+
+// Cálculo de Regate
+function calcularPromedioRegate(valores) {
+    const { 'REGATES EXITOSOS': regatesExitosos, 'REGATES TOTALES': regatesTotales, 'DUELOS GANADOS': duelosGanados, 'DUELOS TOTALES': duelosTotales } = valores;
+    if (!regatesTotales || !duelosTotales) return 0;
+
+    let promedio = (
+        (regatesExitosos / regatesTotales) +
+        (duelosGanados / duelosTotales)
+    ) / 2 * 100;
+
+    return Math.min(promedio, 100);
+}
+
+// Cálculo de Defensa
+function calcularPromedioDefensa(valores) {
+    const { 'INTERCEPCIONES EXITOSAS': intercepcionesExitosas, 'INTERCEPCIONES INTENTOS': intercepcionesTotales, 'DESPEJES EXITOSOS': despejesExitosos, 'DESPEJES INTENTOS': despejesTotales } = valores;
+    if (!intercepcionesTotales || !despejesTotales) return 0;
+
+    let promedio = (
+        ((intercepcionesExitosas / intercepcionesTotales) * 1.1) +
+        (despejesExitosos / despejesTotales)
+    ) / 2 * 100;
+
+    return Math.min(promedio, 100);
+}
+
+// Cálculo de Físico
+function calcularPromedioFisico(valores) {
+    const { 'SALTO EVALUADO': salto, 'DISTANCIA RECORRIDA': distancia, 'SPRINTS REALIZADOS': sprints, 'FUERZA EXPLOSIVA EVALUADA': fuerzaExplosiva, 'FUERZA ISOMETRICA EVALUADA': fuerzaIsometrica, 'FUERZA RESISTENCIA EVALUADA': resistencia } = valores;
+
+    let promedio = (
+        (salto / 100) +
+        (distancia / 1000) +
+        (sprints / 15) +
+        (fuerzaExplosiva / 200) +
+        (fuerzaIsometrica / 180) +
+        (resistencia / 25)
+    ) / 6 * 100;
+
+    return Math.min(promedio, 100);
+}
+
+// Cálculo de Reflejos
+function calcularPromedioReflejos(valores) {
+    const { 'PENALES ATAJADOS': penalesAtajados, 'PENALES RECIBIDOS': penalesRecibidos, '1V1 GANADOS': unoVsUnoGanados, '1V1 TOTALES': unoVsUnoTotales, 'ATAJADAS CRITICAS REFLEJOS': atajadasCriticas, 'TIROS BLOQUEADOS REFLEJOS': tirosBloqueados } = valores;
+    if (!penalesRecibidos || !unoVsUnoTotales || !tirosBloqueados) return 0;
+
+    let promedio = (
+        (penalesAtajados / penalesRecibidos * 1.5) +
+        (unoVsUnoGanados / unoVsUnoTotales) +
+        (atajadasCriticas / tirosBloqueados)
+    ) / 3 * 100 * 1.1;
+
+    return Math.min(promedio, 100);
+}
+
+// Cálculo de Manejo
+function calcularPromedioManejo(valores) {
+    const { 'TIROS BLOQUEADOS MANEJO': tirosBloqueados, 'TIROS AL ARCO': tirosArco, 'DESPEJES EXITOSOS': despejesExitosos, 'DESPEJES TOTALES': despejesTotales, 'ATRAPES SIN REBOTE': atrapadasSinRebote, 'BALONES ATRAPADOS': balonesAtrapados } = valores;
+    if (!tirosArco || !despejesTotales || !balonesAtrapados) return 0;
+
+    let promedio = (
+        (tirosBloqueados / tirosArco) +
+        (despejesExitosos / despejesTotales) +
+        (atrapadasSinRebote / balonesAtrapados)
+    ) / 3 * 100 * 1.1;
+
+    return Math.min(promedio, 100);
+}
+
+// Cálculo de Saque
+function calcularPromedioSaque(valores) {
+    const { 'SAQUES LARGOS EXITOSOS': saquesLargosExitosos, 'SAQUES LARGOS INTENTOS': saquesLargosTotales, 'SAQUES CORTOS EXITOSOS': saquesCortosExitosos, 'SAQUES CORTOS INTENTOS': saquesCortosTotales } = valores;
+    if (!saquesLargosTotales || !saquesCortosTotales) return 0;
+
+    let promedio = (
+        (saquesLargosExitosos / saquesLargosTotales) +
+        (saquesCortosExitosos / saquesCortosTotales)
+    ) / 2 * 100;
+
+    return Math.min(promedio, 100);
+}
+
+
+    // Mapeo de cualidades a funciones de cálculo
+    const calculadores = {
+        'TIRO': calcularPromedioTiro,
+        'PASE': calcularPromedioPase,
+        'VELOCIDAD': calcularPromedioVelocidad,
+        'REGATE': calcularPromedioRegate,
+        'DEFENSA': calcularPromedioDefensa,
+        'FISICO': calcularPromedioFisico,
+        'REFLEJOS': calcularPromedioReflejos,
+        'MANEJO': calcularPromedioManejo,
+        'SAQUE': calcularPromedioSaque,
+    };
+
+    // Obtiene los valores actuales ingresados en las estadísticas
+    function obtenerValoresEstadisticas() {
+        const valores = {};
+        document.querySelectorAll('.estadistica-input').forEach(input => {
+            const estadisticaNombre = input.name.replace("estadistica_", "");
+            const valor = parseFloat(input.value) || 0;
+            valores[estadisticaNombre] = valor;
+        });
+        return valores;
     }
 
-    // Función para calcular el promedio de pase
-    function calcularPromedioPase(valores) {
-        const { 'PASES ACERTADOS': pases_acertados, 'PASES TOTALES': pases_totales, 'CENTROS ACERTADOS': centros_acertados, 'CENTROS TOTALES': centros_totales } = valores;
-
-        if (pases_totales === 0 || centros_totales === 0) return 0;
-
-        let promedio = (
-            (pases_acertados / pases_totales) +
-            (centros_acertados / centros_totales)
-        ) / 2 * 100;
-
-        return Math.min(promedio, 100);
-    }
-
-    // Función para calcular el promedio de velocidad
-    function calcularPromedioVelocidad(valores) {
-        const { 'SPRINT': sprint_kmh, 'ACELERACION': aceleracion_kmh } = valores;
-
-        let promedio = (
-            (sprint_kmh / 42) +
-            (aceleracion_kmh / 35.28)
-        ) / 2 * 100;
-
-        return Math.min(promedio, 100);
-    }
-
-    // Función para calcular el promedio de regate
-    function calcularPromedioRegate(valores) {
-        const { 'REGATES EXITOSOS': regates_exitosos, 'REGATES TOTALES': regates_intentos, 'DUELOS GANADOS': duelos_ganados, 'DUELOS TOTALES': duelos_intentos } = valores;
-
-        if (regates_intentos === 0 || duelos_intentos === 0) return 0;
-
-        let promedio = (
-            (regates_exitosos / regates_intentos) +
-            (duelos_ganados / duelos_intentos)
-        ) / 2 * 100;
-
-        return Math.min(promedio, 100);
-    }
-
-    // Función para calcular el promedio de defensa
-    function calcularPromedioDefensa(valores) {
-        const { 'INTERCEPCIONES EXITOSAS': intercepciones_exitosas, 'INTERCEPCIONES INTENTOS': intercepciones_intentos, 'DESPEJES EXITOSOS': despejes_exitosos, 'DESPEJES INTENTOS': despejes_intentos } = valores;
-
-        if (intercepciones_intentos === 0 || despejes_intentos === 0) return 0;
-
-        let promedio = (
-            ((intercepciones_exitosas / intercepciones_intentos) * 1.1) +
-            (despejes_exitosos / despejes_intentos)
-        ) / 2 * 100;
-
-        return Math.min(promedio, 100);
-    }
-
-    // Función para calcular el promedio físico
-    function calcularPromedioFisico(valores) {
-        const { 'SALTO EVALUADO': salto_evaluado, 'DISTANCIA RECORRIDA': distancia_recorrida, 'SPRINTS REALIZADOS': sprints_realizados, 'FUERZA EXPLOSIVA EVALUADA': fuerza_explosiva_evaluada, 'FUERZA ISOMETRICA EVALUADA': fuerza_isometrica_evaluada, 'FUERZA RESISTENCIA EVALUADA': resistencia_evaluada } = valores;
-
-        let promedio = (
-            (salto_evaluado / 100) +
-            (distancia_recorrida / 1000) +
-            (sprints_realizados / 15) +
-            (fuerza_explosiva_evaluada / 200) +
-            (fuerza_isometrica_evaluada / 180) +
-            (resistencia_evaluada / 25)
-        ) / 6 * 100;
-
-        return Math.min(promedio, 100);
-    }
-
-    // Función para actualizar los campos de la cabecera con los cálculos
-    function actualizarCabecera(cualidades) {
-        cualidades.forEach(cualidad => {
-            const input = document.getElementById(`calculo_${cualidad.cualidad}`);
-            if (input) {
-                input.value = cualidad.valor.toFixed(2);
+    // Actualiza los campos de las cualidades en la cabecera
+    function actualizarCabecera() {
+        const valores = obtenerValoresEstadisticas();
+        Object.keys(calculadores).forEach(cualidad => {
+            const calculador = calculadores[cualidad];
+            const promedio = calculador(valores);
+            const campo = document.getElementById(`calculo_${cualidad}`);
+            if (campo) {
+                campo.value = isNaN(promedio) ? "N/A" : promedio.toFixed(2);
             }
         });
     }
 
-    // Evento para manejar el ingreso de las estadísticas
-    document.getElementById("valoracion-form").addEventListener("input", function () {
-        let valores = {};
+    // Listener para cambios en los inputs de estadísticas
+    document.getElementById("valoracion-form").addEventListener("input", actualizarCabecera);
 
-        // Obtener las estadísticas ingresadas
-        document.querySelectorAll('.estadistica-input').forEach(input => {
-            valores[input.name] = parseFloat(input.value) || 0;
-        });
+    // Cargar cualidades y estadísticas al cambiar el jugador
+    document.getElementById("jugador").addEventListener("change", function () {
+        const jugadorId = this.value;
+        const puestoInput = document.getElementById("puesto");
+        const calculosContainer = document.getElementById("calculos-container");
+        const acordeon = document.getElementById("accordionEstadisticas");
+        const guardarBtn = document.getElementById("guardar-btn");
 
-        // Realizar los cálculos para cada cualidad
-        const cualidades = [
-            { cualidad: "Pase", valor: calcularPromedioPase(valores) },
-            { cualidad: "Tiro", valor: calcularPromedioTiro(valores) },
-            { cualidad: "Velocidad", valor: calcularPromedioVelocidad(valores) },
-            { cualidad: "Regate", valor: calcularPromedioRegate(valores) },
-            { cualidad: "Defensa", valor: calcularPromedioDefensa(valores) },
-            { cualidad: "Fisico", valor: calcularPromedioFisico(valores) },
-        ];
+        if (jugadorId) {
+            fetch(`/cargar-cualidades/${jugadorId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    puestoInput.value = data.puesto || "Sin puesto asignado";
+                    calculosContainer.innerHTML = '';
+                    acordeon.innerHTML = '';
 
-        // Actualizar la cabecera con los valores calculados
-        actualizarCabecera(cualidades);
+                    if (data.cualidades && data.cualidades.length > 0) {
+                        data.cualidades.forEach((cualidad, index) => {
+                            const cualidadHTML = `
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">${cualidad.cualidad}</label>
+                                    <input type="text" class="form-control" readonly id="calculo_${cualidad.cualidad}">
+                                </div>`;
+                            calculosContainer.insertAdjacentHTML("beforeend", cualidadHTML);
+
+                            const estadisticasHTML = cualidad.estadisticas.map((estadistica, idx) => `
+                                <tr>
+                                    <td>${idx + 1}</td>
+                                    <td>${estadistica.nombre}</td>
+                                    <td><input type="number" name="estadistica_${estadistica.nombre}" class="form-control estadistica-input"></td>
+                                </tr>`).join("");
+
+                            const acordeonHTML = `
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading${index}">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
+                                            ${cualidad.cualidad}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse${index}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <table class="table">
+                                                <tbody>${estadisticasHTML}</tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            acordeon.insertAdjacentHTML("beforeend", acordeonHTML);
+                        });
+
+                        guardarBtn.disabled = false;
+                    } else {
+                        calculosContainer.innerHTML = '<p>No hay cálculos disponibles para este jugador.</p>';
+                        guardarBtn.disabled = true;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al cargar datos:", error);
+                    puestoInput.value = "Error al cargar datos";
+                    calculosContainer.innerHTML = '<p class="text-center text-danger">Error al cargar cualidades.</p>';
+                    acordeon.innerHTML = '<p class="text-center text-danger">Error al cargar estadísticas.</p>';
+                    guardarBtn.disabled = true;
+                });
+        } else {
+            puestoInput.value = '';
+            calculosContainer.innerHTML = '<p>Seleccione un jugador para ver los cálculos.</p>';
+            guardarBtn.disabled = true;
+        }
     });
 });
+
