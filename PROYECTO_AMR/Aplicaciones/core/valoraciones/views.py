@@ -57,6 +57,7 @@ class CargarCualidadesView(View):
                 estadisticas = Estadistica.objects.filter(cualidad=pc.cualidad, estado=True)
                 cualidades.append({
                     "cualidad": pc.cualidad.cualidad,  # Nombre de la cualidad
+                    "peso": float(pc.peso),  # Convertir peso a float para el frontend
                     "estadisticas": [
                         {"nombre": est.estadistica} for est in estadisticas
                     ],  # Lista de estadísticas asociadas

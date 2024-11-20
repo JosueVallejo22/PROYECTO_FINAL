@@ -127,30 +127,64 @@ document.addEventListener("DOMContentLoaded", function () {
         'SAQUE': calcularPromedioSaque,
     };
 
-    //  Función para actualizar cálculos dinámicos en la cabecera
-    function actualizarCabecera() {
-        // Verificar si hay errores en los campos
-        const hayErrores = document.querySelectorAll(".is-invalid").length > 0;
+    let pesos = {}; // Aquí almacenaremos los pesos de las cualidades
 
+    // Función para cargar los pesos desde el servidor
+    async function cargarPesos(jugadorId) {
+        const response = await fetch(`/cargar-cualidades/${jugadorId}/`);
+        const data = await response.json();
+
+        pesos = data.cualidades.reduce((acc, cualidad) => {
+            acc[cualidad.cualidad] = cualidad.peso; // Mapear los pesos por cualidad
+            return acc;
+        }, {});
+    }
+
+    // Función para actualizar cálculos dinámicos en la cabecera
+    function actualizarCabecera() {
+        const hayErrores = document.querySelectorAll(".is-invalid").length > 0;
         if (hayErrores) {
             console.log("Errores presentes. No se calculan valores.");
             return; // Ignorar cálculos si hay errores
         }
 
-        // Realizar cálculos si no hay errores
         const valores = obtenerValoresEstadisticas();
         Object.keys(calculadores).forEach(cualidad => {
             const calculador = calculadores[cualidad];
             const promedio = calculador(valores);
 
-            // Verificar si existe el campo para la cualidad
             const campo = document.getElementById(`calculo_${cualidad}`);
             if (campo) {
                 campo.value = isNaN(promedio) ? "N/A" : promedio;
-            } else {
-                console.warn(`Campo no encontrado para la cualidad: ${cualidad}`);
             }
         });
+
+        actualizarValoracionFinal(); // Calcular la valoración final después de actualizar las cualidades
+    }
+
+    // Función para calcular y mostrar la valoración final
+    function actualizarValoracionFinal() {
+        let sumaPonderada = 0;
+        let sumaPesos = 0;
+    
+        // Recorrer cada cualidad y calcular su contribución
+        Object.keys(pesos).forEach(cualidad => {
+            const promedio = parseFloat(document.getElementById(`calculo_${cualidad}`)?.value || 0); // Obtener promedio de la cualidad
+            const peso = pesos[cualidad] || 0; // Obtener peso correspondiente desde los datos cargados
+    
+            sumaPonderada += promedio * peso; // Sumar el promedio ponderado por el peso
+            sumaPesos += peso; // Sumar el peso
+        });
+    
+        // Dividir la suma ponderada por el número total de cualidades (6 en este caso)
+        const totalCualidades = Object.keys(pesos).length;
+        const valoracionFinal = totalCualidades > 0 ? Math.min((sumaPonderada / totalCualidades), 100) : 0;
+    
+        // Mostrar el resultado
+        const campoValoracionFinal = document.getElementById("valoracion_final");
+        if (campoValoracionFinal) {
+            campoValoracionFinal.value = valoracionFinal.toFixed(2);
+        }
     }
     
 
@@ -159,11 +193,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Escuchar cambios en inputs dinámicos
     document.getElementById("jugador").addEventListener("change", function () {
-        // Reasignar listeners a nuevos inputs generados dinámicamente
-        setTimeout(() => {
-            document.querySelectorAll(".estadistica-input").forEach(input => {
-                input.addEventListener("input", actualizarCabecera);
+        const jugadorId = this.value;
+        if (jugadorId) {
+            cargarPesos(jugadorId).then(() => {
+                // Reasignar listeners a nuevos inputs generados dinámicamente
+                setTimeout(() => {
+                    document.querySelectorAll(".estadistica-input").forEach(input => {
+                        input.addEventListener("input", actualizarCabecera);
+                    });
+                }, 500); // Esperar la carga de elementos dinámicos
             });
-        }, 500); // Esperar la carga de elementos dinámicos
+        }
     });
 });

@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Formulario de Valoración{% endblock %}
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 mb-5"> <!-- Se agrega mb-5 para margen inferior -->
     <div class="card">
         <div class="card-header bg-success text-white text-center">
             <h4>Formulario de Valoración</h4>
@@ -28,11 +28,15 @@
                         <label for="puesto" class="form-label">Puesto</label>
                         <input type="text" id="puesto" class="form-control" placeholder="Puesto del jugador" readonly>
                     </div>
+                    <div class="col-md-2">
+                        <label for="valoracion_final" class="form-label">Valoración Final</label>
+                        <input type="text" id="valoracion_final" class="form-control" readonly>
+                    </div>                    
                     <div class="col-md-3">
                         <label for="fecha" class="form-label">Fecha</label>
                         <input type="text" id="fecha" class="form-control" readonly value="{{ fecha_actual }}">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-1">
                         <label for="hora" class="form-label">Hora</label>
                         <input type="text" id="hora" class="form-control" readonly value="{{ hora_actual }}">
                     </div>
@@ -70,6 +74,10 @@
         </div>
     </div>
 </div>
+
+<!-- Espaciador adicional para evitar que el footer corte el contenido -->
+<div class="mb-5"></div>
+
 <script src="{% static 'js/obtencion_cualidades.js' %}"></script>
 <script src="{% static 'js/validaciones.js' %}"></script>
 <script src="{% static 'js/calculos_estadisticas.js' %}"></script>

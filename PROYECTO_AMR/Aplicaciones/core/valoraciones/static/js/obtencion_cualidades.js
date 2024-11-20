@@ -72,21 +72,24 @@ document.getElementById("jugador").addEventListener("change", function () {
                         acordeon.insertAdjacentHTML("beforeend", acordeonHTML);
                     });
 
-                    // Rehabilitar el botón de guardar si no hay errores
-                    guardarBtn.disabled = false;
-
-                    // Revalidar los campos recién generados
+                    // Agregar validación a los campos recién generados
                     document.querySelectorAll(".estadistica-input").forEach(input => {
                         input.addEventListener("input", () => {
                             if (typeof validarCampo === 'function') {
                                 validarCampo(input); // Validación dinámica
                             }
+                            if (typeof validarFormulario === 'function') {
+                                validarFormulario(); // Validar formulario global
+                            }
                         });
                     });
 
-                    // Validar globalmente el formulario
+                    // Asegurar que el botón permanezca deshabilitado hasta que todos los campos estén llenos
                     if (typeof validarFormulario === 'function') {
-                        validarFormulario();
+                        setTimeout(() => {
+                            validarFormulario(); // Validar el formulario después de cargar
+                            guardarBtn.disabled = true; // Forzar deshabilitar el botón inicialmente
+                        }, 100);
                     }
                 } else {
                     calculosContainer.innerHTML = '<p>No hay cálculos disponibles para este jugador.</p>';

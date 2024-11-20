@@ -62,7 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Validar el valor ingresado
-        if (maximo !== null && valor > maximo) {
+        if (valor < 0) {
+            input.classList.add("is-invalid");
+            errorDiv.textContent = "El valor no puede ser negativo.";
+        } else if (maximo !== null && valor > maximo) {
             input.classList.add("is-invalid");
             errorDiv.textContent = `El valor no puede ser mayor a ${maximo}.`;
         } else {
@@ -76,8 +79,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const hayErrores = document.querySelectorAll(".is-invalid").length > 0;
         const jugadorSeleccionado = document.getElementById("jugador").value !== "";
 
+        // Comprobar si todos los campos de estadística están llenos (permitiendo 0 como válido)
+        const camposDetalle = document.querySelectorAll('.estadistica-input');
+        const todosCamposLlenos = Array.from(camposDetalle).every(input => input.value.trim() !== "");
+
         if (guardarBtn) {
-            guardarBtn.disabled = hayErrores || !jugadorSeleccionado;
+            guardarBtn.disabled = hayErrores || !jugadorSeleccionado || !todosCamposLlenos;
         }
     }
 
