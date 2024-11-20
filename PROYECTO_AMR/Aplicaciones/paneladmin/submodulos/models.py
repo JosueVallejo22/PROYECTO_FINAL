@@ -54,8 +54,6 @@ class Estadistica(models.Model):
         # Cualidad Defensa
         ('INTERCEPCIONES INTENTOS', 'INTERCEPCIONES INTENTOS'),
         ('INTERCEPCIONES EXITOSAS', 'INTERCEPCIONES EXITOSAS'),
-        ('DESPEJES INTENTOS', 'DESPEJES INTENTOS'),
-        ('DESPEJES EXITOSOS', 'DESPEJES EXITOSOS'),
         ('DUELOS DEFENSIVOS TOTALES', 'DUELOS DEFENSIVOS TOTALES'),
         ('DUELOS DEFENSIVOS GANADOS', 'DUELOS DEFENSIVOS GANADOS'),
         
@@ -125,8 +123,6 @@ class Estadistica(models.Model):
             # Cualidad Defensa
             'INTERCEPCIONES INTENTOS': 'Defensa',
             'INTERCEPCIONES EXITOSAS': 'Defensa',
-            'DESPEJES INTENTOS': 'Defensa',
-            'DESPEJES EXITOSOS': 'Defensa',
             'DUELOS DEFENSIVOS TOTALES': 'Defensa',
             'DUELOS DEFENSIVOS GANADOS': 'Defensa',
             
