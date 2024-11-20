@@ -2,11 +2,22 @@
 function obtenerValoresEstadisticas() {
     const valores = {};
     document.querySelectorAll('.estadistica-input').forEach(input => {
-        const estadisticaNombre = input.name.replace("estadistica_", "");
+        const estadisticaNombre = input.name.replace("estadistica_", ""); // Usar nombre descriptivo
         const valor = parseFloat(input.value) || 0;
         valores[estadisticaNombre] = valor;
     });
     return valores;
+}
+
+// Validar el formulario dinámicamente
+function validarFormulario() {
+    const guardarBtn = document.getElementById("guardar-btn");
+    const jugadorSeleccionado = document.getElementById("jugador").value;
+    const estadisticasCompletas = Array.from(document.querySelectorAll('.estadistica-input')).every(input => input.value.trim() !== '');
+    const cualidadesCalculadas = Array.from(document.querySelectorAll('#calculos-container input')).every(input => input.value.trim() !== '' && input.value.trim() !== 'N/A');
+
+    // Habilitar el botón solo si se cumplen todas las condiciones
+    guardarBtn.disabled = !(jugadorSeleccionado && estadisticasCompletas && cualidadesCalculadas);
 }
 
 // Cargar cualidades y estadísticas al cambiar el jugador
@@ -19,8 +30,16 @@ document.getElementById("jugador").addEventListener("change", function () {
 
     // Limpiar contenido anterior y deshabilitar el botón
     puestoInput.value = '';
-    calculosContainer.innerHTML = '<p class="text-center">Cargando datos...</p>';
-    acordeon.innerHTML = '<p class="text-center">Cargando estadísticas...</p>';
+    calculosContainer.innerHTML = `
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="spinner-border text-success" role="status"></div>
+            <span class="ms-2 text-success fw-bold">Cargando datos...</span>
+        </div>`;
+    acordeon.innerHTML = `
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="spinner-border text-success" role="status"></div>
+            <span class="ms-2 text-success fw-bold">Cargando estadísticas...</span>
+        </div>`;
     guardarBtn.disabled = true;
 
     // Verificar si se seleccionó un jugador
@@ -40,30 +59,30 @@ document.getElementById("jugador").addEventListener("change", function () {
                     data.cualidades.forEach((cualidad, index) => {
                         const cualidadHTML = `
                             <div class="col-md-2 mb-3">
-                                <label class="form-label">${cualidad.cualidad}</label>
-                                <input type="text" class="form-control" readonly id="calculo_${cualidad.cualidad}">
+                                <label class="form-label fw-bold text-success">${cualidad.cualidad}</label>
+                                <input type="text" class="form-control border-success text-success fw-bold shadow-sm" readonly id="calculo_${cualidad.cualidad}" name="calculo_${cualidad.cualidad.toUpperCase()}" value="0">
                             </div>`;
                         calculosContainer.insertAdjacentHTML("beforeend", cualidadHTML);
 
                         const estadisticasHTML = cualidad.estadisticas.map((estadistica, idx) => `
                             <tr>
-                                <td>${idx + 1}</td>
-                                <td>${estadistica.nombre}</td>
+                                <td class="text-center fw-bold">${idx + 1}</td>
+                                <td class="text-muted">${estadistica.nombre}</td>
                                 <td>
                                     <input type="number" name="estadistica_${estadistica.nombre}" class="form-control estadistica-input">
                                 </td>
                             </tr>`).join("");
 
                         const acordeonHTML = `
-                            <div class="accordion-item">
+                            <div class="accordion-item border-success">
                                 <h2 class="accordion-header" id="heading${index}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
+                                    <button class="accordion-button collapsed text-success fw-bold shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
                                         ${cualidad.cualidad}
                                     </button>
                                 </h2>
-                                <div id="collapse${index}" class="accordion-collapse collapse">
-                                    <div class="accordion-body">
-                                        <table class="table">
+                                <div id="collapse${index}" class="accordion-collapse collapse" data-bs-parent="#accordionEstadisticas">
+                                    <div class="accordion-body bg-light">
+                                        <table class="table table-striped table-hover border">
                                             <tbody>${estadisticasHTML}</tbody>
                                         </table>
                                     </div>
@@ -75,48 +94,41 @@ document.getElementById("jugador").addEventListener("change", function () {
                     // Agregar validación a los campos recién generados
                     document.querySelectorAll(".estadistica-input").forEach(input => {
                         input.addEventListener("input", () => {
-                            if (typeof validarCampo === 'function') {
-                                validarCampo(input); // Validación dinámica
-                            }
-                            if (typeof validarFormulario === 'function') {
-                                validarFormulario(); // Validar formulario global
-                            }
+                            validarFormulario(); // Validar formulario al ingresar valores
                         });
                     });
-
-                    // Asegurar que el botón permanezca deshabilitado hasta que todos los campos estén llenos
-                    if (typeof validarFormulario === 'function') {
-                        setTimeout(() => {
-                            validarFormulario(); // Validar el formulario después de cargar
-                            guardarBtn.disabled = true; // Forzar deshabilitar el botón inicialmente
-                        }, 100);
-                    }
                 } else {
-                    calculosContainer.innerHTML = '<p>No hay cálculos disponibles para este jugador.</p>';
+                    calculosContainer.innerHTML = `
+                        <p class="text-center text-danger fw-bold">No hay cálculos disponibles para este jugador.</p>`;
                     guardarBtn.disabled = true;
                 }
+
+                // Revalidar el formulario al cargar los datos
+                validarFormulario();
             })
             .catch(error => {
                 console.error("Error al cargar datos:", error);
                 puestoInput.value = "Error al cargar datos";
-                calculosContainer.innerHTML = '<p class="text-center text-danger">Error al cargar cualidades.</p>';
-                acordeon.innerHTML = '<p class="text-center text-danger">Error al cargar estadísticas.</p>';
+                calculosContainer.innerHTML = `
+                    <p class="text-center text-danger fw-bold">Error al cargar cualidades.</p>`;
+                acordeon.innerHTML = `
+                    <p class="text-center text-danger fw-bold">Error al cargar estadísticas.</p>`;
                 guardarBtn.disabled = true;
             });
     } else {
         // Mostrar mensaje si no se selecciona un jugador
-        calculosContainer.innerHTML = '<p>Seleccione un jugador para ver los cálculos.</p>';
-        acordeon.innerHTML = '<p>Seleccione un jugador para cargar las estadísticas.</p>';
+        calculosContainer.innerHTML = `
+            <p class="text-center text-muted fw-bold">Seleccione un jugador para ver los cálculos.</p>`;
+        acordeon.innerHTML = `
+            <p class="text-center text-muted fw-bold">Seleccione un jugador para cargar las estadísticas.</p>`;
         guardarBtn.disabled = true;
     }
+
+    // Validar formulario después de cambio
+    validarFormulario();
 });
 
 // Sobrescribir el evento de actualización con cálculos y validaciones dinámicas
 document.getElementById("valoracion-form").addEventListener("input", function () {
-    if (typeof validarFormulario === 'function') {
-        validarFormulario(); // Validar el formulario en cada input
-    }
-    if (typeof actualizarCabecera === 'function') {
-        actualizarCabecera(); // Calcular valores dinámicos
-    }
+    validarFormulario(); // Validar el formulario en cada input
 });

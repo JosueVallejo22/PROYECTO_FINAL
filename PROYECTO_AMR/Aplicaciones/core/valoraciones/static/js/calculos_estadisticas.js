@@ -142,50 +142,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para actualizar cálculos dinámicos en la cabecera
     function actualizarCabecera() {
-        const hayErrores = document.querySelectorAll(".is-invalid").length > 0;
-        if (hayErrores) {
-            console.log("Errores presentes. No se calculan valores.");
-            return; // Ignorar cálculos si hay errores
-        }
-
         const valores = obtenerValoresEstadisticas();
         Object.keys(calculadores).forEach(cualidad => {
             const calculador = calculadores[cualidad];
             const promedio = calculador(valores);
-
             const campo = document.getElementById(`calculo_${cualidad}`);
             if (campo) {
-                campo.value = isNaN(promedio) ? "N/A" : promedio;
+                campo.value = isNaN(promedio) ? "0" : promedio; // Asigna el promedio calculado al atributo "value"
+                campo.setAttribute("value", isNaN(promedio) ? "0" : promedio); // Asegura que el valor se envíe al backend
             }
         });
-
-        actualizarValoracionFinal(); // Calcular la valoración final después de actualizar las cualidades
+    
+        actualizarValoracionFinal();
     }
+    
 
     // Función para calcular y mostrar la valoración final
     function actualizarValoracionFinal() {
         let sumaPonderada = 0;
-        let sumaPesos = 0;
     
-        // Recorrer cada cualidad y calcular su contribución
         Object.keys(pesos).forEach(cualidad => {
-            const promedio = parseFloat(document.getElementById(`calculo_${cualidad}`)?.value || 0); // Obtener promedio de la cualidad
-            const peso = pesos[cualidad] || 0; // Obtener peso correspondiente desde los datos cargados
+            const promedio = parseFloat(document.getElementById(`calculo_${cualidad}`)?.value || 0);
+            const peso = pesos[cualidad] || 0;
     
-            sumaPonderada += promedio * peso; // Sumar el promedio ponderado por el peso
-            sumaPesos += peso; // Sumar el peso
+            sumaPonderada += promedio * peso;
         });
-    
-        // Dividir la suma ponderada por el número total de cualidades (6 en este caso)
         const totalCualidades = Object.keys(pesos).length;
-        const valoracionFinal = totalCualidades > 0 ? Math.min((sumaPonderada / totalCualidades), 100) : 0;
-    
-        // Mostrar el resultado
+        const valoracionFinal = totalCualidades > 0 ? Math.min((sumaPonderada / totalCualidades), 100) : 0;    
+        
         const campoValoracionFinal = document.getElementById("valoracion_final");
         if (campoValoracionFinal) {
             campoValoracionFinal.value = valoracionFinal.toFixed(2);
         }
     }
+    
     
 
     // Listeners para cálculos dinámicos

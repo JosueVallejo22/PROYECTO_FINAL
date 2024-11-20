@@ -4,17 +4,21 @@ from django.views.generic.edit import FormView
 from django.db import transaction
 from django.http import JsonResponse
 from django.utils.timezone import now
+from django.contrib import messages
+from django.urls import reverse_lazy
 from Aplicaciones.core.models import Jugador
 from Aplicaciones.core.valoraciones.models import *
 from Aplicaciones.paneladmin.submodulos.models import *
 from Aplicaciones.core.valoraciones.forms import ValoracionForm, ValoracionDetalleForm
 
+
 # Vista para el módulo principal de valoraciones
 class ModuloValoracionesView(TemplateView):
     template_name = "modulo_valoraciones.html"
 
+
 # Vista para el formulario de generar una nueva valoración
-class GenerarValoracionView(TemplateView):
+class CrearValoracionView(TemplateView):
     template_name = "valoracion_formulario.html"
 
     def get_context_data(self, **kwargs):
@@ -33,15 +37,16 @@ class GenerarValoracionView(TemplateView):
             'fecha_actual': fecha_actual,
             'hora_actual': hora_actual,
         })
-        
+
         return context
+
 
 # Cargar cualidades del jugador seleccionado
 class CargarCualidadesView(View):
     def get(self, request, jugador_id):
         try:
             # Obtener el jugador seleccionado
-            jugador = Jugador.objects.get(id=jugador_id, estado=True)
+            jugador = get_object_or_404(Jugador, id=jugador_id, estado=True)
             puesto = jugador.puesto  # Obtener el puesto del jugador
 
             # Verificar si el jugador tiene puesto y posición asociados
@@ -53,14 +58,13 @@ class CargarCualidadesView(View):
 
             # Preparar las cualidades y las estadísticas asociadas
             cualidades = []
+            
             for pc in puesto_cualidades:
                 estadisticas = Estadistica.objects.filter(cualidad=pc.cualidad, estado=True)
                 cualidades.append({
                     "cualidad": pc.cualidad.cualidad,  # Nombre de la cualidad
                     "peso": float(pc.peso),  # Convertir peso a float para el frontend
-                    "estadisticas": [
-                        {"nombre": est.estadistica} for est in estadisticas
-                    ],  # Lista de estadísticas asociadas
+                    "estadisticas": [{"id": est.id, "nombre": est.estadistica, "clave": est.estadistica.upper()} for est in estadisticas]
                 })
 
             # Preparar respuesta JSON
@@ -69,64 +73,89 @@ class CargarCualidadesView(View):
                 "cualidades": cualidades,
             }
             return JsonResponse(data)
-        except Jugador.DoesNotExist:
-            return JsonResponse({"error": "Jugador no encontrado."}, status=404)
         except Exception as e:
             return JsonResponse({"error": f"Error inesperado: {str(e)}"}, status=500)
 
-# Crear valoración, incluyendo la cabecera y los detalles
-class CrearValoracionView(FormView):
+
+# Vista para guardar valoración y detalles
+class GuardarValoracionView(FormView):
     template_name = 'valoracion_formulario.html'
     form_class = ValoracionForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Obtener jugadores activos y la fecha actual
-        jugadores = Jugador.objects.filter(estado=True)
-        fecha_actual = now().date()
-        hora_actual = now().time()
-        
-        context.update({
-            'jugadores': jugadores,
-            'fecha_actual': fecha_actual,
-            'hora_actual': hora_actual,
-        })
-
-        # Inicialmente no hay jugador seleccionado
-        context['jugador'] = None
-        
-        return context
+    success_url = reverse_lazy('valoraciones:modulo_valoraciones')  # Redirige al listado tras guardar
 
     def form_valid(self, form):
-        # Usamos una transacción atómica para guardar ambos modelos de forma segura
-        with transaction.atomic():
-            # Guardar la cabecera de la valoración
-            valoracion = form.save()
+        try:
+            with transaction.atomic():
+                # Obtener jugador y descripción
+                jugador_id = self.request.POST.get('jugador')
+                jugador = get_object_or_404(Jugador, id=jugador_id)
+                descripcion = self.request.POST.get('descripcion', '')
 
-            # Obtener el formulario de detalles con las estadísticas
-            detalle_form = ValoracionDetalleForm(self.request.POST)
-            
-            if detalle_form.is_valid():
-                # Guardar cada detalle de valoración
-                for field, value in detalle_form.cleaned_data.items():
-                    if value:
-                        try:
-                            # Extraemos el ID de la estadística del nombre del campo (formato 'estadistica_{id}')
-                            estadistica_id = field.split('_')[1]
-                            estadistica = get_object_or_404(Estadistica, pk=estadistica_id)
+                # Crear cabecera de valoración
+                valoracion = Valoracion.objects.create(
+                    jugador=jugador,
+                    descripcion=descripcion,
+                    usuario_registro=self.request.user.username if self.request.user.is_authenticated else "Anónimo"
+                )
 
-                            # Crear un registro en ValoracionDetalle
-                            ValoracionDetalle.objects.create(
-                                valoracion=valoracion,
-                                estadistica=estadistica,
-                                valor=value
-                            )
-                        except IndexError:
-                            return JsonResponse({"error": "Formato de campo inválido"}, status=400)
+                # Calcular y asignar valores a las cualidades
+                cualidades = ['tiro', 'pase', 'velocidad', 'regate', 'defensa', 'fisico', 'reflejos', 'manejo', 'saque']
+                for cualidad in cualidades:
+                    promedio_cualidad = float(self.request.POST.get(f'calculo_{cualidad.upper()}', 0))
+                    setattr(valoracion, f'valoracion_{cualidad}', promedio_cualidad)  # Asignar valor a cada campo
 
-            # Redirigir al usuario después de guardar correctamente
-            return redirect('valoraciones:success')
+                # Inicializar variables
+                suma_ponderada = 0
+                total_cualidades = 0
+
+                # Iterar sobre las cualidades y calcular los valores
+                for cualidad in cualidades:
+                    # Obtener el promedio de la cualidad desde el formulario
+                    promedio_cualidad = float(self.request.POST.get(f'calculo_{cualidad.upper()}', 0))
+                    # Obtener el peso de la cualidad para el jugador
+                    peso_obj = PuestoCualidad.objects.filter(puesto=jugador.puesto, cualidad__cualidad=cualidad).first()
+                    peso_valor = float(peso_obj.peso) if peso_obj else 0
+
+                    # Verificar si el promedio o el peso son válidos antes de continuar
+                    if promedio_cualidad > 0 and peso_valor > 0:
+                        suma_ponderada += promedio_cualidad * peso_valor
+                        total_cualidades += peso_valor  # Acumular el peso total
+
+                    # Guardar el promedio en el campo correspondiente de la cabecera
+                    setattr(valoracion, f'valoracion_{cualidad.lower()}', promedio_cualidad)
+
+                # Obtener las cualidades asociadas al puesto del jugador
+                puesto_cualidades = PuestoCualidad.objects.filter(puesto=jugador.puesto, estado=True)
+                numero_cualidades = puesto_cualidades.count()  # Número real de cualidades asociadas
+
+                # Calcular la valoración total dividiendo por el número real de cualidades asociadas al jugador
+                valoracion.valoracion_total = (suma_ponderada / numero_cualidades) if numero_cualidades > 0 else 0
+                valoracion.valoracion_total = min(valoracion.valoracion_total, 100)  # Limitar el máximo a 100
+
+                # Guardar la cabecera
+                valoracion.save()
+
+                # Guardar detalles de estadísticas
+                for key, value in self.request.POST.items():
+                    if key.startswith('estadistica_'):
+                        estadistica_nombre = key.split('_')[1]  # Extraer el nombre de la estadística
+                        estadistica = get_object_or_404(Estadistica, estadistica=estadistica_nombre)
+                        ValoracionDetalle.objects.create(
+                            valoracion=valoracion,
+                            estadistica=estadistica,
+                            valor=float(value),
+                            usuario_registro=self.request.user.username if self.request.user.is_authenticated else "Anónimo"
+                        )
+
+                messages.success(self.request, "Valoración guardada exitosamente.")
+                return redirect(self.success_url)
+
+        except Exception as e:
+            messages.error(self.request, f"Error al guardar la valoración: {e}")
+            return redirect(self.success_url)
+
 
     def form_invalid(self, form):
-        return JsonResponse({"error": "Formulario inválido"}, status=400)
+        messages.error(self.request, "Formulario inválido. Verifique los datos ingresados.")
+        return redirect(self.success_url)
+
