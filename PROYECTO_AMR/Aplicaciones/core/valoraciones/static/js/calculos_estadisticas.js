@@ -1,18 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Funciones de cálculo para cada cualidad
     function calcularPromedioTiro(valores) {
-        const { 'GOLES ANOTADOS': goles, 'TIROS TOTALES': tirosTotales, 'TIROS AL ARCO': tirosArco, 'PENALES ANOTADOS': penalesAnotados, 'PENALES EJECUTADOS': penalesTotales } = valores;
-        if (!tirosTotales || !tirosArco || !penalesTotales) return 0;
-
-        let promedio = (
-            (goles / tirosTotales) +
-            (tirosArco / tirosTotales) +
-            ((goles / tirosArco) * 1.1) +
-            (penalesAnotados / penalesTotales)
-        ) / 4 * 100;
-
+        const { 
+            'GOLES ANOTADOS': goles, 
+            'TIROS TOTALES': tirosTotales, 
+            'TIROS AL ARCO': tirosArco, 
+            'PENALES ANOTADOS': penalesAnotados, 
+            'PENALES EJECUTADOS': penalesTotales 
+        } = valores;
+    
+        if (!tirosTotales || !tirosArco) return 0;
+    
+        let componentes = [
+            goles / tirosTotales, 
+            tirosArco / tirosTotales, 
+            (goles / tirosArco) * 1.1
+        ];
+    
+        // Agregar la parte de penales si el jugador ejecutó penales
+        if (penalesTotales > 0) {
+            componentes.push(penalesAnotados / penalesTotales);
+        }
+    
+        // Calcular el promedio ajustado basado en la cantidad de componentes
+        let promedio = (componentes.reduce((acc, val) => acc + val, 0) / componentes.length) * 100;
+    
         return Math.round(Math.min(promedio, 100));
     }
+    
 
     function calcularPromedioPase(valores) {
         const { 'PASES ACERTADOS': pasesAcertados, 'PASES TOTALES': pasesTotales, 'CENTROS ACERTADOS': centrosAcertados, 'CENTROS TOTALES': centrosTotales } = valores;

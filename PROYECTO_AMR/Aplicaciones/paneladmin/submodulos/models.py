@@ -203,7 +203,7 @@ class Puesto(models.Model):
 
 
 class PuestoCualidad(models.Model):
-    puesto = models.ForeignKey(Puesto, on_delete=models.PROTECT)
+    puesto = models.ForeignKey(Puesto, on_delete=models.PROTECT, related_name="puesto_cualidades")
     cualidad = models.ForeignKey(Cualidad, on_delete=models.PROTECT)
     peso = models.DecimalField(max_digits=2, decimal_places=1)
     estado = models.BooleanField(default=True)

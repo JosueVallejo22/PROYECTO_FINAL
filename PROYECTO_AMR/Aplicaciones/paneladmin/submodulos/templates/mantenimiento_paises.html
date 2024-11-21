@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}MANTENIMIENTO PAISES{% endblock %}
+{% block title %}Mantenimiento Países{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <h1 class="text-center text-white fw-bold">MANTENIMIENTO PAISES</h1>
-        <div class="d-flex justify-content-end">
-            <a href="{% url 'submodulos:menu_submodulos' %}" class="btn btn-danger mb-3 fw-bold">REGRESAR</a>
+        <!-- Botones superiores -->
+        <div class="col-md-12 mb-3 d-flex justify-content-between">
+            <h2 class="text-white fw-bold">Mantenimiento de Paises</h2>
+            <div>
+                <a href="{% url 'submodulos:menu_submodulos' %}" class="btn btn-danger fw-bold">
+                    <i class="bi bi-arrow-left-circle me-2"></i> Regresar
+                </a>
+            </div>
         </div>
 
-
-        <!-- Tarjeta para el formulario de creación o edición -->
+        <!-- Tarjeta para el formulario -->
         <div class="col-md-4">
-            <div class="card mb-4">
+            <div class="card shadow-sm mb-4">
                 <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">
+                    <h2 class="mb-0 fw-bold text-center text-white">
                         {% if object %}Editar País{% else %}Registrar País{% endif %}
                     </h2>
                 </div>
@@ -24,8 +28,8 @@
                     <form method="post" action="{% if object %}{% url 'submodulos:editar_pais' object.pk %}{% else %}{% url 'submodulos:registrar_pais' %}{% endif %}">
                         {% csrf_token %}
                         <div class="form-group mb-3">
-                            <label for="id_pais">Nombre del Pais</label>
-                            <input type="text" name="pais" class="form-control" id="id_pais" placeholder="Ingrese el nombre del país" value="{{ object.pais }}" required />
+                            <label for="id_pais" class="fw-bold">Nombre del País</label>
+                            <input type="text" name="pais" class="form-control" id="id_pais" placeholder="Ingrese el nombre del país" value="{{ object.pais }}" required>
                             {% for error in form.non_field_errors %}
                                 <div class="alert alert-danger mt-2">{{ error }}</div>
                             {% endfor %}
@@ -35,86 +39,124 @@
                                 {% endfor %}
                             {% endfor %}
                         </div>
-                        <button type="submit" class="btn btn-success btn-block">{% if object %}Actualizar{% else %}Registrar{% endif %}</button>
+                        <button type="submit" class="btn btn-success w-100 fw-bold">
+                            {% if object %}<i class="bi bi-pencil"></i> Actualizar{% else %}<i class="bi bi-save"></i> Registrar{% endif %}
+                        </button>
                         {% if object %}
-                            <!-- Solo muestra el botón de cancelar si se está editando -->
-                            <a href="{% url 'submodulos:mantenimiento_paises' %}" class="btn btn-danger btn-block">Cancelar</a>
+                        <a href="{% url 'submodulos:mantenimiento_paises' %}" class="btn btn-danger w-100 mt-2 fw-bold">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
                         {% endif %}
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Tabla de paises -->
-        <div class="col-md-8 mb-3">
-            <div class="card mb-5">
+        <!-- Tabla de países -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-5">
                 <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Paises Registrados</h2>
+                    <h2 class="mb-0 fw-bold text-center text-white">Países Registrados</h2>
                 </div>
                 <div class="card-body">
-                    <form method="get" class="mb-3">
+                    <!-- Formulario para buscar -->
+                    <form method="get" class="mb-4">
                         <div class="input-group">
                             <input type="text" name="q" placeholder="Buscar..." value="{{ request.GET.q|default:'' }}" class="form-control">
-                            <button type="submit" class="btn btn-primary">Buscar</button>
-                            <a href="{% url 'submodulos:mantenimiento_paises' %}" class="btn btn-warning">Limpiar</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-search"></i> Buscar
+                            </button>
+                            <a href="{% url 'submodulos:mantenimiento_paises' %}" class="btn btn-warning">
+                                <i class="bi bi-x-circle"></i> Limpiar
+                            </a>
                         </div>
                     </form>
+                    
+                    <!-- Tabla -->
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
-                            <thead>
+                        <table class="table table-hover align-middle">
+                            <thead class="table-success text-center">
                                 <tr>
-                                    <th>Pais</th>
+                                    <th>País</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for pais in paises %}
-                                    <tr>
-                                        <td>{{ pais.pais }}</td>
-                                        <td>{% if pais.estado %}Activo{% else %}Inactivo{% endif %}</td>
-                                        <td>
-                                            <a href="{% url 'submodulos:editar_pais' pais.id %}" class="btn btn-primary btn-sm">Editar</a>
-                                            {% if pais.estado %}
-                                                <a href="{% url 'submodulos:activar-inactivar-pais' pais.id %}" class="btn btn-warning btn-sm">Inactivar</a>
-                                            {% else %}
-                                                <a href="{% url 'submodulos:activar-inactivar-pais' pais.id %}" class="btn btn-success btn-sm">Activar</a>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
+                                <tr class="text-center">
+                                    <td>{{ pais.pais }}</td>
+                                    <td>
+                                        {% if pais.estado %}
+                                            <span class="badge bg-success">Activo</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactivo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="{% url 'submodulos:editar_pais' pais.id %}" class="btn btn-warning btn-sm fw-bold">
+                                                <i class="bi bi-pencil"></i> Editar
+                                            </a>
+                                            <a href="{% url 'submodulos:activar-inactivar-pais' pais.id %}" class="btn btn-{{ pais.estado|yesno:'danger,success' }} btn-sm fw-bold">
+                                                {% if pais.estado %}<i class="bi bi-x-circle"></i> Inactivar{% else %}<i class="bi bi-check-circle"></i> Activar{% endif %}
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No se encontraron resultados.</td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <!-- Paginación -->
-                        <div class="d-flex justify-content-center">
-                            {% if is_paginated %}
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination">
-                                    {% if page_obj.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                    {% endif %}
+                    </div>
 
-                                    {% for object in paginator.page_range %}
-                                    <li class="page-item {% if object == page_obj.number %}active{% endif %}">
-                                        <a class="page-link" href="?page={{ object }}&q={{ request.GET.q }}">{{ object }}</a>
-                                    </li>
-                                    {% endfor %}
-
-                                    {% if page_obj.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
+                    <!-- Paginación -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {% if is_paginated %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <!-- Botón de página anterior -->
+                                {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                    
+                                <!-- Mostrar un rango limitado de páginas -->
+                                {% for num in paginator.page_range %}
+                                    {% if num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                                        <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ num }}&q={{ request.GET.q }}">{{ num }}</a>
+                                        </li>
+                                    {% elif num == 1 or num == paginator.num_pages %}
+                                        <!-- Mostrar siempre la primera y última página -->
+                                        <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ num }}&q={{ request.GET.q }}">{{ num }}</a>
+                                        </li>
+                                    {% elif num == page_obj.number|add:-3 or num == page_obj.number|add:3 %}
+                                        <!-- Agregar puntos suspensivos donde hay saltos -->
+                                        <li class="page-item disabled">
+                                            <a class="page-link">...</a>
+                                        </li>
                                     {% endif %}
-                                </ul>
-                            </nav>
-                            {% endif %}
-                        </div>
+                                {% endfor %}
+                    
+                                <!-- Botón de página siguiente -->
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
                     </div>
                 </div>
             </div>
