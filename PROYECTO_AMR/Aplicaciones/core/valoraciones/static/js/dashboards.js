@@ -1,9 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const selectContainer = document.getElementById("jugador-select-container");
-    const ctx = document.getElementById("jugadorChart").getContext("2d");
-    const chartTitle = document.getElementById("chart-title");
-    const chartInfo = document.getElementById("chart-info");
+    // Elementos DOM
+    const jugadorSelect = document.getElementById("jugador-select");
+    const arqueroSelect = document.getElementById("arquero-select");
+    const evolucionInfo = document.getElementById("evolucion-info");
+    const distribucionInfo = document.getElementById("distribucion-info");
+    const penalesInfo = document.getElementById("penales-info");
+    const distribucionListadoMinimal = document.getElementById("distribucion-listado-minimal");
 
+    // Gráficos
+    const evolucionCtx = document.getElementById("evolucionChart").getContext("2d");
+    const distribucionCtx = document.getElementById("distribucionChart").getContext("2d");
+    const penalesCtx = document.getElementById("penalesChart").getContext("2d");
+
+    // Colores para los gráficos
     const colors = [
         "rgba(75, 192, 192, 1)",
         "rgba(255, 99, 132, 1)",
@@ -12,139 +21,182 @@ document.addEventListener("DOMContentLoaded", function () {
         "rgba(153, 102, 255, 1)",
         "rgba(255, 159, 64, 1)",
     ];
-
     const backgroundColors = colors.map((color) => color.replace("1)", "0.2)"));
 
-    let chart = new Chart(ctx, {
+    // Inicialización de gráficos
+    let evolucionChart = new Chart(evolucionCtx, {
         type: "line",
         data: {
-            labels: [], // Este eje mostrará los índices
+            labels: [],
             datasets: [],
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: true,
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            const datasetIndex = context.datasetIndex;
-                            const index = context.dataIndex;
-                            const fecha = chart.data.datasets[datasetIndex].fechas[index];
-                            const valor = context.raw;
-                            return `Valor: ${valor}, Fecha: ${fecha}`;
-                        },
-                    },
-                },
+                legend: { display: true },
             },
             scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: "Valoraciones",
-                    },
+                x: { title: { display: true, text: "Fechas" } },
+                y: { title: { display: true, text: "Valoración Total" }, beginAtZero: true },
+            },
+        },
+    });
+
+    let distribucionChart = new Chart(distribucionCtx, {
+        type: "doughnut",
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: backgroundColors,
+                    borderColor: colors,
+                    borderWidth: 1,
                 },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true },
+            },
+        },
+    });
+
+    let penalesChart = new Chart(penalesCtx, {
+        type: "bar",
+        data: {
+            labels: [], // Nombres de los arqueros
+            datasets: [
+                {
+                    label: "Penales Atajados",
+                    data: [], // Penales atajados
+                    backgroundColor: "rgba(75, 192, 192, 0.8)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1,
+                },
+                {
+                    label: "Penales No Atajados",
+                    data: [], // Penales no atajados (calculados como recibidos - atajados)
+                    backgroundColor: "rgba(255, 0, 0, 0.8)",
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true },
+            },
+            scales: {
+                x: { title: { display: true, text: "Arqueros" }, stacked: true },
                 y: {
-                    title: {
-                        display: true,
-                        text: "Valoración Total",
-                    },
+                    title: { display: true, text: "Penales" },
                     beginAtZero: true,
+                    stacked: true,
                 },
             },
         },
     });
 
-    let selectCount = 1;
-    const jugadoresSeleccionados = new Map(); // Rastrea los jugadores seleccionados por ID de selector
-
-    // Función para agregar o actualizar un jugador en el gráfico
-    async function agregarJugador(jugadorId, selectElement) {
+    // Función para cargar datos de evolución de un jugador
+    async function cargarEvolucion(jugadorId) {
         try {
-            const response = await fetch(`/jugador/${jugadorId}/evolucion-data/`);
+            const response = await fetch(`/dashboards/${jugadorId}/evolucion-data/`);
             const data = await response.json();
 
-            // Si el jugador ya está en otro selector, evitar duplicados
-            if (jugadoresSeleccionados.has(jugadorId) && jugadoresSeleccionados.get(jugadorId) !== selectElement.id) {
-                alert("Este jugador ya está seleccionado en otro campo.");
-                selectElement.value = ""; // Restablecer el select
-                return;
-            }
+            // Limpiar el gráfico actual
+            evolucionChart.data.labels = [];
+            evolucionChart.data.datasets = [];
 
-            const selectorId = selectElement.id;
+            const colorIndex = 0;
 
-            // Si el selector ya tenía un jugador, eliminarlo del gráfico
-            if (jugadoresSeleccionados.has(selectorId)) {
-                const jugadorAnteriorId = jugadoresSeleccionados.get(selectorId);
-                const datasetIndex = chart.data.datasets.findIndex((ds) => ds.label === jugadorAnteriorId);
-                if (datasetIndex !== -1) {
-                    chart.data.datasets.splice(datasetIndex, 1);
-                }
-                jugadoresSeleccionados.delete(jugadorAnteriorId);
-            }
+            // Agregar fechas al eje X
+            evolucionChart.data.labels = data.fechas;
 
-            // Agregar el nuevo jugador al gráfico
-            const colorIndex = chart.data.datasets.length % colors.length;
-            chart.data.datasets.push({
-                label: data.jugador,
+            // Crear dataset para el jugador
+            evolucionChart.data.datasets.push({
+                label: `Evolución de ${data.jugador}`,
                 data: data.valoraciones_totales,
                 borderColor: colors[colorIndex],
                 backgroundColor: backgroundColors[colorIndex],
-                pointBackgroundColor: colors[colorIndex],
                 pointRadius: 4,
                 tension: 0.3,
                 fill: true,
-                fechas: data.fechas,
             });
 
-            // Ajustar etiquetas (índices)
-            if (chart.data.labels.length < data.valoraciones_totales.length) {
-                chart.data.labels = data.valoraciones_totales.map((_, i) => i + 1); // Índices
-            }
-
-            chart.update();
-            chartInfo.textContent = `Comparando ${chart.data.datasets.length} jugadores.`;
-
-            jugadoresSeleccionados.set(selectorId, jugadorId); // Actualizar el jugador seleccionado para este selector
+            evolucionChart.update();
+            evolucionInfo.textContent = `Mostrando evolución de ${data.jugador}.`;
         } catch (error) {
-            console.error("Error al cargar los datos del jugador:", error);
+            console.error("Error al cargar evolución:", error);
         }
     }
 
-    // Función para agregar un nuevo selector de jugador
-    function agregarNuevoSelector() {
-        selectCount++;
-        const newSelect = document.createElement("select");
-        newSelect.id = `jugador-select-${selectCount}`;
-        newSelect.className = "form-select jugador-select mt-2";
+    // Función para cargar datos de distribución de jugadores
+    async function cargarDistribucion() {
+        try {
+            const response = await fetch(`/dashboards/distribucion/`);
+            const data = await response.json();
 
-        // Agregar opciones excluyendo las ya seleccionadas
-        newSelect.innerHTML = `<option value="" disabled selected>-- Selecciona un jugador --</option>`;
-        document.querySelectorAll("#jugador-select-1 option").forEach((option) => {
-            const jugadorId = option.value;
-            if (!Array.from(jugadoresSeleccionados.values()).includes(jugadorId) && jugadorId !== "") {
-                newSelect.innerHTML += `<option value="${jugadorId}">${option.textContent}</option>`;
-            }
-        });
+            // Actualizar datos del gráfico
+            distribucionChart.data.labels = data.puestos.map((p) => p.puesto);
+            distribucionChart.data.datasets[0].data = data.puestos.map((p) => p.total_jugadores);
+            distribucionChart.update();
 
-        selectContainer.appendChild(newSelect);
+            // Actualizar el listado minimalista
+            distribucionListadoMinimal.innerHTML = "";
+            data.puestos.forEach((p, index) => {
+                const badge = document.createElement("span");
+                badge.className = `badge bg-${index % 2 === 0 ? "info" : "secondary"} m-1`;
+                badge.innerText = `${p.puesto}: ${p.total_jugadores}`;
+                distribucionListadoMinimal.appendChild(badge);
+            });
 
-        newSelect.addEventListener("change", function () {
-            const jugadorId = this.value;
-            if (jugadorId) {
-                agregarJugador(jugadorId, newSelect);
-            }
-        });
+            distribucionInfo.textContent = "Distribución actualizada.";
+        } catch (error) {
+            console.error("Error al cargar distribución:", error);
+        }
     }
 
-    // Evento inicial para el primer selector
-    document.getElementById("jugador-select-1").addEventListener("change", function () {
+    // Función para cargar datos de penales atajados
+    async function cargarPenales(jugadorId = null) {
+        try {
+            const url = jugadorId ? `/dashboards/penales/${jugadorId}/` : `/dashboards/penales/`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            // Actualizar datos del gráfico
+            penalesChart.data.labels = data.jugadores.map((j) => j.nombre);
+            penalesChart.data.datasets[0].data = data.jugadores.map((j) => j.penales_atajados);
+            penalesChart.data.datasets[1].data = data.jugadores.map(
+                (j) => j.penales_recibidos - j.penales_atajados
+            );
+            penalesChart.update();
+
+            penalesInfo.textContent = jugadorId
+                ? `Mostrando datos de penales para ${data.jugadores[0]?.nombre}.`
+                : "Mostrando datos de penales para todos los arqueros.";
+        } catch (error) {
+            console.error("Error al cargar datos de penales:", error);
+        }
+    }
+
+    // Eventos
+    jugadorSelect.addEventListener("change", function () {
         const jugadorId = this.value;
-        if (jugadorId) {
-            agregarJugador(jugadorId, this);
-        }
+        if (jugadorId) cargarEvolucion(jugadorId);
     });
+
+    arqueroSelect.addEventListener("change", function () {
+        const arqueroId = this.value;
+        cargarPenales(arqueroId || null);
+    });
+
+    // Cargar datos iniciales
+    cargarDistribucion();
+    cargarPenales();
 });

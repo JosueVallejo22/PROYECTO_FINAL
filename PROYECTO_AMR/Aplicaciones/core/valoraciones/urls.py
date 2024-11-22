@@ -18,6 +18,9 @@ urlpatterns = [
 
     #Ruta de dashboards
     path('dashboards/', DashboardsView.as_view(), name='dashboards'),
-    path('jugador/<int:jugador_id>/evolucion-data/', ObtenerDatosValoracionView.as_view(), name='jugador-evolucion-data'),
+    path('dashboards/<int:jugador_id>/evolucion-data/', ObtenerDatosValoracionView.as_view(), name='jugador-evolucion-data'),
+    path('dashboards/distribucion/', ObtenerDatosDistribucionView.as_view(), name='api_distribucion'),
+    path('dashboards/penales/', ObtenerDatosPenalesView.as_view(), name='api_penales'),
+    path('dashboards/penales/<int:jugador_id>/', ObtenerDatosPenalesView.as_view(), name='api_penales_jugador'),
 
 ]

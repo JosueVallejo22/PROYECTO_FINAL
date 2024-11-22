@@ -1,0 +1,79 @@
+/* Gradiente para el texto del título */
+.text-primary-gradient {
+    background: linear-gradient(90deg, #ffffff, #2fff28); /* Gradiente */
+    -webkit-background-clip: text; /* Compatibilidad con Webkit */
+    background-clip: text; /* Propiedad estándar */
+    -webkit-text-fill-color: transparent; /* Para Safari y navegadores Webkit */
+}
+
+
+/* Botón personalizado */
+.btn-primary {
+    background: linear-gradient(90deg, #009900, #034e00) !important;
+    border: none !important;
+    color: #fff !important;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #48ff00, #0f4900) !important;
+    box-shadow: 0px 4px 10px rgb(0, 255, 85) !important;
+}
+
+/* Cartas de jugadores seleccionados */
+.card {
+    border: none !important;
+    border-radius: 15px !important;
+    background: linear-gradient(to bottom, #ffffff, #e8f4ff) !important;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.03) !important;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.card-img-top {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+/* Tabla de comparación */
+.table th {
+    background: #121212 !important;
+    color: #fff !important;
+}
+
+.table-success {
+    background-color: rgba(40, 167, 69, 0.2) !important;
+    color: #28a745 !important;
+}
+
+.table-danger {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    color: #dc3545 !important;
+}
+
+/* List group item hover */
+.list-group-item:hover {
+    background-color: #0072ff !important;
+    color: #fff !important;
+}
+
+/* Modal Header */
+.modal-header {
+    background: linear-gradient(90deg, #00ff40, #ffe600) !important;
+    color: rgb(0, 0, 0) !important;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .card {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+
+    #comparison-results {
+        overflow-x: auto;
+    }
+}

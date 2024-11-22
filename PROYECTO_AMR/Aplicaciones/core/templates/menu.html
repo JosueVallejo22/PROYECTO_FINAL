@@ -11,7 +11,7 @@
         <div class="container py-5">
             <div class="row g-4 justify-content-center">
                 <!-- Tarjeta de Jugadores -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-lg border-0 rounded-4">
                         <div class="card-header bg-success text-white text-center rounded-top py-3">
                             <h5 class="fw-bold mb-0">MÓDULO JUGADORES</h5>
@@ -28,7 +28,7 @@
                 </div>
 
                 <!-- Tarjeta de Valoraciones -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-lg border-0 rounded-4">
                         <div class="card-header bg-success text-white text-center rounded-top py-3">
                             <h5 class="fw-bold mb-0">MÓDULO VALORACIONES</h5>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-lg border-0 rounded-4">
                         <div class="card-header bg-success text-white text-center rounded-top py-3">
                             <h5 class="fw-bold mb-0">DASHBOARDS</h5>
@@ -54,6 +54,22 @@
                         </div>
                         <div class="card-footer text-center py-3 bg-light rounded-bottom">
                             <a href="{% url 'valoraciones:dashboards' %}" class="btn btn-success btn-lg fw-bold shadow-sm px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-header bg-success text-white text-center rounded-top py-3">
+                            <h5 class="fw-bold mb-0">COMPARAR</h5>
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <img src="{% static 'img/comparar.png' %}" alt="icono dashboards" class="img-fluid" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
+                            <a href="{% url 'core:comparar_jugadores' %}" class="btn btn-success btn-lg fw-bold shadow-sm px-4">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
                             </a>
                         </div>

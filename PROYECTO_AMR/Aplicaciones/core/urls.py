@@ -14,4 +14,8 @@ urlpatterns = [
     path('editjugadores/<int:pk>', jugadoresUpdateView.as_view(), name='editjugadores'),
     path('eliminar/<int:pk>/', ActivarInactivarJugador.as_view(), name='eliminar_jugador'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('comparar/', CompararJugadoresView.as_view(), name='comparar_jugadores'),
+    path('api/jugadores/', BuscarJugadoresView.as_view(), name='buscar_jugadores'),
+    path('api/comparar/', CompararJugadoresStatsView.as_view(), name='comparar_jugadores_stats'),
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

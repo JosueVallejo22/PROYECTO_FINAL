@@ -8,6 +8,9 @@ from Aplicaciones.Login.models import Usuario
 from Aplicaciones.Auditoria.utils import save_audit
 from django.contrib import messages
 from Aplicaciones.paneladmin.submodulos.models import Puesto
+from django.http import JsonResponse
+from Aplicaciones.paneladmin.submodulos.models import *
+from Aplicaciones.core.valoraciones.models import *
 ##########################################################################################
 
 def login_required(view_func):
@@ -146,3 +149,70 @@ class ActivarInactivarJugador(View):
         return redirect('core:listjugadores')
 
 ##########################################################################################
+class CompararJugadoresView(TemplateView):
+    template_name = 'comparar_jugadores.html'
+
+class BuscarJugadoresView(View):
+    def get(self, request, *args, **kwargs):
+        """
+        Devuelve una lista de valoraciones de jugadores filtradas por un término de búsqueda.
+        """
+        search_term = request.GET.get("q", "").strip()  # Término de búsqueda ingresado por el usuario
+        valoraciones = Valoracion.objects.filter(
+            Q(jugador__estado=True) &  # Filtrar solo jugadores activos
+            (Q(jugador__nombre__icontains=search_term) | Q(jugador__apellido__icontains=search_term))  # Buscar coincidencias
+        ).select_related('jugador')
+
+        # Formateamos los datos para enviarlos al frontend
+        data = [
+            {
+                "id": valoracion.id,  # ID único de la valoración
+                "nombre": f"{valoracion.jugador.nombre} {valoracion.jugador.apellido}",
+                "puesto": valoracion.jugador.puesto.abreviatura if valoracion.jugador.puesto else "N/A",
+                "foto": valoracion.jugador.foto.url if valoracion.jugador.foto else "/static/img/default-player.png",
+            }
+            for valoracion in valoraciones
+        ]
+
+        return JsonResponse({"jugadores": data})
+
+
+
+class CompararJugadoresStatsView(View):
+    def get(self, request, *args, **kwargs):
+        """
+        Devuelve las estadísticas de los jugadores seleccionados, respetando el orden recibido.
+        """
+        jugadores_ids = request.GET.get("valoraciones")  # Recibe el parámetro como cadena
+        if not jugadores_ids:
+            return JsonResponse({"error": "No se proporcionaron IDs de jugadores."}, status=400)
+
+        # Convertir los IDs a una lista de enteros
+        try:
+            jugadores_ids = [int(id) for id in jugadores_ids.split(",")]
+        except ValueError:
+            return JsonResponse({"error": "IDs de jugadores inválidos."}, status=400)
+
+        # Buscar valoraciones activas y respetar el orden recibido
+        valoraciones = list(Valoracion.objects.filter(id__in=jugadores_ids).select_related("jugador"))
+        valoraciones.sort(key=lambda x: jugadores_ids.index(x.id))  # Ordenar según el orden de los IDs recibidos
+
+        data = []
+        for valoracion in valoraciones:
+            jugador = valoracion.jugador
+            cualidades = [
+                {"nombre": pc.cualidad.cualidad, "valor": getattr(valoracion, f"valoracion_{pc.cualidad.cualidad.lower()}", 0)}
+                for pc in PuestoCualidad.objects.filter(puesto=jugador.puesto, estado=True)
+            ]
+
+            jugador_data = {
+                "id": valoracion.id,
+                "nombre": f"{jugador.nombre} {jugador.apellido}",
+                "puesto": jugador.puesto.abreviatura,
+                "foto": jugador.foto.url if jugador.foto else None,
+                "cualidades": cualidades,
+            }
+
+            data.append(jugador_data)
+
+        return JsonResponse({"jugadores": data})

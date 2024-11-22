@@ -11,7 +11,7 @@ from Aplicaciones.core.models import Jugador
 from Aplicaciones.core.valoraciones.models import *
 from Aplicaciones.paneladmin.submodulos.models import *
 from Aplicaciones.core.valoraciones.forms import ValoracionForm, ValoracionDetalleForm
-from django.db.models import Q
+from django.db.models import Q, Count, Sum
 from Aplicaciones.core.views import login_required
 from django.utils.decorators import method_decorator
 
@@ -225,16 +225,22 @@ class GuardarValoracionView(FormView):
 
 ###### PRIMER DASHBOARD ######
 
+@method_decorator(login_required, name='dispatch')
 class DashboardsView(TemplateView):
     template_name = 'dashboards.html'
 
     def get_context_data(self, **kwargs):
         """
-        Agrega al contexto la lista de jugadores activos para ser utilizada en el frontend.
+        Agrega al contexto los jugadores activos y la distribución por puesto.
         """
         context = super().get_context_data(**kwargs)
         context['jugadores'] = Jugador.objects.filter(estado=True)
+
+        # Consulta: Cantidad de jugadores por puesto
+        context['puestos'] = Puesto.objects.filter(estado=True).annotate(total_jugadores=Count('jugador'))
+
         return context
+
 
 
 # API PARA OBTENER LOS DATOS DE VALORACIÓN DE UN JUGADOR
@@ -252,4 +258,78 @@ class ObtenerDatosValoracionView(View):
             "fechas": [v.fecha_registro.strftime('%Y-%m-%d') for v in valoraciones],
             "valoraciones_totales": [v.valoracion_total for v in valoraciones],
         }
+        return JsonResponse(datos)
+
+class ObtenerDatosDistribucionView(View):
+    def get(self, request, *args, **kwargs):
+        """
+        Devuelve la cantidad de jugadores por puesto en formato JSON.
+        """
+        puestos = Puesto.objects.filter(estado=True).annotate(total_jugadores=Count('jugador'))
+        datos = {
+            "puestos": [{"puesto": p.puesto, "total_jugadores": p.total_jugadores} for p in puestos]
+        }
+        return JsonResponse(datos)
+
+from django.db.models import Count, Sum, Q
+
+# Vista API para datos de penales atajados
+class ObtenerDatosPenalesView(View):
+    def get(self, request, jugador_id=None, *args, **kwargs):
+        """
+        Devuelve en formato JSON la tasa de éxito en penales atajados.
+        Si jugador_id es None, calcula para todos los arqueros.
+        """
+        if jugador_id:
+            # Filtrar estadísticas para un arquero específico
+            jugador = get_object_or_404(Jugador, id=jugador_id, puesto__puesto__icontains="portero")
+            penales_recibidos = ValoracionDetalle.objects.filter(
+                valoracion__jugador=jugador, 
+                estadistica__estadistica="PENALES RECIBIDOS"
+            ).aggregate(total=Sum('valor'))['total'] or 0
+
+            penales_atajados = ValoracionDetalle.objects.filter(
+                valoracion__jugador=jugador, 
+                estadistica__estadistica="PENALES ATAJADOS"
+            ).aggregate(total=Sum('valor'))['total'] or 0
+
+            tasa_exito = (penales_atajados / penales_recibidos * 100) if penales_recibidos > 0 else 0
+
+            datos = {
+                "jugadores": [
+                    {
+                        "nombre": f"{jugador.nombre} {jugador.apellido}",
+                        "penales_recibidos": penales_recibidos,
+                        "penales_atajados": penales_atajados,
+                        "tasa_exito": round(tasa_exito, 2),
+                    }
+                ]
+            }
+        else:
+            # Calcular estadísticas para todos los porteros
+            porteros = Jugador.objects.filter(estado=True, puesto__puesto__icontains="portero")
+            jugadores_datos = []
+
+            for portero in porteros:
+                penales_recibidos = ValoracionDetalle.objects.filter(
+                    valoracion__jugador=portero, 
+                    estadistica__estadistica="PENALES RECIBIDOS"
+                ).aggregate(total=Sum('valor'))['total'] or 0
+
+                penales_atajados = ValoracionDetalle.objects.filter(
+                    valoracion__jugador=portero, 
+                    estadistica__estadistica="PENALES ATAJADOS"
+                ).aggregate(total=Sum('valor'))['total'] or 0
+
+                tasa_exito = (penales_atajados / penales_recibidos * 100) if penales_recibidos > 0 else 0
+
+                jugadores_datos.append({
+                    "nombre": f"{portero.nombre} {portero.apellido}",
+                    "penales_recibidos": penales_recibidos,
+                    "penales_atajados": penales_atajados,
+                    "tasa_exito": round(tasa_exito, 2),
+                })
+
+            datos = {"jugadores": jugadores_datos}
+
         return JsonResponse(datos)

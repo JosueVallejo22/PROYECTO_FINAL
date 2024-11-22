@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Comparar Jugadores{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/comparacion.css' %}">
+<style>
+  /* Asegura que el contenido de la tabla sea desplazable horizontalmente si es necesario */
+  #comparison-results {
+      overflow-x: auto;
+      max-width: 100%;
+  }
+  /* Ajuste para cartas de jugadores seleccionados */
+  #selected-players {
+      max-width: 100%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Título -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold display-4 text-primary-gradient">Comparar Jugadores</h1>
+        <p class="text-muted fs-5">Selecciona jugadores para visualizar y comparar sus estadísticas de forma dinámica.</p>
+    </div>
+
+    <!-- Botón para abrir modal -->
+    <div class="text-center mb-4">
+        <button id="btn-add-players" class="btn btn-primary btn-lg rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#modal-buscar-jugadores">
+            <i class="bi bi-plus-circle fs-4"></i> Añadir jugador(es)
+        </button>
+    </div>
+
+    <!-- Contenedor de jugadores seleccionados -->
+    <div id="selected-players" class="d-flex flex-wrap gap-3 justify-content-center mb-5">
+        <!-- Las cartas de jugadores se renderizan aquí -->
+    </div>
+
+    <!-- Contenedor de resultados de la comparación -->
+    <div id="comparison-results" class="p-2 rounded shadow bg-white">
+        <p class="text-muted text-center fs-5">Añade jugadores para comenzar la comparación.</p>
+    </div>
+    <span></span>
+    <span></span>
+</div>
+
+<!-- Modal para buscar jugadores -->
+<div class="modal fade" id="modal-buscar-jugadores" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buscar Jugadores</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="search-input" class="form-control mb-3" placeholder="Escribe el nombre del jugador...">
+                <div id="search-results" class="list-group"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="clear-selection" class="btn btn-secondary rounded-pill">Limpiar selección</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/comparar_jugadores.js' %}"></script>
+{% endblock %}
