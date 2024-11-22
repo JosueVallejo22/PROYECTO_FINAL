@@ -1,47 +1,162 @@
-/* Gradiente para el texto del título */
-.text-primary-gradient {
-    background: linear-gradient(90deg, #ffffff, #2fff28); /* Gradiente */
-    -webkit-background-clip: text; /* Compatibilidad con Webkit */
-    background-clip: text; /* Propiedad estándar */
-    -webkit-text-fill-color: transparent; /* Para Safari y navegadores Webkit */
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Encabezado */
+.header-section h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #007bff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-section p {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* Botón principal */
+.action-button button {
+    font-size: 1rem;
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    color: #fff;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.action-button button:hover {
+    background: linear-gradient(90deg, #0056b3, #0091ff);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Tarjetas y gráfico radar */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Ajusta las proporciones */
+    gap: 1.5rem;
+}
+
+#selected-players-container {
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#selected-players {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Tarjetas de jugadores */
+.player-card {
+    width: 140px;
+    height: 180px;
+    background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.player-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.player-card img {
+    width: 60%;
+    margin: 10px auto 0;
+    display: block;
+}
+
+.player-card .card-body {
+    text-align: center;
+    padding: 5px;
+}
+
+.player-card .card-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+.player-card .card-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Botón de eliminar */
+.player-card .btn-danger {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border-radius: 50%;
+    padding: 5px 7px;
+    font-size: 0.8rem;
+}
+
+/* Gráfico radar */
+#radar-container {
+    background: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px; /* Reducir padding */
+    max-width: 400px; /* Limitar el ancho */
+    margin: auto; /* Centrar el contenedor */
+}
+
+#radar-container h5 {
+    font-size: 1.1rem; /* Reducir tamaño del título */
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px; /* Espaciado más compacto */
+}
+
+/* Ajustar el canvas del gráfico */
+#player-radar {
+    max-width: 100%; /* Asegurar responsividad */
+    height: auto; /* Ajustar proporcionalmente */
+    aspect-ratio: 1; /* Mantener proporción cuadrada */
 }
 
 
-/* Botón personalizado */
-.btn-primary {
-    background: linear-gradient(90deg, #009900, #034e00) !important;
-    border: none !important;
-    color: #fff !important;
-    transition: all 0.3s ease-in-out;
+/* Resultados de comparación */
+#comparison-results {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(90deg, #48ff00, #0f4900) !important;
-    box-shadow: 0px 4px 10px rgb(0, 255, 85) !important;
+#comparison-results h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
-/* Cartas de jugadores seleccionados */
-.card {
-    border: none !important;
-    border-radius: 15px !important;
-    background: linear-gradient(to bottom, #ffffff, #e8f4ff) !important;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1) !important;
-    transition: transform 0.3s ease-in-out;
+.table-responsive {
+    overflow-x: auto;
 }
 
-.card:hover {
-    transform: scale(1.03) !important;
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2) !important;
-}
-
-.card-img-top {
-    border-radius: 15px 15px 0 0 !important;
-}
-
-/* Tabla de comparación */
 .table th {
-    background: #121212 !important;
-    color: #fff !important;
+    background: #343a40;
+    color: #fff;
+    text-align: center;
+}
+
+.table td {
+    text-align: center;
+    vertical-align: middle;
 }
 
 .table-success {
@@ -54,26 +169,22 @@
     color: #dc3545 !important;
 }
 
-/* List group item hover */
-.list-group-item:hover {
-    background-color: #0072ff !important;
-    color: #fff !important;
+/* Modal */
+.modal-content {
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Modal Header */
 .modal-header {
-    background: linear-gradient(90deg, #00ff40, #ffe600) !important;
-    color: rgb(0, 0, 0) !important;
+    background: linear-gradient(90deg, #007bff, #00ff88);
+    color: white;
+    border-radius: 15px 15px 0 0;
 }
 
-/* Ajustes para pantallas pequeñas */
-@media (max-width: 768px) {
-    .card {
-        width: 100% !important;
-        margin-bottom: 1rem;
-    }
+.modal-footer {
+    justify-content: space-between;
+}
 
-    #comparison-results {
-        overflow-x: auto;
-    }
+.modal-footer button {
+    font-size: 0.9rem;
 }
