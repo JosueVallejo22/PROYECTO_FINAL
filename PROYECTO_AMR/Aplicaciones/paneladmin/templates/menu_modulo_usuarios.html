@@ -2,54 +2,77 @@
 
 {% load static %}
 
-{% block title %} MODULO USUARIOS {% endblock %}
+{% block title %}MÓDULO USUARIOS{% endblock %}
 
 {% block content %}
 <main style="padding-bottom: 4rem;">
-  <section>
-    <div class="container p-4">
-      <div class="row mt-5 justify-content-center align-items-center">
-        <h1 class="text-center p-3 text-white fw-bold">MENU MODULO USUARIOS</h1>
-        <div class="col-md-3 mb-3 mx-2 d-flex justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top">
-              <h1 class="fs-5">MANTENIMIENTO ROLES</h1>
+    <section>
+        <div class="container py-5">
+            <!-- Título del menú -->
+            <div class="row justify-content-center mb-4">
+                <h1 class="text-center text-white fw-bold">MENÚ MÓDULO USUARIOS</h1>
             </div>
-            <div class="card-body text-center">
-              <img src="{% static 'img/mantenimiento_roles_icon.png' %}"
-                alt="icono_roles" class="img-fluid"
-                style="width: 70px; height: 70px;">
+
+            <!-- Tarjetas de módulos -->
+            <div class="row g-4 justify-content-center">
+                <!-- Tarjeta Mantenimiento Roles -->
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-header bg-success text-white text-center py-3 rounded-top">
+                            <h5 class="fw-bold mb-0">MANTENIMIENTO ROLES</h5>
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <img 
+                                src="{% static 'img/mantenimiento_roles_icon.png' %}" 
+                                alt="icono_roles" 
+                                class="img-fluid" 
+                                style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
+                            <a 
+                                href="{% url 'paneladmin:mantenimiento_roles' %}" 
+                                class="btn btn-success btn-lg fw-bold shadow-sm px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Mantenimiento Usuarios -->
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-header bg-success text-white text-center py-3 rounded-top">
+                            <h5 class="fw-bold mb-0">MANTENIMIENTO USUARIOS</h5>
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <img 
+                                src="{% static 'img/person-fill-gear.svg' %}" 
+                                alt="icono_usuarios" 
+                                class="img-fluid" 
+                                style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
+                            <a 
+                                href="{% url 'paneladmin:mantenimiento_usuarios' %}" 
+                                class="btn btn-success btn-lg fw-bold shadow-sm px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer text-center">
-              <a href="{% url 'paneladmin:mantenimiento_roles' %}"
-                class="btn btn-success fw-bold">Ingresar</a>
+
+            <!-- Botón Regresar -->
+            <div class="row mt-4 justify-content-center">
+                <div class="col-md-4 text-center">
+                    <a 
+                        href="{% url 'paneladmin:menu_admin' %}" 
+                        class="btn btn-danger btn-lg fw-bold shadow-sm px-5">
+                        <i class="bi bi-arrow-left-circle me-2"></i>REGRESAR
+                    </a>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="col-md-3 mb-3 mx-2 d-flex justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top">
-              <h1 class="fs-5">MANTENIMIENTO USUARIOS</h1>
-            </div>
-            <div class="card-body text-center">
-              <img src="{% static 'img/person-fill-gear.svg' %}"
-                alt="icono_usuarios" class="img-fluid"
-                style="height: 70px; height: 70px;">
-            </div>
-            <div class="card-footer text-center">
-              <a href="{% url 'paneladmin:mantenimiento_usuarios' %}"
-                class="btn btn-success fw-bold">Ingresar</a>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex justify-content-center">
-          <a
-            href="{% url 'paneladmin:menu_admin' %}"
-            class="btn btn-danger mb-3 fw-bold"><i class="bi bi-arrow-left-circle me-2"></i>REGRESAR</a>
-        </div>
-      </div>
     </section>
-  </main>
-  {% endblock %}
+</main>
+{% endblock %}

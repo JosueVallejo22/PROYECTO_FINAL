@@ -7,7 +7,7 @@ from Aplicaciones.core.forms import JugadorForm
 from Aplicaciones.Login.models import Usuario
 from Aplicaciones.Auditoria.utils import save_audit
 from django.contrib import messages
-
+from Aplicaciones.paneladmin.submodulos.models import Puesto
 ##########################################################################################
 
 def login_required(view_func):
@@ -25,13 +25,51 @@ class MenuView(TemplateView):
 
 ##########################################################################################
 
+from django.db.models import Q
+from django.core.paginator import Paginator
+
 @method_decorator(login_required, name='dispatch')
 class listjugadoresView(ListView):
-    """vista para listar Jugadores"""
+    """Vista para listar Jugadores con filtros, búsqueda y paginación"""
     model = Jugador
     template_name = 'listjugadores.html'
     context_object_name = 'listjugadores'
-    queryset = Jugador.objects.filter(estado=True).order_by('nombre')
+    paginate_by = 5  # Número de jugadores por página
+
+    def get_queryset(self):
+        """Filtrar jugadores según búsqueda y puesto"""
+        queryset = self.model.objects.filter(estado=True)
+
+        # Obtener parámetros de búsqueda
+        search_query = self.request.GET.get('search', '').strip()
+        puesto_filter = self.request.GET.get('puesto', '')
+
+        # Filtro de búsqueda por nombre o apellido
+        if search_query:
+            queryset = queryset.filter(
+                Q(nombre__icontains=search_query) | Q(apellido__icontains=search_query)
+            )
+
+        # Filtro por puesto
+        if puesto_filter:
+            queryset = queryset.filter(puesto__id=puesto_filter)
+
+        # Ordenar alfabéticamente por nombre
+        return queryset.order_by('nombre')
+
+    def get_context_data(self, **kwargs):
+        """Agregar datos adicionales al contexto"""
+        context = super().get_context_data(**kwargs)
+
+        # Obtener la lista de puestos para el filtro
+        context['puestos'] = Puesto.objects.filter(estado=True).order_by('puesto')
+
+        # Agregar parámetros de búsqueda actuales al contexto
+        context['search_query'] = self.request.GET.get('search', '')
+        context['puesto_filter'] = self.request.GET.get('puesto', '')
+
+        return context
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -94,7 +132,6 @@ class jugadoresUpdateView(UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 class ActivarInactivarJugador(View):
-    """Vista para activar/inactivar un rol"""
     def get(self, request, pk):
         jugador = get_object_or_404(Jugador, pk=pk)
         jugador.estado = not jugador.estado

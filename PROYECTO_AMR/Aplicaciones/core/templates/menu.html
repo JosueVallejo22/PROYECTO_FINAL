@@ -1,44 +1,67 @@
-{% extends 'base.html' %} <!--ESTA LINEA DE CODIGO HEREDA LA PLANTILLA COMPLETA QUE SE ENCUENTRA EN ESE DIRECTORIO-->
-{% load static %} 
-{% block title %} Menu Principal {% endblock %} <!--ESTA LINEA DE CODIGO COLOCA EL TITULO A LA NUEVA PAGINA-->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Menu Principal{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/menu.css' %}">
-{% endblock %} 
+{% endblock %}
 
 {% block content %}
 <main style="padding-bottom: 4rem;">
     <section>
-      <div class="container-fluid p-4">
-        <div class="row mt-5 justify-content-center">
-          <div class="col-md-3 mb-3 justify-content-center">
-            <div class="card shadow-sm">
-              <div class="card-header bg-success text-center text-white fw-bold rounded-top">
-                  <h1 class="fs-5">MÓDULO JUGADORES</h1>
-              </div>
-              <div class="card-body text-center">
-                  <img src="{% static 'img/icono_j.png' %}" alt="icono_usuarios" class="img-fluid" style="width: 70px; height: 70px;">
-              </div>
-              <div class="card-footer text-center">
-                  <a href="{% url 'core:listjugadores' %}" class="btn btn-success fw-bold">Ingresar</a>
-              </div>
+        <div class="container py-5">
+            <div class="row g-4 justify-content-center">
+                <!-- Tarjeta de Jugadores -->
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-header bg-success text-white text-center rounded-top py-3">
+                            <h5 class="fw-bold mb-0">MÓDULO JUGADORES</h5>
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <img src="{% static 'img/icono_j.png' %}" alt="icono jugadores" class="img-fluid" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
+                            <a href="{% url 'core:listjugadores' %}" class="btn btn-success btn-lg fw-bold shadow-sm px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Valoraciones -->
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-header bg-success text-white text-center rounded-top py-3">
+                            <h5 class="fw-bold mb-0">MÓDULO VALORACIONES</h5>
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <img src="{% static 'img/valoracion.svg' %}" alt="icono valoraciones" class="img-fluid" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
+                            <a href="{% url 'valoraciones:modulo_valoraciones' %}" class="btn btn-success btn-lg fw-bold shadow-sm px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-header bg-success text-white text-center rounded-top py-3">
+                            <h5 class="fw-bold mb-0">DASHBOARDS</h5>
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <img src="{% static 'img/dashboards.svg' %}" alt="icono dashboards" class="img-fluid" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
+                            <a href="{% url 'valoraciones:dashboards' %}" class="btn btn-success btn-lg fw-bold shadow-sm px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col-md-3 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div class="card-header bg-success text-center text-white fw-bold rounded-top">
-              <h1 class="fs-5">MODULO VALORACIONES</h1>
-            </div>
-            <div class="card-body text-center">
-              <img src="{% static 'img/icono_v.png' %}" alt="icono_aplicativos" class="img-fluid" style="height: 70px; height: 70px;">
-            </div>
-            <div class="card-footer text-center">
-              <a href="{% url 'valoraciones:modulo_valoraciones' %}" class="btn btn-success fw-bold">Ingresar</a>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
-  </main>
+</main>
 <br>
-  
 {% endblock %}

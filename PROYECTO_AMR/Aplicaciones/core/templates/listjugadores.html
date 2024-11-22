@@ -2,74 +2,144 @@
 
 {% load static %}
 
-{% block title %}LISTA DE JUGADORES {% endblock %}
+{% block title %}Lista de Jugadores{% endblock %}
 
 {% block content %}
-
 <div class="container mt-5">
-    <div class="row">
-        <div class="d-flex justify-content-end">
-            <a href="{% url 'core:menu' %}" class="btn btn-danger mb-3 fw-bold">REGRESAR</a>
+    <!-- Encabezado con botón de regreso -->
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{% url 'core:menu' %}" class="btn btn-danger fw-bold shadow-sm">
+            <i class="bi bi-arrow-left-circle me-2"></i>Regresar
+        </a>
+    </div>
+
+    <!-- Card principal -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-success text-white text-center py-3 rounded-top">
+            <h3 class="fw-bold">Lista de Jugadores</h3>
         </div>
-
-
-        <div class="col-md-12 mb-4">
-            <div class="card mb-5">
-                <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">Lista de Jugadores</h2>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive" >
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="py-1 px-2">#</th> 
-                                    <th class="py-1 px-2">Foto</th>
-                                    <th class="py-1 px-2">Nombre</th>
-                                    <th class="py-1 px-2">Apellido</th>
-                                    <th class="py-1 px-2">Edad</th>
-                                    <th class="py-1 px-2">Puesto</th>
-                                    
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for jugador in listjugadores %}
-                                <tr style="height: 100px;" class="text-center">
-                                    <td>{{ forloop.counter }}</td>
-                                    <td> 
-                                        <img src="{{ jugador.imagen.url }}" alt="Imagen de {{ jugador.nombre }} " style="width: 10px; height: auto;">
-                                    </td>
-                                    <td>{{ jugador.nombre }}</td>
-                                    <td>{{ jugador.apellido }}</td>
-                                    <td>{{ jugador.calcular_edad }}</td>
-                                    <td>{{ jugador.puesto }}</td>
-                                    <td class="text-center"> 
-                                        <div class="d-flex justify-content-center gap-2"> 
-                                            <a href="{% url 'core:editjugadores' jugador.pk %}" class="btn btn-warning btn-sm fw-bold">Editar</a>
-                                            <a href="{% url 'core:detjugadores' jugador.pk %}" class="btn btn-info btn-sm fw-bold">Detalles</a>
-                                            <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-danger btn-sm fw-bold">Eliminar</a>
-                                        </div> 
-                                    </td>      
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="12" class="text-center">No hay jugadores registrados.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center">
-                        <a href="{% url 'core:crearjugador' %}" class=" btn btn-success btn-sm">
-                            Crear nuevo jugador
+        <div class="card-body">
+            <!-- Tabla responsiva -->
+            <div class="table-responsive">
+                <form method="get" class="mb-4">
+                    <div class="input-group">
+                        <!-- Campo de búsqueda -->
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Buscar por nombre o apellido" 
+                            value="{{ search_query }}" 
+                            class="form-control"
+                        >
+                
+                        <!-- Filtro por puesto -->
+                        <select name="puesto" class="form-select">
+                            <option value="">Filtrar por puesto</option>
+                            {% for puesto in puestos %}
+                            <option value="{{ puesto.id }}" {% if puesto_filter == puesto.id|stringformat:"s" %}selected{% endif %}>
+                                {{ puesto.puesto }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                
+                        <!-- Botones -->
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                        <a href="{% url 'core:listjugadores' %}" class="btn btn-warning">
+                            <i class="bi bi-x-circle"></i> Limpiar
                         </a>
                     </div>
+                </form>
+                
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-success">
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Edad</th>
+                            <th>Puesto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jugador in listjugadores %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ jugador.nombre }}</td>
+                            <td>{{ jugador.apellido }}</td>
+                            <td>{{ jugador.calcular_edad }}</td>
+                            <td>{{ jugador.puesto }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{% url 'core:editjugadores' jugador.pk %}" class="btn btn-warning btn-sm fw-bold shadow-sm">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    <a href="{% url 'core:detjugadores' jugador.pk %}" class="btn btn-info btn-sm fw-bold shadow-sm">
+                                        <i class="bi bi-eye"></i> Detalles
+                                    </a>
+                                    <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-danger btn-sm fw-bold shadow-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-muted">No hay jugadores registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <!-- Paginación -->
+                <div class="d-flex justify-content-center mt-4">
+                    {% if is_paginated %}
+                    <nav aria-label="Paginación de jugadores">
+                        <ul class="pagination">
+                            <!-- Botón "anterior" -->
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&puesto={{ puesto_filter }}" aria-label="Anterior">
+                                    &laquo;
+                                </a>
+                            </li>
+                            {% endif %}
+    
+                            <!-- Números de página -->
+                            {% for num in paginator.page_range %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}&search={{ search_query }}&puesto={{ puesto_filter }}">{{ num }}</a>
+                            </li>
+                            {% endfor %}
+    
+                            <!-- Botón "siguiente" -->
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&puesto={{ puesto_filter }}" aria-label="Siguiente">
+                                    &raquo;
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
                 </div>
+            </div>
+    
+            <!-- Botón para crear nuevo jugador -->
+            <div class="text-center mt-4">
+                <a href="{% url 'core:crearjugador' %}" class="btn btn-success btn-lg fw-bold shadow-sm">
+                    <i class="bi bi-plus-circle me-2"></i>Crear Nuevo Jugador
+                </a>
             </div>
         </div>
     </div>
     
 </div>
+
+<!-- Espaciador para evitar que el contenido se corte -->
+<div class="mt-5"></div>
 
 {% endblock %}

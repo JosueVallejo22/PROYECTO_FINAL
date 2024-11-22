@@ -57,6 +57,7 @@
                                     <th>Puesto</th>
                                     <th>Fecha de Valoración</th>
                                     <th>Promedio Total</th>
+                                    <th>Rendimiento</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -69,27 +70,30 @@
                                     <td>{{ valoracion.fecha_registro|date:"d/m/Y" }}</td>
                                     <td>{{ valoracion.valoracion_total|floatformat:1 }}</td>
                                     <td>
+                                        <!-- Alerta según el valor de valoración_total -->
+                                        {% if valoracion.valoracion_total < 80 %}
+                                            <span class="badge bg-danger">Bajo</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Adecuado</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
                                         <div class="d-flex justify-content-center gap-2">
                                             <a href="?detalle={{ valoracion.id }}" class="btn btn-info btn-sm fw-bold">
                                                 <i class="bi bi-eye"></i> Detalles
-                                            </a>
-                                            <a href="#" class="btn btn-warning btn-sm fw-bold">
-                                                <i class="bi bi-pencil"></i> Editar
-                                            </a>
-                                            <a href="#" class="btn btn-danger btn-sm fw-bold">
-                                                <i class="bi bi-trash"></i> Eliminar
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted">No hay valoraciones registradas.</td>
+                                    <td colspan="7" class="text-center text-muted">No hay valoraciones registradas.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>                            
                         </table>
                     </div>
+
 
                     <!-- Paginación -->
                     <div class="d-flex justify-content-center mt-4">

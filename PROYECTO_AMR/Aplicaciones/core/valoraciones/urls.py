@@ -15,4 +15,9 @@ urlpatterns = [
 
     # Ruta para guardar la valoración en la base de datos
     path('menu/valoraciones/guardar/', GuardarValoracionView.as_view(), name='guardar_valoracion'),
+
+    #Ruta de dashboards
+    path('dashboards/', DashboardsView.as_view(), name='dashboards'),
+    path('jugador/<int:jugador_id>/evolucion-data/', ObtenerDatosValoracionView.as_view(), name='jugador-evolucion-data'),
+
 ]

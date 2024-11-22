@@ -20,11 +20,11 @@ class ModuloValoracionesView(ListView):
     model = Valoracion
     template_name = 'modulo_valoraciones.html'
     context_object_name = 'valoraciones'
-    paginate_by = 5  # Cambia según la cantidad que desees por página
+    paginate_by = 5
 
     def get_queryset(self):
         # Obtener el queryset inicial
-        queryset = super().get_queryset().select_related('jugador', 'jugador__puesto')
+        queryset = super().get_queryset().select_related('jugador', 'jugador__puesto').order_by('-id')
 
         # Obtener parámetros de búsqueda y filtro
         search_query = self.request.GET.get('search', '')
@@ -219,4 +219,37 @@ class GuardarValoracionView(FormView):
     def form_invalid(self, form):
         messages.error(self.request, "Formulario inválido. Verifique los datos ingresados.")
         return redirect(self.success_url)
+    
+#######################
+#DASHBOARDS#
 
+###### PRIMER DASHBOARD ######
+
+class DashboardsView(TemplateView):
+    template_name = 'dashboards.html'
+
+    def get_context_data(self, **kwargs):
+        """
+        Agrega al contexto la lista de jugadores activos para ser utilizada en el frontend.
+        """
+        context = super().get_context_data(**kwargs)
+        context['jugadores'] = Jugador.objects.filter(estado=True)
+        return context
+
+
+# API PARA OBTENER LOS DATOS DE VALORACIÓN DE UN JUGADOR
+class ObtenerDatosValoracionView(View):
+    def get(self, request, jugador_id, *args, **kwargs):
+        """
+        Devuelve en formato JSON la evolución de valoraciones totales
+        de un jugador específico ordenadas por fecha.
+        """
+        jugador = get_object_or_404(Jugador, id=jugador_id)
+        valoraciones = Valoracion.objects.filter(jugador=jugador).order_by('fecha_registro')
+
+        datos = {
+            "jugador": f"{jugador.nombre} {jugador.apellido}",
+            "fechas": [v.fecha_registro.strftime('%Y-%m-%d') for v in valoraciones],
+            "valoraciones_totales": [v.valoracion_total for v in valoraciones],
+        }
+        return JsonResponse(datos)

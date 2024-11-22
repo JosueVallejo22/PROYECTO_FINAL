@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Dashboards
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-6 fw-bold text-white">EVOLUCION DE JUGADORES EN EL TIEMPO</h1>
+        <p class="text-white">Selecciona jugadores y observa su rendimiento.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Contenedor para los selectores -->
+        <div class="col-lg-4">
+            <div id="jugador-select-container" class="p-3 bg-light rounded shadow-sm" style="max-height: 450px; overflow-y: auto;">
+                <h5 class="text-center mb-3 fw-bold">Jugadores</h5>
+                <select id="jugador-select-1" class="form-select jugador-select mb-3">
+                    <option value="" disabled selected>-- Selecciona un jugador --</option>
+                    {% for jugador in jugadores %}
+                        <option value="{{ jugador.id }}">{{ jugador.nombre }} {{ jugador.apellido }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Gráfico -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4 fw-bold" id="chart-title">Evolucion de Jugadores</h5>
+                    <div style="position: relative; height: 400px;">
+                        <canvas id="jugadorChart"></canvas>
+                    </div>
+                    <p class="text-center text-muted mt-3" id="chart-info"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dashboards.js' %}"></script>
+{% endblock %}
