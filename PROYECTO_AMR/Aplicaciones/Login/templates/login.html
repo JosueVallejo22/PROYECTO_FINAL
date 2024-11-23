@@ -7,99 +7,57 @@
     <meta name="description" content="Aplicativo Web para realizar un análisis del rendimiento deportivo de los futbolistas en un club.">
     <meta name="keywords" content="futbol, valoraciones, plantillas, jugadores">
     <meta name="author" content="Josue Vallejo, Robert Vera">
-    <title>INICIAR SESIÓN</title>
+    <title>Iniciar Sesión</title>
+    <!-- Estilos -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
-<body class="d-flex justify-content-center align-items-center vh-100">
-    <main>
-        <section>
-            <div class="bg-white p-5 rounded-5">
-                <div class="d-flex justify-content-center">
-                    <img src="{% static 'img/person-login.svg' %}" style="width: 60%; height: 60%;" alt="icono_logueo">
+<body>
+    <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
+        <div class="login-box p-4 col-10 col-md-8 col-lg-6 col-xl-4">
+            <!-- Icono principal -->
+            <div class="login-icon text-center mb-4">
+                <i class="bi bi-person-badge"></i>
+            </div>
+            <!-- Título -->
+            <h1 class="text-center mb-4">Iniciar Sesión</h1>
+            <!-- Bloque de error -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            <!-- Formulario -->
+            <form method="POST" action="{% url 'Login:login_usuario' %}">
+                {% csrf_token %}
+                <!-- Usuario -->
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label">Nombre de usuario</label>
+                    <input type="text" id="username" name="nombre_usuario" class="form-control" placeholder="Ingrese su usuario" required>
                 </div>
-                <div class="text-center fs-1 fw-bold">INICIAR SESIÓN</div>
-
-                <!-- Formulario de Login -->
-                <form method="POST" action="{% url 'Login:login_usuario' %}">
-                    {% csrf_token %}
-                    <div class="input-group mt-2">
-                        <div class="input-group-text bg-success">
-                            <img src="{% static 'img/person.svg' %}" style="transform: scale(1.2)" alt="icono_usuario">
-                        </div>
-                        <input class="form-control" type="text" name="nombre_usuario" placeholder="INGRESE SU NOMBRE DE USUARIO" required>
-                    </div>
-                    <div class="input-group mt-2">
-                        <div class="input-group-text bg-success">
-                            <img src="{% static 'img/key.svg' %}" style="transform: scale(1.2)" alt="icono_contrasena">
-                        </div>
-                        <input class="form-control" type="password" name="clave" placeholder="INGRESE SU CONTRASEÑA" id="clave" required>
+                <!-- Contraseña -->
+                <div class="form-group mb-3 position-relative">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" id="password" name="clave" class="form-control" placeholder="Ingrese su contraseña" required>
                         <button type="button" id="toggle-password" class="btn btn-outline-secondary">
-                            <img src="{% static 'img/eye-fill.svg' %}" alt="Ver contraseña" id="eye-icon">
+                            <i id="eye-icon" class="bi bi-eye-fill"></i>
                         </button>
                     </div>
-
-                    <!-- Recuperar Contraseña y Botón de Ingreso -->
-                    <div class="d-flex justify-content-around mt-3">
-                        <a href="{% url 'Login:solicitar_restablecimiento' %}" class="text-decoration-none text-success fw-bold fst-italic">Recuperar Contraseña</a>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100 mt-3">INGRESAR</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <!-- Modal para mostrar errores -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true" {% if form.non_field_errors %} data-show="true" {% endif %}>
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">ERROR</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger mb-0">
-                            {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
+                <!-- Recuperar contraseña -->
+                <a href="{% url 'Login:solicitar_restablecimiento' %}" class="d-block text-center mb-3">Recuperar Contraseña</a>
+                <!-- Botón -->
+                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+            </form>
         </div>
     </div>
-
-    <footer class="footer d-flex fixed-bottom" id="footer">
-        <div class="container text-center">
-          <p class="mb-0 text-white">© 2024 VV Enterprises. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
+    
+    <!-- Scripts -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mostrar el modal solo si hay errores
-            var errorModal = document.getElementById('errorModal');
-            if (errorModal.getAttribute('data-show') === 'true') {
-                var bootstrapModal = new bootstrap.Modal(errorModal);
-                bootstrapModal.show();
-            }
-
-            // Alternar visibilidad de la contraseña
-            document.getElementById('toggle-password').addEventListener('click', function() {
-                const passwordInput = document.getElementById('clave');
-                const eyeIcon = document.getElementById('eye-icon');
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    eyeIcon.src = '{% static "img/eye-slash-fill.svg" %}'; // Cambia el icono a "ocultar"
-                } else {
-                    passwordInput.type = 'password';
-                    eyeIcon.src = '{% static "img/eye-fill.svg" %}'; // Cambia el icono a "mostrar"
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/login.js' %}"></script>
 </body>
 </html>

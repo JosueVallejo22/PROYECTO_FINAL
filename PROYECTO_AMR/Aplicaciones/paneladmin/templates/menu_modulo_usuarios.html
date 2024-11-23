@@ -2,77 +2,75 @@
 
 {% load static %}
 
-{% block title %}MÓDULO USUARIOS{% endblock %}
+{% block title %}Módulo Usuarios{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/menu_usuarios.css' %}">
+{% endblock %}
 
 {% block content %}
-<main style="padding-bottom: 4rem;">
-    <section>
-        <div class="container py-5">
-            <!-- Título del menú -->
-            <div class="row justify-content-center mb-4">
-                <h1 class="text-center text-white fw-bold">MENÚ MÓDULO USUARIOS</h1>
-            </div>
+<main class="py-5">
+    <div class="container">
+        <!-- Título -->
+        <div class="text-center mb-5">
+            <h1 class="text-warning fw-bold">Menú Módulo Usuarios</h1>
+            <p class="text-light">Selecciona una de las opciones para gestionar usuarios y roles</p>
+        </div>
 
-            <!-- Tarjetas de módulos -->
-            <div class="row g-4 justify-content-center">
-                <!-- Tarjeta Mantenimiento Roles -->
-                <div class="col-md-4">
-                    <div class="card shadow-lg border-0 rounded-4">
-                        <div class="card-header bg-success text-white text-center py-3 rounded-top">
-                            <h5 class="fw-bold mb-0">MANTENIMIENTO ROLES</h5>
-                        </div>
-                        <div class="card-body text-center py-4">
-                            <img 
-                                src="{% static 'img/mantenimiento_roles_icon.png' %}" 
-                                alt="icono_roles" 
-                                class="img-fluid" 
-                                style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
-                            <a 
-                                href="{% url 'paneladmin:mantenimiento_roles' %}" 
-                                class="btn btn-success btn-lg fw-bold shadow-sm px-4">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
-                            </a>
-                        </div>
+        <!-- Tarjetas -->
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <!-- Tarjeta: Mantenimiento Roles -->
+            <div class="col">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/mantenimiento_roles_icon.png' %}" 
+                            alt="Icono Roles" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Mantenimiento Roles</h5>
+                        <p class="card-text">Gestiona los roles del sistema.</p>
                     </div>
-                </div>
-
-                <!-- Tarjeta Mantenimiento Usuarios -->
-                <div class="col-md-4">
-                    <div class="card shadow-lg border-0 rounded-4">
-                        <div class="card-header bg-success text-white text-center py-3 rounded-top">
-                            <h5 class="fw-bold mb-0">MANTENIMIENTO USUARIOS</h5>
-                        </div>
-                        <div class="card-body text-center py-4">
-                            <img 
-                                src="{% static 'img/person-fill-gear.svg' %}" 
-                                alt="icono_usuarios" 
-                                class="img-fluid" 
-                                style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
-                            <a 
-                                href="{% url 'paneladmin:mantenimiento_usuarios' %}" 
-                                class="btn btn-success btn-lg fw-bold shadow-sm px-4">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
-                            </a>
-                        </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'paneladmin:mantenimiento_roles' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Botón Regresar -->
-            <div class="row mt-4 justify-content-center">
-                <div class="col-md-4 text-center">
-                    <a 
-                        href="{% url 'paneladmin:menu_admin' %}" 
-                        class="btn btn-danger btn-lg fw-bold shadow-sm px-5">
-                        <i class="bi bi-arrow-left-circle me-2"></i>REGRESAR
-                    </a>
+            <!-- Tarjeta: Mantenimiento Usuarios -->
+            <div class="col">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/person-fill-gear.svg' %}" 
+                            alt="Icono Usuarios" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Mantenimiento Usuarios</h5>
+                        <p class="card-text">Gestiona los usuarios del sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'paneladmin:mantenimiento_usuarios' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+
+        <!-- Botón Regresar -->
+        <div class="text-center mt-5">
+            <a 
+                href="{% url 'paneladmin:menu_admin' %}" 
+                class="btn btn-danger btn-lg fw-bold shadow-sm px-5">
+                <i class="bi bi-arrow-left-circle me-2"></i>Regresar
+            </a>
+        </div>
+    </div>
 </main>
 {% endblock %}

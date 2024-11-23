@@ -1,0 +1,58 @@
+/* Fondo general */
+body {
+    background: linear-gradient(to bottom, #711a1b, #1a0630);
+}
+
+/* Cabecera de la tabla */
+.table-dark {
+    background-color: #000;
+    color: white;
+}
+
+/* Botones */
+.btn-success {
+    background-color: #28a745;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: black;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* Tabla fija */
+.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table td {
+    word-wrap: break-word;
+}
+
+/* Botones en pantallas pequeñas */
+.flex-wrap {
+    gap: 0.5rem;
+}

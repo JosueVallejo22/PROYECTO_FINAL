@@ -61,17 +61,7 @@
                 <div class="card-body">
 
                     <!-- Formulario para buscar -->
-                    <form method="get" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" name="q" placeholder="Buscar..." value="{{ request.GET.q|default:'' }}" class="form-control">
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-search"></i> Buscar
-                            </button>
-                            <a href="{% url 'submodulos:mantenimiento_cualidades' %}" class="btn btn-warning">
-                                <i class="bi bi-x-circle"></i> Limpiar
-                            </a>
-                        </div>
-                    </form>
+                    {% include "form_busqueda.html" with clear_url=request.path %}
 
                     <!-- Tabla -->
                     <div class="table-responsive">

@@ -1,0 +1,150 @@
+/* Fondo del login */
+body {
+    background: linear-gradient(to bottom, #711a1b, #1a0630);
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Contenedor principal */
+.container-fluid {
+    background: linear-gradient(to bottom, #711a1b, #1a0630);
+}
+
+/* Caja del login */
+.login-box {
+    background: #2c1a2b;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 350px; /* Tamaño máximo reducido */
+}
+
+/* Ícono del login */
+.login-box .login-icon {
+    font-size: 8rem; /* Tamaño ajustado */
+    color: #ffc107;
+    margin-bottom: 1.5rem;
+}
+
+/* Título */
+h1 {
+    font-size: 1.5rem; /* Tamaño reducido */
+    color: #ffc107;
+    margin-bottom: 1rem;
+}
+
+/* Asegura que el texto sea visible mientras escribes */
+.form-control {
+    color: #ffc107; /* Color amarillo para el texto */
+    background: #1a0d1c; /* Fondo oscuro */
+    border: 1px solid #ffc107; /* Bordes amarillos */
+    font-size: 1rem; /* Tamaño del texto */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Cuando el input está enfocado */
+.form-control:focus {
+    color: #ffc107; /* Asegura que el texto permanezca visible */
+    background: #2c1a2b; /* Fondo más claro */
+    border-color: #e0a800; /* Bordes más brillantes */
+    box-shadow: 0 0 8px #ffc107; /* Efecto de resplandor */
+    outline: none; /* Elimina el borde por defecto */
+}
+
+/* Placeholder visible y accesible */
+.form-control::placeholder {
+    color: #ffc107; /* Amarillo tenue */
+    opacity: 0.8;
+}
+
+
+/* Efectos al enfocar */
+.form-control:focus {
+    background: #2c1a2b;
+    border-color: #e0a800;
+    box-shadow: 0 0 8px #ffc107;
+    outline: none;
+}
+
+/* Labels */
+.form-label {
+    font-size: 0.85rem; /* Tamaño reducido */
+    color: #ffc107;
+    margin-bottom: 0.3rem;
+}
+
+/* Botón de mostrar contraseña */
+.btn-outline-secondary {
+    background: #1a0d1c;
+    color: #ffc107;
+    border-radius: 0 10px 10px 0;
+}
+
+#eye-icon {
+    font-size: 1.2rem;
+}
+
+#eye-icon:hover {
+    color: #e0a800;
+}
+
+/* Botón de ingresar */
+.btn-primary {
+    background-color: #ffc107;
+    color: #2c1a2b;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem; /* Tamaño reducido */
+    padding: 0.5rem 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #e0a800;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Link recuperar contraseña */
+a {
+    color: #ffc107;
+    font-size: 0.85rem; /* Tamaño reducido */
+}
+
+a:hover {
+    color: #e0a800;
+    text-decoration: underline;
+}
+
+/* Mensaje de error */
+.alert-danger {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    font-size: 0.85rem; /* Tamaño reducido */
+}
+
+/* Ajustes responsivos */
+@media (max-width: 576px) {
+    .login-box {
+        padding: 1.5rem;
+    }
+
+    .login-icon {
+        font-size: 3rem; /* Tamaño reducido */
+    }
+
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    .btn-primary {
+        font-size: 0.9rem;
+    }
+
+    a {
+        font-size: 0.8rem;
+    }
+}

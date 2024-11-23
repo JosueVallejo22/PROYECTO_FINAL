@@ -21,6 +21,8 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive" >
+                        {% include "form_filtro_base.html" with search_name="q" search_placeholder="Buscar por nombre o apellido..." filter_name="puesto" filter_placeholder="Filtrar por puesto" filter_options=puestos filter_selected=puesto_selected clear_url=clear_url %}
+
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -65,10 +67,12 @@
                         </table>
                     </div>
                     <div class="text-center">
-                        <a href="{% url 'submodulos:crear_jugador_admin' %}" class=" btn btn-success btn-sm">
+                        <a href="{% url 'submodulos:crear_jugador_admin' %}" class=" btn btn-success btn-lg">
                             Crear nuevo jugador
                         </a>
                     </div>
+                    {% include "paginacion_base.html" %}
+
                 </div>
             </div>
         </div>

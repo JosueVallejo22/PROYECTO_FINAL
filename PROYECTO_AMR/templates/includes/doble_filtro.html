@@ -1,0 +1,43 @@
+<form method="get" class="mb-4">
+    <div class="input-group">
+        <!-- Campo de búsqueda -->
+        <input type="text" 
+               name="{{ search_name|default:'search' }}" 
+               placeholder="{{ search_placeholder|default:'Buscar...' }}" 
+               value="{{ search }}" 
+               class="form-control">
+
+        <!-- Filtro por usuario -->
+        {% if filter_options %}
+        <select name="{{ filter_name|default:'filter' }}" class="form-control">
+            <option value="">{{ filter_placeholder|default:'Filtrar...' }}</option>
+            {% for option in filter_options %}
+                <option value="{{ option.id }}" {% if option.id|stringformat:"s" == filter_selected|stringformat:"s" %}selected{% endif %}>
+                    {{ option.nombre_usuario }}
+                </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+
+        <!-- Filtro por acción -->
+        {% if action_options %}
+            <select name="accion" class="form-control">
+                <option value="">Filtrar por acción</option>
+                {% for action in action_options %}
+                    <option value="{{ action.codigo }}" {% if action.codigo == accion_selected %}selected{% endif %}>
+                        {{ action.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        
+        {% endif %}
+        
+        <!-- Botones -->
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-search"></i> Buscar
+        </button>
+        <a href="{{ clear_url }}" class="btn btn-warning">
+            <i class="bi bi-x-circle"></i> Limpiar
+        </a>
+    </div>
+</form>

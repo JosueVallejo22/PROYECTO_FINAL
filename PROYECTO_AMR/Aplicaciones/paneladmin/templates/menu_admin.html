@@ -1,65 +1,88 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %} 
-{% block title %}MENÚ ADMINISTRATIVO{% endblock %}
+
+{% block title %}Menú Administrativo{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/menu_admin.css' %}">
+{% endblock %}
 
 {% block content %}
-<main style="padding-bottom: 4rem;">
-    <section>
-        <div class="container py-5">
-            <!-- Título del menú -->
-            <div class="row justify-content-center mb-5">
-                <h1 class="text-center text-white fw-bold">MENÚ ADMINISTRATIVO</h1>
-            </div>
+<main class="py-5">
+    <div class="container">
+        <!-- Título -->
+        <div class="text-center mb-5">
+            <h1 class="text-warning fw-bold">Menú Administrativo</h1>
+            <p class="text-light">Selecciona una de las opciones para continuar</p>
+        </div>
 
-            <!-- Tarjetas de módulos -->
-            <div class="row g-4 justify-content-center">
-                <!-- Tarjeta Módulo Usuarios -->
-                <div class="col-md-4">
-                    <div class="card shadow-lg border-0 rounded-4">
-                        <div class="card-header bg-success text-white text-center py-3 rounded-top">
-                            <h5 class="fw-bold mb-0">MÓDULO USUARIOS</h5>
-                        </div>
-                        <div class="card-body text-center py-4">
-                            <img 
-                                src="{% static 'img/person-gear.svg' %}" 
-                                alt="icono usuarios" 
-                                class="img-fluid" 
-                                style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
-                            <a 
-                                href="{% url 'paneladmin:menu_modulo_usuarios' %}" 
-                                class="btn btn-success btn-lg fw-bold shadow-sm px-4">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
-                            </a>
-                        </div>
+        <!-- Tarjetas -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Tarjeta: Módulo Usuarios -->
+            <div class="col">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/person-gear.svg' %}" 
+                            alt="icono usuarios" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Módulo Usuarios</h5>
+                        <p class="card-text">Gestiona los roles y usuarios del sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'paneladmin:menu_modulo_usuarios' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
                     </div>
                 </div>
+            </div>
 
-                <!-- Tarjeta Submódulos Aplicativo -->
-                <div class="col-md-4">
-                    <div class="card shadow-lg border-0 rounded-4">
-                        <div class="card-header bg-success text-white text-center py-3 rounded-top">
-                            <h5 class="fw-bold mb-0">SUBMÓDULOS APLICATIVO</h5>
-                        </div>
-                        <div class="card-body text-center py-4">
-                            <img 
-                                src="{% static 'img/gear.svg' %}" 
-                                alt="icono aplicativos" 
-                                class="img-fluid" 
-                                style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="card-footer text-center py-3 bg-light rounded-bottom">
-                            <a 
-                                href="{% url 'submodulos:menu_submodulos' %}" 
-                                class="btn btn-success btn-lg fw-bold shadow-sm px-4">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
-                            </a>
-                        </div>
+            <!-- Tarjeta: Submódulos Aplicativo -->
+            <div class="col">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/gear.svg' %}" 
+                            alt="icono aplicativos" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Menú Principal</h5>
+                        <p class="card-text">Accede al menu a nivel operativo del sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'core:menu' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Submódulos Aplicativo -->
+            <div class="col">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/gear.svg' %}" 
+                            alt="icono aplicativos" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Submódulos Aplicativo</h5>
+                        <p class="card-text">Accede a las configuraciones y submódulos del sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'submodulos:menu_submodulos' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </main>
 {% endblock %}

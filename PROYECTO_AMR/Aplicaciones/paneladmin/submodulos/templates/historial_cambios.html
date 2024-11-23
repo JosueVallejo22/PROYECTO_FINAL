@@ -25,29 +25,8 @@
                 </div>
                 <div class="card-body">
                     <!-- Formulario de búsqueda y filtros -->
-                    <form method="get" class="row g-3 mb-4">
-                        <div class="col-md-8">
-                            <input type="text" name="search" class="form-control" placeholder="Buscar por usuario o tabla" value="{{ request.GET.search }}">
-                        </div>
-                        <div class="col-md-2">
-                            <select name="usuario" class="form-select">
-                                <option value="">Filtrar por usuario</option>
-                                {% for usuario in usuarios %}
-                                    <option value="{{ usuario.id }}" {% if request.GET.usuario == usuario.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ usuario.nombre_usuario }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-2 d-flex gap-2">
-                            <button type="submit" class="btn btn-success w-100">
-                                <i class="bi bi-search"></i> Buscar
-                            </button>
-                            <a href="{% url 'submodulos:lista_cambios' %}" class="btn btn-warning w-100">
-                                <i class="bi bi-x-circle"></i> Limpiar
-                            </a>
-                        </div>
-                    </form>
+                    {% include "includes/doble_filtro.html" with search_name="search" search_placeholder="Buscar por usuario o tabla..." filter_name="usuario" filter_placeholder="Filtrar por usuario" filter_options=usuarios filter_selected=usuario_selected action_options=acciones accion_selected=accion_selected clear_url=clear_url %}
+
 
                     <!-- Tabla de auditoría -->
                     <div class="table-responsive">

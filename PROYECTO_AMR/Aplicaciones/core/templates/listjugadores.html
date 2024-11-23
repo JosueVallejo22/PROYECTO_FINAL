@@ -94,38 +94,7 @@
                 </table>
                 
                 <!-- Paginación -->
-                <div class="d-flex justify-content-center mt-4">
-                    {% if is_paginated %}
-                    <nav aria-label="Paginación de jugadores">
-                        <ul class="pagination">
-                            <!-- Botón "anterior" -->
-                            {% if page_obj.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&puesto={{ puesto_filter }}" aria-label="Anterior">
-                                    &laquo;
-                                </a>
-                            </li>
-                            {% endif %}
-    
-                            <!-- Números de página -->
-                            {% for num in paginator.page_range %}
-                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}&search={{ search_query }}&puesto={{ puesto_filter }}">{{ num }}</a>
-                            </li>
-                            {% endfor %}
-    
-                            <!-- Botón "siguiente" -->
-                            {% if page_obj.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&puesto={{ puesto_filter }}" aria-label="Siguiente">
-                                    &raquo;
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
-                </div>
+                {% include "paginacion_base.html" %}
             </div>
     
             <!-- Botón para crear nuevo jugador -->

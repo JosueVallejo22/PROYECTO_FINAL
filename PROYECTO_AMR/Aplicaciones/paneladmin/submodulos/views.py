@@ -49,14 +49,19 @@ class PaisListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        query = self.request.GET.get('q')
+        query = self.request.GET.get('q')  # Obtiene el valor del campo de búsqueda
         queryset = Pais.objects.all().order_by('pais')
         if query:
             queryset = queryset.filter(
-                Q(pais__icontains=query)
+                Q(pais__icontains=query)  # Filtra por coincidencias parciales
             )
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
+        return context
+    
 @method_decorator(admin_required, name='dispatch')
 class PaisCreateView(CreateView):
     model = Pais
@@ -73,6 +78,7 @@ class PaisCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['paises'] = Pais.objects.all().order_by('pais')
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
     
 @method_decorator(admin_required, name='dispatch')
@@ -85,6 +91,7 @@ class PaisUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['paises'] = Pais.objects.all().order_by('pais')
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
     
     def form_valid(self, form):
@@ -126,6 +133,7 @@ class CualidadListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['q'] = self.request.GET.get('q', '')  # Pasar la búsqueda al contexto para mantenerla en la vista
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
 
 
@@ -145,6 +153,7 @@ class CualidadCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cualidades'] = Cualidad.objects.all().order_by('cualidad')
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
 
 @method_decorator(admin_required, name='dispatch')
@@ -157,6 +166,7 @@ class CualidadUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cualidades'] = Cualidad.objects.all().order_by('cualidad')
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
     
     def form_valid(self, form):
@@ -207,9 +217,10 @@ class EstadisticasListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = EstadisticaForm()  # Formulario actualizado
-        context['cualidades'] = Cualidad.objects.all().order_by('id')  # Para el select de cualidades
         context['search'] = self.request.GET.get('search', '')
-        context['cualidad_selected'] = self.request.GET.get('cualidad', '')
+        context['cualidades'] = Cualidad.objects.all().order_by('id')  # Opciones del filtro
+        context['cualidad_selected'] = self.request.GET.get('cualidad', '')  # Mantener seleccionada la opción
+        context['clear_url'] = self.request.path  # URL para limpiar filtros
         return context
 
 
@@ -229,6 +240,7 @@ class EstadisticasCreateView(CreateView):
         context['estadisticas'] = Estadistica.objects.all().order_by('cualidad')
         context['form'] = self.get_form()
         context['cualidades'] = Cualidad.objects.all().order_by('id')  # Select de cualidades
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
 
 
@@ -274,6 +286,7 @@ class PosicionListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = PosicionForm()
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
 
 
@@ -287,6 +300,7 @@ class PosicionCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['posiciones'] = Posicion.objects.all()
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
     
 
@@ -307,6 +321,7 @@ class PosicionUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['posiciones'] = Posicion.objects.all()
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
     
     def form_valid(self, form):
@@ -338,6 +353,7 @@ class PuestoListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = PuestoForm()
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
 
 
@@ -369,6 +385,7 @@ class PuestoUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['puestos'] = Puesto.objects.all().order_by('posicion')
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
     
     def form_valid(self, form):
@@ -418,6 +435,7 @@ class PuestoCualidadListView(ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = PuestoCualidadForm()
         context['puestos'] = Puesto.objects.filter(estado=True).order_by('puesto')
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
 
 @method_decorator(admin_required, name='dispatch')
@@ -429,6 +447,7 @@ class PuestoCualidadCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         context['puestos_cualidades'] = PuestoCualidad.objects.all().order_by('puesto', 'cualidad')
         return context
     
@@ -448,6 +467,7 @@ class PuestoCualidadUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['puestos_cualidades'] = PuestoCualidad.objects.all().order_by('puesto', 'cualidad')
+        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
         return context
 
     def form_valid(self, form):
@@ -474,7 +494,35 @@ class ListarJugador(ListView):
     model = Jugador
     template_name = 'lista_jugadores_admin.html'
     context_object_name = 'listjugadores'
-    queryset = Jugador.objects.filter(estado=False).order_by('nombre')
+    paginate_by = 5  # Si deseas paginación
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '').strip()  # Búsqueda
+        puesto_filter = self.request.GET.get('puesto', '')  # Filtro por puesto
+
+        # Filtra jugadores activos y ordenados por nombre
+        queryset = Jugador.objects.filter(estado=False).order_by('nombre')
+
+        if query:
+            # Filtra por nombre o apellido
+            queryset = queryset.filter(
+                Q(nombre__icontains=query) | Q(apellido__icontains=query)
+            )
+
+        if puesto_filter:
+            # Filtra por puesto (relación FK)
+            queryset = queryset.filter(puesto_id=puesto_filter)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['puestos'] = Puesto.objects.all().order_by('puesto')  # Opciones para el filtro de puesto
+        context['puesto_selected'] = self.request.GET.get('puesto', '')  # Opción seleccionada
+        context['search'] = self.request.GET.get('q', '')  # Valor del campo de búsqueda
+        context['clear_url'] = self.request.path  # URL para el botón "Limpiar"
+        return context
+
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -563,6 +611,7 @@ class ListaCambios(ListView):
         queryset = super().get_queryset().order_by('-fecha', '-hora')
         search_query = self.request.GET.get('search', '')
         usuario_filter = self.request.GET.get('usuario', '')
+        accion_filter = self.request.GET.get('accion', '')
 
         if search_query:
             queryset = queryset.filter(
@@ -573,13 +622,29 @@ class ListaCambios(ListView):
         if usuario_filter:
             queryset = queryset.filter(usuario__id=usuario_filter)
         
+        if accion_filter:
+            queryset = queryset.filter(accion=accion_filter)
+        
         return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['usuarios'] = Usuario.objects.all()
+
+        # Obtener opciones del campo `tipo_accion` (choices)
+        acciones = AuditoriaUsuario.tipo_accion  # Esto devuelve [('A', 'A'), ('M', 'M'), ('E', 'E')]
+
+        # Mapear códigos de acción a nombres legibles
+        context['acciones'] = [{"codigo": accion[0], "nombre": "Adición" if accion[0] == "A" else "Modificación" if accion[0] == "M" else "Eliminación"} for accion in acciones]
+
+        context['usuarios'] = Usuario.objects.all().order_by('nombre_usuario')  # Opciones para el filtro de usuario
+        context['usuario_selected'] = self.request.GET.get('usuario', '')  # Usuario seleccionado
+        context['accion_selected'] = self.request.GET.get('accion', '')  # Acción seleccionada
+        context['search'] = self.request.GET.get('search', '')  # Valor del campo de búsqueda
+        context['clear_url'] = self.request.path  # URL para limpiar filtros
+
         detalle_id = self.request.GET.get('detalle')
         if detalle_id:
             context['detalle_auditoria'] = get_object_or_404(AuditoriaUsuario, pk=detalle_id)
         
         return context
+

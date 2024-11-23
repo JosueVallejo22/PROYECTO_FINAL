@@ -149,6 +149,7 @@ class ActivarInactivarJugador(View):
         return redirect('core:listjugadores')
 
 ##########################################################################################
+@method_decorator(login_required, name='dispatch')
 class CompararJugadoresView(TemplateView):
     template_name = 'comparar_jugadores.html'
 

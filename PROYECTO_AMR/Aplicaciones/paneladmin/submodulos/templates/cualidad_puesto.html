@@ -146,35 +146,8 @@
                 </div>
             
                 <!-- Paginación -->
-                <div class="d-flex justify-content-center mt-4">
-                    {% if is_paginated %}
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            {% if page_obj.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&puesto={{ request.GET.puesto }}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            {% endif %}
-            
-                            {% for object in paginator.page_range %}
-                            <li class="page-item {% if object == page_obj.number %}active{% endif %}">
-                                <a class="page-link" href="?page={{ object }}&search={{ request.GET.search }}&puesto={{ request.GET.puesto }}">{{ object }}</a>
-                            </li>
-                            {% endfor %}
-            
-                            {% if page_obj.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&puesto={{ request.GET.puesto }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
-                </div>
+                {% include "paginacion_base.html" %}
+
             </div>
             
         </div>

@@ -67,26 +67,11 @@
                 </div>
                 <div class="card-body">
                     <!-- Formulario de búsqueda y filtro -->
-                    <form method="get" class="mb-3">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input type="text" name="search" placeholder="Buscar por estadística..." value="{{ request.GET.search|default:'' }}" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <select name="cualidad" class="form-control">
-                                    <option value="">Filtrar por cualidad</option>
-                                    {% for cualidad in cualidades %}
-                                        <option value="{{ cualidad.id }}" {% if cualidad.id|stringformat:"s" == cualidad_selected %}selected{% endif %}>{{ cualidad.cualidad }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <button type="submit" class="btn btn-primary">Buscar</button>
-                                <a href="{% url 'submodulos:mantenimiento_estadisticas' %}" class="btn btn-warning">Limpiar</a>
-                            </div>
-                        </div>
-                    </form>
+                    {% include "form_filtro_base.html" with search_name="search" search_placeholder="Buscar por estadística..." filter_name="cualidad" filter_placeholder="Filtrar por cualidad" filter_options=cualidades filter_selected=cualidad_selected clear_url=clear_url %}
+                                
 
+
+                
                     <!-- Tabla de estadísticas -->
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
@@ -119,35 +104,8 @@
                     </div>
 
                     <!-- Paginación -->
-                    <div class="d-flex justify-content-center">
-                        {% if is_paginated %}
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
+                    {% include "paginacion_base.html" %}
 
-                                {% for object in paginator.page_range %}
-                                <li class="page-item {% if object == page_obj.number %}active{% endif %}">
-                                    <a class="page-link" href="?page={{ object }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}">{{ object }}</a>
-                                </li>
-                                {% endfor %}
-
-                                {% if page_obj.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&cualidad={{ request.GET.cualidad }}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                        {% endif %}
-                    </div>
                 </div>
             </div>
         </div>

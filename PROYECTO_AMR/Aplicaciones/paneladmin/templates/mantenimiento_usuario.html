@@ -28,29 +28,8 @@
                 </div>
                 <div class="card-body">
                     <!-- Formulario de filtros -->
-                    <form method="get" class="row g-3 align-items-center mb-4">
-                        <div class="col-md-6">
-                            <input type="text" name="search" class="form-control" placeholder="Buscar por nombre o apellido" value="{{ request.GET.search }}">
-                        </div>
-                        <div class="col-md-4">
-                            <select name="rol" class="form-select">
-                                <option value="">Filtrar por rol</option>
-                                {% for rol in roles %}
-                                    <option value="{{ rol.id }}" {% if request.GET.rol == rol.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ rol.rol }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-2 d-flex gap-2">
-                            <button type="submit" class="btn btn-success w-100">
-                                <i class="bi bi-search"></i> Buscar
-                            </button>
-                            <a href="{% url 'paneladmin:mantenimiento_usuarios' %}" class="btn btn-warning w-100">
-                                <i class="bi bi-x-circle"></i> Limpiar
-                            </a>
-                        </div>
-                    </form>
+                    {% include "form_filtro_base.html" with search_name="search" search_placeholder="Buscar por nombre o apellido..." filter_name="rol" filter_placeholder="Filtrar por rol" filter_options=roles filter_selected=rol_selected clear_url=clear_url %}
+
 
                     <!-- Tabla -->
                     <div class="table-responsive">
@@ -114,36 +93,8 @@
                         </table>
                     </div>
 
-                    <!-- Paginación -->
-                    <div class="d-flex justify-content-center mt-4">
-                        {% if is_paginated %}
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&rol={{ request.GET.rol }}" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
+                    {% include "paginacion_base.html" %}
 
-                                {% for num in paginator.page_range %}
-                                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                                    <a class="page-link" href="?page={{ num }}&search={{ request.GET.search }}&rol={{ request.GET.rol }}">{{ num }}</a>
-                                </li>
-                                {% endfor %}
-
-                                {% if page_obj.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&rol={{ request.GET.rol }}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                        {% endif %}
-                    </div>
                 </div>
             </div>
         </div>

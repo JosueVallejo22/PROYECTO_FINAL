@@ -14,6 +14,7 @@ from Aplicaciones.core.valoraciones.forms import ValoracionForm, ValoracionDetal
 from django.db.models import Q, Count, Sum
 from Aplicaciones.core.views import login_required
 from django.utils.decorators import method_decorator
+from Aplicaciones.Auditoria.utils import save_audit
 
 @method_decorator(login_required, name='dispatch')
 class ModuloValoracionesView(ListView):
@@ -209,12 +210,16 @@ class GuardarValoracionView(FormView):
                             usuario_registro=usuario.nombre_usuario  # Usa el mismo usuario
                         )
 
+                # Guardar auditoría
+                save_audit(self.request, valoracion, action='A')  # Acción 'A' para agregar
+
                 messages.success(self.request, "Valoración guardada exitosamente.")
                 return redirect(self.success_url)
 
         except Exception as e:
             messages.error(self.request, f"Error al guardar la valoración: {e}")
             return redirect(self.success_url)
+
 
     def form_invalid(self, form):
         messages.error(self.request, "Formulario inválido. Verifique los datos ingresados.")

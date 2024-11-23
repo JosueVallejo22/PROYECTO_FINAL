@@ -47,25 +47,27 @@ class MenuModUsuarios(View):
 
 @method_decorator(admin_required, name='dispatch')
 class RolListView(ListView):
-    """Vista para listar roles sin paginación"""
+    """Vista para listar roles con búsqueda"""
     model = Rol
     template_name = 'mantenimiento_roles.html'
     context_object_name = 'roles'
-    paginate_by = 3
+    paginate_by = 2
 
     def get_queryset(self):
-        query = self.request.GET.get('q')
-        queryset = Rol.objects.all().order_by('id','-estado')
+        query = self.request.GET.get('q', '')  # Obtiene el valor de búsqueda
+        queryset = Rol.objects.all().order_by('rol', '-estado')  # Ordena por rol y estado
         if query:
             queryset = queryset.filter(
-                Q(rol__icontains=query) | Q(estado__icontains=query)
+                Q(rol__icontains=query)  # Busca por rol
             )
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['q'] = self.request.GET.get('q', '')  # Pasar la búsqueda al contexto para mantenerla en la vista
+        context['search'] = self.request.GET.get('q', '')  # Valor del campo de búsqueda
+        context['clear_url'] = self.request.path  # URL para el botón "Limpiar"
         return context
+
 
     
 @method_decorator(admin_required, name='dispatch')
@@ -77,12 +79,22 @@ class RolCreateView(CreateView):
     success_url = reverse_lazy('paneladmin:mantenimiento_roles')
 
     def form_valid(self, form):
+        # Guardar el rol y agregar el mensaje de éxito
         response = super().form_valid(form)
         save_audit(self.request, self.object, action='A')
         messages.success(self.request, 'Rol creado exitosamente.')
         return response
-    
+
+    def form_invalid(self, form):
+        # Agregar los errores del formulario como mensajes
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        # Redirigir al listado de roles
+        return redirect(self.success_url)
+
     def get_context_data(self, **kwargs):
+        # Agregar los roles al contexto para el listado
         context = super().get_context_data(**kwargs)
         context['roles'] = Rol.objects.all().order_by('-estado')
         return context
@@ -129,8 +141,8 @@ class UsuarioListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        search_query = self.request.GET.get('search', '')
-        rol_filter = self.request.GET.get('rol', '')
+        search_query = self.request.GET.get('search', '')  # Búsqueda por nombre o apellido
+        rol_filter = self.request.GET.get('rol', '')  # Filtro por rol
 
         if search_query:
             queryset = queryset.filter(
@@ -145,7 +157,10 @@ class UsuarioListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['roles'] = Rol.objects.filter(estado=True).order_by('rol')
+        context['roles'] = Rol.objects.filter(estado=True).order_by('rol')  # Opciones para el filtro de rol
+        context['rol_selected'] = self.request.GET.get('rol', '')  # Rol seleccionado
+        context['search'] = self.request.GET.get('search', '')  # Valor del campo de búsqueda
+        context['clear_url'] = self.request.path  # URL para el botón "Limpiar"
         return context
 
 
