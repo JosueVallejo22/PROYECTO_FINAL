@@ -1,90 +1,106 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} {{ usuario.nombre_usuario|default:"Agregar Usuario" }} {% endblock %}
+{% block title %}
+    {% if object %}
+        Editando Usuario: {{ object.nombre_usuario }}
+    {% else %}
+        Crear Usuario
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12 mb-3">
-            <div class="card">
-                <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center mt-2 text-white">{{ usuario.nombre_usuario|default:"Agregar Usuario" }}</h2>
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white">
+                    <h2 class="mb-0 fw-bold text-center">
+                        {% if object %}
+                            Editando Usuario: {{ object.nombre_usuario }}
+                        {% else %}
+                            Crear Usuario
+                        {% endif %}
+                    </h2>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" novalidate>
                         {% csrf_token %}
-
+                        
                         {% if form.non_field_errors %}
                             <div class="alert alert-danger">{{ form.non_field_errors }}</div>
                         {% endif %}
 
-                        <!-- Campos del formulario organizados según el nuevo orden -->
-                        <div class=" row">
-                            <div class="col-6 form-group">
-                                {{ form.nombre.label_tag }}
+                        <!-- Organización del formulario -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{{ form.nombre.label }}</label>
                                 {{ form.nombre }}
                                 {% if form.nombre.errors %}
-                                    <div class="alert alert-danger">{{ form.nombre.errors }}</div>
+                                    <div class="text-danger small">{{ form.nombre.errors|join:", " }}</div>
                                 {% endif %}
                             </div>
-                            <div class="col-6 form-group">
-                                {{ form.apellido.label_tag }}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{{ form.apellido.label }}</label>
                                 {{ form.apellido }}
                                 {% if form.apellido.errors %}
-                                    <div class="alert alert-danger">{{ form.apellido.errors }}</div>
+                                    <div class="text-danger small">{{ form.apellido.errors|join:", " }}</div>
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-4 form-group">
-                                {{ form.nombre_usuario.label_tag }}
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.nombre_usuario.label }}</label>
                                 {{ form.nombre_usuario }}
                                 {% if form.nombre_usuario.errors %}
-                                    <div class="alert alert-danger">{{ form.nombre_usuario.errors }}</div>
+                                    <div class="text-danger small">{{ form.nombre_usuario.errors|join:", " }}</div>
                                 {% endif %}
                             </div>
-                            <!-- Eliminado el campo de la clave -->
-                            <div class="col-4 form-group">
-                                {{ form.correo.label_tag }}
-                                {{ form.correo }}
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.correo.label }}</label>
+                                <input type="email" class="form-control shadow-sm" name="correo" value="{{ form.correo.value|default:'' }}" required>
                                 {% if form.correo.errors %}
-                                    <div class="alert alert-danger">{{ form.correo.errors }}</div>
+                                    <div class="text-danger small">{{ form.correo.errors|join:", " }}</div>
                                 {% endif %}
                             </div>
-                            <div class="col-4 form-group">
-                                {{ form.numero_telefono.label_tag }}
-                                {{ form.numero_telefono }}
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ form.numero_telefono.label }}</label>
+                                <input type="tel" class="form-control shadow-sm" name="numero_telefono" value="{{ form.numero_telefono.value|default:'' }}" pattern="[0-9]+" maxlength="10" required>
                                 {% if form.numero_telefono.errors %}
-                                    <div class="alert alert-danger">{{ form.numero_telefono.errors }}</div>
+                                    <div class="text-danger small">{{ form.numero_telefono.errors|join:", " }}</div>
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="form-group">
-                            {{ form.fecha_nacimiento.label_tag }}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">{{ form.fecha_nacimiento.label }}</label>
                             {{ form.fecha_nacimiento }}
                             {% if form.fecha_nacimiento.errors %}
-                                <div class="alert alert-danger">{{ form.fecha_nacimiento.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.sexo.label_tag }}
-                            {{ form.sexo }}
-                            {% if form.sexo.errors %}
-                                <div class="alert alert-danger">{{ form.sexo.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.rol.label_tag }}
-                            {{ form.rol }}
-                            {% if form.rol.errors %}
-                                <div class="alert alert-danger">{{ form.rol.errors }}</div>
+                                <div class="text-danger small">{{ form.fecha_nacimiento.errors|join:", " }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-success">Guardar</button>
-                            <a href="{% url 'paneladmin:mantenimiento_usuarios' %}" class="btn btn-danger">Cancelar</a>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{{ form.sexo.label }}</label>
+                                {{ form.sexo }}
+                                {% if form.sexo.errors %}
+                                    <div class="text-danger small">{{ form.sexo.errors|join:", " }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{{ form.rol.label }}</label>
+                                {{ form.rol }}
+                                {% if form.rol.errors %}
+                                    <div class="text-danger small">{{ form.rol.errors|join:", " }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success fw-bold shadow-sm">Guardar</button>
+                            <a href="{% url 'paneladmin:mantenimiento_usuarios' %}" class="btn btn-danger fw-bold shadow-sm">Cancelar</a>
                         </div>
                     </form>
                 </div>
@@ -92,4 +108,20 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#id_fecha_nacimiento", {
+            dateFormat: "Y-m-d", // Formato enviado al backend
+            altInput: true,
+            altFormat: "d/m/Y", // Formato amigable para el usuario
+            locale: "es", // Cambiar el idioma a español
+            defaultDate: "{{ form.fecha_nacimiento.value|default:'' }}" // Precarga la fecha
+        });
+    });
+</script>
 {% endblock %}

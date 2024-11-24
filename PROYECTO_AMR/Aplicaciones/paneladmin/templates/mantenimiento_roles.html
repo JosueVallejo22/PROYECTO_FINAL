@@ -13,7 +13,7 @@
         <div class="col-md-12 mb-3 d-flex justify-content-between flex-wrap align-items-center">
             <h2 class="text-warning fw-bold mb-2 mb-md-0">Mantenimiento de Roles</h2>
             <div class="d-flex flex-wrap gap-2">
-                <button class="btn btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#rolModal">
+                <button class="btn btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#rolModal" id="openCreateModal">
                     <i class="bi bi-plus-circle me-2"></i> Crear Rol
                 </button>
                 <a href="{% url 'paneladmin:menu_modulo_usuarios' %}" class="btn btn-danger fw-bold">
@@ -56,7 +56,7 @@
                                     <td>
                                         <div class="d-flex justify-content-center gap-2 flex-wrap">
                                             <button 
-                                                class="btn btn-warning btn-sm fw-bold" 
+                                                class="btn btn-warning btn-sm fw-bold editRoleButton" 
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#rolModal" 
                                                 data-id="{{ rol.id }}" 
@@ -96,8 +96,10 @@
             <div class="modal-body">
                 <form method="post" id="rolForm" action="{% url 'paneladmin:crear_rol' %}">
                     {% csrf_token %}
+                    <!-- Campo oculto para manejar la edición -->
+                    <input type="hidden" name="id" id="rolId" value="">
                     <div class="mb-3">
-                        <label for="rol" class="form-label">Nombre del Rol</label>
+                        <label for="rol" class="form-label text-dark">Nombre del Rol</label>
                         <input type="text" class="form-control" id="rol" name="rol" required>
                     </div>
                     <button type="submit" class="btn btn-success w-100">Guardar</button>
@@ -107,3 +109,40 @@
     </div>
 </div>
 {% endblock %}
+
+
+<!-- JavaScript para manejar el modal -->
+{% block js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById('rolModal');
+        const modalTitle = modal.querySelector('.modal-title');
+        const form = document.getElementById('rolForm');
+        const rolInput = document.getElementById('rol');
+        const idInput = document.getElementById('rolId');
+
+        // Botón para abrir el modal de crear rol
+        document.getElementById('openCreateModal').addEventListener('click', function () {
+            modalTitle.textContent = "Crear Rol";
+            form.action = "{% url 'paneladmin:crear_rol' %}";
+            rolInput.value = "";
+            idInput.value = "";
+        });
+
+        // Botones para abrir el modal de editar rol
+        document.querySelectorAll('.editRoleButton').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.dataset.id;
+                const rol = this.dataset.rol;
+
+                // Actualizar el modal para edición
+                modalTitle.textContent = "Editar Rol";
+                form.action = `{% url 'paneladmin:editar_rol' pk=0 %}`.replace('0', id);
+                rolInput.value = rol; // Precargar el nombre del rol
+                idInput.value = id;   // Precargar el ID del rol
+            });
+        });
+    });
+</script>
+{% endblock %}
+

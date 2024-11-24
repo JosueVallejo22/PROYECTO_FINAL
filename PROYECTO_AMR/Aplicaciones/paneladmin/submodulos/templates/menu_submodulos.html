@@ -1,211 +1,115 @@
-{% extends 'base.html' %} {% load static %} 
-{% block title %} Menú Submodulos {%endblock %} 
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Menú Submódulos{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/menu_admin.css' %}">
+{% endblock %}
+
 {% block content %}
-<main style="padding-bottom: 4rem">
-  <section>
-    <div class="container pb-5">
-      <div class="row mt-5 justify-content-center">
-      <h1 class="text-center text-white fw-bold mb-4">MENU SUBMODULOS</h1>
-        <div class="d-flex justify-content-end mb-4">
-          <a href="{% url 'paneladmin:menu_admin' %}" class="btn btn-danger fw-bold">
-            <i class="bi bi-arrow-left-circle me-2"></i> Regresar
-          </a>
+<main class="py-5">
+    <div class="container">
+        <!-- Título -->
+        <div class="text-center mb-5">
+            <h1 class="text-warning fw-bold">Menú Submódulos</h1>
+            <p class="text-light">Selecciona una de las opciones para continuar</p>
+            <div class="d-flex justify-content-end mb-4">
+                <a href="{% url 'paneladmin:menu_admin' %}" class="btn btn-danger fw-bold">
+                    <i class="bi bi-arrow-left-circle me-2"></i> Regresar
+                </a>
+            </div>
         </div>
-        
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">MANTENIMIENTO PAISES</h1>
+
+        <!-- Tarjetas -->
+        <div class="row g-5 justify-content-center">
+            <!-- Tarjeta: Mantenimiento Países -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/bandera.svg' %}" 
+                            alt="icono_paises" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Mantenimiento Países</h5>
+                        <p class="card-text">Gestiona los países registrados en el sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'submodulos:mantenimiento_paises' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/bandera.svg' %}"
-                alt="icono_usuarios"
-                class="img-fluid"
-                style="width: 70px; height: 70px"
-              />
+
+            <!-- Tarjeta: Cualidad-Puesto -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/posicion.png' %}" 
+                            alt="icono_cualidad_puesto" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Cualidad-Puesto</h5>
+                        <p class="card-text">Administra la relación entre cualidades y puestos.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'submodulos:mantenimiento_puesto_cualidad' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer text-center">
-              <a
-                href="{% url 'submodulos:mantenimiento_paises' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
+
+            <!-- Tarjeta: Listado de Jugadores -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/puesto.png' %}" 
+                            alt="icono_jugadores" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Listado de Jugadores</h5>
+                        <p class="card-text">Consulta los jugadores registrados en el sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'submodulos:listar_jugador_admin' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <!-- Tarjeta: Historial de Cambios -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card text-center shadow-lg border-0 h-100 bg-dark text-light rounded-4">
+                    <div class="card-body py-4">
+                        <img 
+                            src="{% static 'img/gear.svg' %}" 
+                            alt="icono_historial" 
+                            class="img-fluid mb-3 icon-yellow" 
+                            style="width: 80px; height: 80px;">
+                        <h5 class="card-title text-warning fw-bold">Historial de Cambios</h5>
+                        <p class="card-text">Consulta los cambios realizados en el sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a 
+                            href="{% url 'submodulos:lista_cambios' %}" 
+                            class="btn btn-warning fw-bold px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">MANTENIMIENTO CUALIDADES</h1>
-            </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/cualidad.png' %}"
-                alt="icono_aplicativos"
-                class="img-fluid"
-                style="height: 70px; height: 70px"
-              />
-            </div>
-            <div class="card-footer text-center">
-              <a
-                href=" {% url 'submodulos:mantenimiento_cualidades' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">MANTENIMIENTO ESTADISTICAS</h1>
-            </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/estadisticas.png' %}"
-                alt="icono_aplicativos"
-                class="img-fluid"
-                style="height: 70px; height: 70px"
-              />
-            </div>
-            <div class="card-footer text-center">
-              <a
-                href=" {% url 'submodulos:mantenimiento_estadisticas' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">MANTENIMIENTO POSICION</h1>
-            </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/posicion.png' %}"
-                alt="icono_aplicativos"
-                class="img-fluid"
-                style="height: 70px; height: 70px"
-              />
-            </div>
-            <div class="card-footer text-center">
-              <a
-                href=" {% url 'submodulos:mantenimiento_posicion' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">MANTENIMIENTO PUESTO</h1>
-            </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/puesto.png' %}"
-                alt="icono_aplicativos"
-                class="img-fluid"
-                style="height: 70px; height: 70px"
-              />
-            </div>
-            <div class="card-footer text-center">
-              <a
-                href=" {% url 'submodulos:mantenimiento_puesto' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">CUALIDAD - PUESTO</h1>
-            </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/gear.svg' %}"
-                alt="icono_aplicativos"
-                class="img-fluid"
-                style="height: 70px; height: 70px"
-              />
-            </div>
-            <div class="card-footer text-center">
-              <a
-                href=" {% url 'submodulos:mantenimiento_puesto_cualidad' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">LISTADO DE JUGADORES</h1>
-            </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/gear.svg' %}"
-                alt="icono_aplicativos"
-                class="img-fluid"
-                style="height: 70px; height: 70px"
-              />
-            </div>
-            <div class="card-footer text-center">
-              <a
-                href=" {% url 'submodulos:listar_jugador_admin' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3 justify-content-center">
-          <div class="card shadow-sm">
-            <div
-              class="card-header bg-success text-center text-white fw-bold rounded-top"
-            >
-              <h1 class="fs-5">HISTORIAL DE CAMBIOS</h1>
-            </div>
-            <div class="card-body text-center">
-              <img
-                src="{% static 'img/gear.svg' %}"
-                alt="icono_aplicativos"
-                class="img-fluid"
-                style="height: 70px; height: 70px"
-              />
-            </div>
-            <div class="card-footer text-center">
-              <a
-                href=" {% url 'submodulos:lista_cambios' %}"
-                class="btn btn-success fw-bold"
-                ><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
 </main>
 {% endblock %}

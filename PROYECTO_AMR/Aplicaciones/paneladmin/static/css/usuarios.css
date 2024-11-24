@@ -1,0 +1,80 @@
+/* Fondo de la página */
+body {
+    background: linear-gradient(to bottom, #711a1b, #1a0630);
+}
+
+/* Cabecera de la tabla */
+.table-dark {
+    background-color: #333;
+    color: white;
+}
+
+/* Estilo para los botones */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+/* Ajustar el tamaño general de la tabla */
+.table {
+    font-size: 0.85rem; /* Reduce el tamaño de la fuente */
+}
+
+.table thead th {
+    padding: 0.5rem 0.75rem; /* Reduce el padding en los encabezados */
+}
+
+.table tbody td {
+    padding: 0.4rem 0.6rem; /* Reduce el padding en las celdas */
+}
+
+/* Botones compactos */
+.btn-sm {
+    padding: 0.3rem 0.6rem; /* Reduce el tamaño de los botones */
+    font-size: 0.8rem; /* Ajusta el tamaño del texto en los botones */
+}
+
+/* Responsivo */
+.table-responsive {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table thead th,
+    .table tbody td {
+        white-space: nowrap; /* Evita que se rompa el texto en pantallas pequeñas */
+    }
+
+    .btn-sm {
+        font-size: 0.75rem; /* Reduce aún más los botones en pantallas pequeñas */
+    }
+}

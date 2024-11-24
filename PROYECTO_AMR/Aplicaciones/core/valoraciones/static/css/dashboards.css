@@ -1,0 +1,69 @@
+/* General Body Styling */
+body {
+    background: linear-gradient(to bottom, #800000, #1a0630);
+}
+
+/* Dashboard Cards */
+.dashboard-card-primary {
+    background: #2c1a2b;
+    border: 2px solid #ffc107;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+}
+
+.dashboard-card-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 193, 7, 0.5);
+}
+
+.dashboard-card-secondary {
+    background: #1f1f1f;
+    border: 2px solid #444;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+}
+
+.dashboard-card-secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Chart Container Styling */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    padding: 5px;
+}
+
+/* Custom Select Dropdown */
+.custom-select {
+    background-color: #222;
+    border: 1px solid #ffc107;
+    color: #ffc107;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.custom-select:hover {
+    background-color: #1a1a1a;
+}
+
+/* Headings and Text */
+h1, h4, h5 {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.text-warning {
+    font-weight: 700;
+    color: #ffc107 !important;
+}
+
+/* Shadows and Effects */
+.shadow-lg {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}

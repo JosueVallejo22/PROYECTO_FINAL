@@ -41,13 +41,11 @@ class Usuario(models.Model):
 
     def save(self, *args, **kwargs):
         if self.clave and not self.clave.startswith('pbkdf2_sha256$'):
-        # Solo hacer hashing si la clave no es un hash ya
             self.clave = make_password(self.clave)
         super().save(*args, **kwargs)
 
 
     def check_password(self, raw_password):
-        """Verifica si la contraseña sin procesar coincide con el hash almacenado."""
         return check_password(raw_password, self.clave)
     
     def get_sexo_display(self):

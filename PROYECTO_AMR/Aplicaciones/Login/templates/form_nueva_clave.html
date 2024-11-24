@@ -7,135 +7,120 @@
     <meta name="description" content="Aplicativo Web para realizar un análisis del rendimiento deportivo de los futbolistas en un club.">
     <meta name="keywords" content="futbol, valoraciones, plantillas, jugadores">
     <meta name="author" content="Josue Vallejo, Robert Vera">
-    <title>RECUPERAR CONTRASEÑA</title>
+    <title>Restablecer Contraseña</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <style>
-        .input-group {
-            width: 100%; /* Asegura que la entrada ocupe todo el ancho disponible */
+        body {
+            background: linear-gradient(to bottom, #800000, #1a0630);
+            color: #ffc107;
         }
-        .error-message {
-            font-size: 0.875rem; /* Tamaño de fuente para mensajes de error */
+        .form-container {
+            background: #2c1a2b;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
         }
-        .valid {
+        .form-container img {
+            width: 80px;
+            height: 80px;
+            filter: invert(69%) sepia(91%) saturate(363%) hue-rotate(2deg) brightness(100%) contrast(103%);
+            margin-bottom: 20px;
+        }
+        .form-container h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .form-container input {
+            background: #1a0630;
+            border: 1px solid #ffc107;
+            color: #ffc107;
+        }
+        .form-container input::placeholder {
+            color: #ffc107;
+            font-style: italic;
+        }
+        .form-container button {
+            background: #ffc107;
+            color: #1a0630;
+            font-weight: bold;
+            border: none;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .form-container button:hover {
+            background: #e0a800;
+        }
+        .form-container ul {
+            text-align: left;
+            padding: 0;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        .form-container ul li {
+            list-style: none;
+        }
+        .form-container ul .valid {
             color: green;
         }
-        .invalid {
+        .form-container ul .invalid {
             color: red;
+        }
+        footer {
+            text-align: center;
+            color: #ffc107;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100">
     <main>
         <section>
-            <form method="POST" id="reset-password-form">
+            <form method="POST" id="reset-password-form" class="form-container">
                 {% csrf_token %}
                 <input type="hidden" name="token" value="{{ request.GET.token }}">
-                <div class="bg-white p-5 rounded-5">
-                    <div class="d-flex justify-content-center">
-                        <h1 class="text-center fs-1 fw-bold">RESTABLECER CONTRASEÑA</h1>
-                    </div>
+                <img src="{% static 'img/key.svg' %}" alt="Restablecer Contraseña">
+                <h1>Restablecer Contraseña</h1>
 
-                    <!-- Mostrar errores de forma global -->
-                    {% for message in messages %}
-                        <div class="alert alert-danger">{{ message }}</div>
-                    {% endfor %}
+                <!-- Mostrar errores de forma global -->
+                {% for message in messages %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
 
-                    <div class="input-group mt-4">
-                        <div class="input-group-text bg-success rounded-3">
-                            <img src="{% static 'img/key.svg' %}" alt="clave_icono">
-                        </div>
-                        <input class="form-control rounded-3" type="password" name="nueva_clave" id="nueva_clave" placeholder="INGRESE SU NUEVA CONTRASEÑA" required>
-                        <button type="button" id="toggle-password" class="btn btn-outline-secondary rounded-3">
-                            <img src="{% static 'img/eye-fill.svg' %}" alt="Ver contraseña" id="eye-icon">
-                        </button>
-                    </div>
-                    <div id="password-requirements" class="mt-2">
-                        <ul>
-                            <li id="length" class="invalid">Al menos 8 caracteres</li>
-                            <li id="uppercase" class="invalid">Al menos una letra mayúscula</li>
-                            <li id="lowercase" class="invalid">Al menos una letra minúscula</li>
-                            <li id="number" class="invalid">Al menos un número</li>
-                            <li id="special" class="invalid">Al menos un carácter especial (!@#$%^&*)</li>
-                        </ul>
-                    </div>
-
-                    <div class="input-group mt-4 mb-2">
-                        <div class="input-group-text bg-success rounded-3">
-                            <img src="{% static 'img/key.svg' %}" alt="clave_icono">
-                        </div>
-                        <input class="form-control rounded-3" type="password" name="confirmar_clave" id="confirmar_clave" placeholder="INGRESE DE NUEVO SU NUEVA CONTRASEÑA" required>
-                        <button type="button" id="toggle-confirm-password" class="btn btn-outline-secondary rounded-3">
-                            <img src="{% static 'img/eye-fill.svg' %}" alt="Ver contraseña" id="eye-icon-confirm">
-                        </button>
-                    </div>
-                    {% if form.confirmar_clave.errors %}
-                        <div class="text-danger error-message mt-2">
-                            {% for error in form.confirmar_clave.errors %}
-                                <small>{{ error }}</small>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    <button type="submit" class="btn btn-success w-100 mt-4 rounded-5">CONTINUAR</button>
+                <!-- Nueva Contraseña -->
+                <div class="mb-3">
+                    <input type="password" name="nueva_clave" id="nueva_clave" class="form-control" placeholder="Nueva Contraseña" required>
                 </div>
+                <ul id="password-requirements">
+                    <li id="length" class="invalid">Al menos 8 caracteres</li>
+                    <li id="uppercase" class="invalid">Al menos una letra mayúscula</li>
+                    <li id="lowercase" class="invalid">Al menos una letra minúscula</li>
+                    <li id="number" class="invalid">Al menos un número</li>
+                    <li id="special" class="invalid">Al menos un carácter especial (!@#$%^&*)</li>
+                </ul>
+
+                <!-- Confirmar Contraseña -->
+                <div class="mb-3">
+                    <input type="password" name="confirmar_clave" id="confirmar_clave" class="form-control" placeholder="Confirmar Contraseña" required>
+                </div>
+
+                <button type="submit" class="btn">Restablecer</button>
             </form>
         </section>
     </main>
-    <footer class="footer d-flex fixed-bottom" id="footer">
-        <div class="container text-center">
-            <p class="mb-0 text-white">© 2024 VV Enterprises. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script>
-        // Función para mostrar requisitos visuales en tiempo real
-        function checkPasswordStrength() {
-            const password = document.getElementById('nueva_clave').value;
-            
-            // Requisitos
-            const length = document.getElementById('length');
-            const uppercase = document.getElementById('uppercase');
-            const lowercase = document.getElementById('lowercase');
-            const number = document.getElementById('number');
-            const special = document.getElementById('special');
-
-            // Comprobar requisitos visuales
-            length.className = password.length >= 8 ? 'valid' : 'invalid';
-            uppercase.className = /[A-Z]/.test(password) ? 'valid' : 'invalid';
-            lowercase.className = /[a-z]/.test(password) ? 'valid' : 'invalid';
-            number.className = /[0-9]/.test(password) ? 'valid' : 'invalid';
-            special.className = /[!@#$%^&*]/.test(password) ? 'valid' : 'invalid';
-        }
-
-        // Agregar evento de entrada al campo de contraseña
-        document.getElementById('nueva_clave').addEventListener('input', checkPasswordStrength);
-        
-        // Alternar visibilidad de la contraseña
-        document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('nueva_clave');
-            const eyeIcon = document.getElementById('eye-icon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.src = '{% static "img/eye-slash-fill.svg" %}'; // Cambia el icono a "ocultar"
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.src = '{% static "img/eye-fill.svg" %}'; // Cambia el icono a "mostrar"
-            }
-        });
-
-        // Alternar visibilidad de la contraseña de confirmación
-        document.getElementById('toggle-confirm-password').addEventListener('click', function() {
-            const confirmPasswordInput = document.getElementById('confirmar_clave');
-            const eyeIconConfirm = document.getElementById('eye-icon-confirm');
-            if (confirmPasswordInput.type === 'password') {
-                confirmPasswordInput.type = 'text';
-                eyeIconConfirm.src = '{% static "img/eye-slash-fill.svg" %}'; // Cambia el icono a "ocultar"
-            } else {
-                confirmPasswordInput.type = 'password';
-                eyeIconConfirm.src = '{% static "img/eye-fill.svg" %}'; // Cambia el icono a "mostrar"
-            }
+        document.getElementById('nueva_clave').addEventListener('input', function () {
+            const password = this.value;
+            document.getElementById('length').className = password.length >= 8 ? 'valid' : 'invalid';
+            document.getElementById('uppercase').className = /[A-Z]/.test(password) ? 'valid' : 'invalid';
+            document.getElementById('lowercase').className = /[a-z]/.test(password) ? 'valid' : 'invalid';
+            document.getElementById('number').className = /[0-9]/.test(password) ? 'valid' : 'invalid';
+            document.getElementById('special').className = /[!@#$%^&*]/.test(password) ? 'valid' : 'invalid';
         });
     </script>
 </body>

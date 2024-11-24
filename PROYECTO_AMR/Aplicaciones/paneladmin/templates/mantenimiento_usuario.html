@@ -3,14 +3,17 @@
 {% load static %}
 
 {% block title %}Mantenimiento de Usuarios{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/usuarios.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
         <!-- Botones superiores -->
-        <div class="col-md-12 mb-3 d-flex justify-content-between">
-            <h2 class="text-white fw-bold">Mantenimiento de Usuarios</h2>
-            <div>
+        <div class="col-md-12 mb-3 d-flex justify-content-between align-items-center">
+            <h2 class="text-warning fw-bold">Mantenimiento de Usuarios</h2>
+            <div class="d-flex gap-2">
                 <a href="{% url 'paneladmin:crear_usuario' %}" class="btn btn-success fw-bold">
                     <i class="bi bi-plus-circle me-2"></i> Registrar Nuevo Usuario
                 </a>
@@ -21,83 +24,183 @@
         </div>
 
         <!-- Tabla de usuarios con filtros -->
-        <div class="col-md-12">
-            <div class="card shadow-sm mb-5">
-                <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center text-white">Usuarios Registrados</h2>
-                </div>
-                <div class="card-body">
-                    <!-- Formulario de filtros -->
-                    {% include "form_filtro_base.html" with search_name="search" search_placeholder="Buscar por nombre o apellido..." filter_name="rol" filter_placeholder="Filtrar por rol" filter_options=roles filter_selected=rol_selected clear_url=clear_url %}
+<div class="col-md-12">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h2 class="mb-0 fw-bold text-center">Usuarios Registrados</h2>
+        </div>
+        <div class="card-body">
+            <!-- Formulario de filtros -->
+            {% include "form_filtro_base.html" with search_name="search" search_placeholder="Buscar por nombre o apellido..." filter_name="rol" filter_placeholder="Filtrar por rol" filter_options=roles filter_selected=rol_selected clear_url=clear_url %}
 
+            <!-- Tabla -->
+            <!-- Tabla de usuarios -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 12%;">Nombre</th>
+                            <th style="width: 12%;">Apellido</th>
+                            <th style="width: 12%;">Usuario</th>
+                            <th style="width: 15%;">Correo</th>
+                            <th style="width: 12%;">Teléfono</th>
+                            <th style="width: 10%;">Rol</th>
+                            <th style="width: 10%;">Estado</th>
+                            <th style="width: 17%;">Último Inicio de Sesión</th>
+                            <th style="width: 20%;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="small">
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.nombre }}</td>
+                            <td>{{ usuario.apellido }}</td>
+                            <td>{{ usuario.nombre_usuario }}</td>
+                            <td>{{ usuario.correo }}</td>
+                            <td>{{ usuario.numero_telefono }}</td>
+                            <td>{{ usuario.rol.rol }}</td>
+                            <td>
+                                {% if usuario.estado %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ usuario.ultimo_inicio_sesion }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button 
+                                        class="btn btn-info btn-sm fw-bold" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#detalleUsuarioModal" 
+                                        data-nombre="{{ usuario.nombre }}" 
+                                        data-apellido="{{ usuario.apellido }}" 
+                                        data-usuario="{{ usuario.nombre_usuario }}" 
+                                        data-correo="{{ usuario.correo }}" 
+                                        data-telefono="{{ usuario.numero_telefono }}" 
+                                        data-fecha-nacimiento="{{ usuario.fecha_nacimiento }}" 
+                                        data-sexo="{{ usuario.get_sexo_display }}" 
+                                        data-rol="{{ usuario.rol.rol }}" 
+                                        data-estado="{% if usuario.estado %}Activo{% else %}Inactivo{% endif %}" 
+                                        data-creacion="{{ usuario.fecha_creacion }}" 
+                                        data-actualizacion="{{ usuario.fecha_actualizacion }}">
+                                        <i class="bi bi-eye"></i> Detalles
+                                    </button>
+                                    <a href="{% url 'paneladmin:editar_usuario' usuario.id %}" class="btn btn-warning btn-sm fw-bold">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    {% if usuario.estado %}
+                                    <a href="{% url 'paneladmin:activar-inactivar-usuario' usuario.id %}" class="btn btn-danger btn-sm fw-bold">
+                                        <i class="bi bi-x-circle"></i> Inactivar
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'paneladmin:activar-inactivar-usuario' usuario.id %}" class="btn btn-success btn-sm fw-bold">
+                                        <i class="bi bi-check-circle"></i> Activar
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">No hay usuarios registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-                    <!-- Tabla -->
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-success text-center">
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Usuario</th>
-                                    <th>Correo</th>
-                                    <th>Teléfono</th>
-                                    <th>Rol</th>
-                                    <th>Estado</th>
-                                    <th>Último Inicio de Sesión</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for usuario in usuarios %}
-                                <tr class="text-center">
-                                    <td>{{ usuario.nombre }}</td>
-                                    <td>{{ usuario.apellido }}</td>
-                                    <td>{{ usuario.nombre_usuario }}</td>
-                                    <td>{{ usuario.correo }}</td>
-                                    <td>{{ usuario.numero_telefono }}</td>
-                                    <td>{{ usuario.rol.rol }}</td>
-                                    <td>
+            <!-- Modal para mostrar detalles -->
+            <div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content shadow-lg">
+                        <!-- Cabecera -->
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title fw-bold" id="detalleUsuarioModalLabel">
+                                <i class="bi bi-person-circle me-2"></i> Detalles del Usuario
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Cuerpo -->
+                        <div class="modal-body bg-light px-4 py-3">
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Nombre de Usuario:</strong>
+                                    <p class="text-muted">{{ usuario.nombre_usuario }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Nombre:</strong>
+                                    <p class="text-muted">{{ usuario.nombre }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Apellido:</strong>
+                                    <p class="text-muted">{{ usuario.apellido }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Correo:</strong>
+                                    <p class="text-muted">{{ usuario.correo }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Teléfono:</strong>
+                                    <p class="text-muted">{{ usuario.numero_telefono }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Fecha de Nacimiento:</strong>
+                                    <p class="text-muted">{{ usuario.fecha_nacimiento }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Sexo:</strong>
+                                    <p class="text-muted">{{ usuario.get_sexo_display }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Rol:</strong>
+                                    <p class="text-muted">{{ usuario.rol.rol }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Estado:</strong>
+                                    <p class="text-muted">
                                         {% if usuario.estado %}
                                             <span class="badge bg-success">Activo</span>
                                         {% else %}
                                             <span class="badge bg-danger">Inactivo</span>
                                         {% endif %}
-                                    </td>
-                                    <td>{{ usuario.ultimo_inicio_sesion }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <a href="{% url 'paneladmin:detalle_usuario' usuario.id %}" class="btn btn-info btn-sm fw-bold">
-                                                <i class="bi bi-eye"></i> Detalles
-                                            </a>
-                                            <a href="{% url 'paneladmin:editar_usuario' usuario.id %}" class="btn btn-warning btn-sm fw-bold">
-                                                <i class="bi bi-pencil"></i> Editar
-                                            </a>
-                                            {% if usuario.estado %}
-                                            <a href="{% url 'paneladmin:activar-inactivar-usuario' usuario.id %}" class="btn btn-danger btn-sm fw-bold">
-                                                <i class="bi bi-x-circle"></i> Inactivar
-                                            </a>
-                                            {% else %}
-                                            <a href="{% url 'paneladmin:activar-inactivar-usuario' usuario.id %}" class="btn btn-success btn-sm fw-bold">
-                                                <i class="bi bi-check-circle"></i> Activar
-                                            </a>
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="9" class="text-center text-muted">No hay usuarios registrados.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Última Actualización:</strong>
+                                    <p class="text-muted">{{ usuario.fecha_actualizacion }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong>Fecha de Creación:</strong>
+                                    <p class="text-muted">{{ usuario.fecha_creacion }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pie -->
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-2"></i> Cerrar
+                            </button>
+                        </div>
                     </div>
-
-                    {% include "paginacion_base.html" %}
-
                 </div>
             </div>
+
+            {% include "paginacion_base.html" %}
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 {% endblock %}

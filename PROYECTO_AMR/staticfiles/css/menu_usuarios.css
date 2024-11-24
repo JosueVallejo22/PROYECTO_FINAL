@@ -1,0 +1,46 @@
+/* Fondo para el cuerpo */
+body {
+    background: linear-gradient(to bottom, #711a1b, #1a0630);
+}
+
+/* Tarjetas */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Íconos de las tarjetas */
+.icon-yellow {
+    filter: invert(71%) sepia(94%) saturate(537%) hue-rotate(359deg) brightness(108%) contrast(103%);
+}
+
+/* Botones */
+.btn-warning {
+    background-color: #ffc107;
+    color: #2c1a2b;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    color: #2c1a2b;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Contenedor del contenido principal */
+main .container {
+    max-width: 960px; /* Reduce el ancho para mejorar la legibilidad */
+}

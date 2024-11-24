@@ -45,23 +45,21 @@ class PaisListView(ListView):
     model = Pais
     template_name = 'mantenimiento_paises.html'
     context_object_name = 'paises'
-    queryset = Pais.objects.all().order_by('pais')
     paginate_by = 5
 
     def get_queryset(self):
-        query = self.request.GET.get('q')  # Obtiene el valor del campo de búsqueda
+        query = self.request.GET.get('q')
         queryset = Pais.objects.all().order_by('pais')
         if query:
-            queryset = queryset.filter(
-                Q(pais__icontains=query)  # Filtra por coincidencias parciales
-            )
+            queryset = queryset.filter(Q(pais__icontains=query))
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
+        context['clear_url'] = self.request.path
         return context
-    
+
+
 @method_decorator(admin_required, name='dispatch')
 class PaisCreateView(CreateView):
     model = Pais
@@ -72,15 +70,21 @@ class PaisCreateView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         save_audit(self.request, self.object, action='A')
-        messages.success(self.request, 'Pais registrado exitosamente.')
+        messages.success(self.request, 'País registrado exitosamente.')
         return response
-        
+
+    def form_invalid(self, form):
+        # Si el formulario es inválido, redirige a la lista y muestra errores.
+        messages.error(self.request, 'Error al registrar el país. Verifique los datos ingresados.')
+        return redirect(self.success_url)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['paises'] = Pais.objects.all().order_by('pais')
-        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
+        context['clear_url'] = self.request.path
         return context
-    
+
+
 @method_decorator(admin_required, name='dispatch')
 class PaisUpdateView(UpdateView):
     model = Pais
@@ -88,27 +92,44 @@ class PaisUpdateView(UpdateView):
     template_name = 'mantenimiento_paises.html'
     success_url = reverse_lazy('submodulos:mantenimiento_paises')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['paises'] = Pais.objects.all().order_by('pais')
-        context['clear_url'] = self.request.path  # Define la URL para el botón "Limpiar"
-        return context
-    
     def form_valid(self, form):
         response = super().form_valid(form)
         save_audit(self.request, self.object, action='M')
-        messages.success(self.request, 'Pais Modificado exitosamente.')
+        messages.success(self.request, 'País modificado exitosamente.')
         return response
+
+    def form_invalid(self, form):
+        # Si el formulario es inválido, redirige a la lista y muestra errores.
+        messages.error(self.request, 'Error al modificar el país. Verifique los datos ingresados.')
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['paises'] = Pais.objects.all().order_by('pais')
+        context['clear_url'] = self.request.path
+        return context
+
 
 @method_decorator(admin_required, name='dispatch')
 class ActivarInactivarPais(View):
     def get(self, request, pk):
-        pais = get_object_or_404(Pais, pk = pk)
+        pais = get_object_or_404(Pais, pk=pk)
         pais.estado = not pais.estado
         pais.save()
         save_audit(self.request, pais, action='M')
-        messages.success(request, "Estado del pais actualizado exitosamente.")
+        estado = "activado" if pais.estado else "inactivado"
+        messages.success(request, f"Estado del país actualizado exitosamente. El país ha sido {estado}.")
         return redirect('submodulos:mantenimiento_paises')
+
+from django.http import JsonResponse
+
+def api_paises(request):
+    query = request.GET.get('q', '')
+    if query:
+        paises = Pais.objects.filter(pais__icontains=query).values('pais')
+    else:
+        paises = Pais.objects.all().values('pais')
+    return JsonResponse(list(paises), safe=False)
 
 ###############################################################################################################
 ## MANTENIMIENTO CUALIDADES ##

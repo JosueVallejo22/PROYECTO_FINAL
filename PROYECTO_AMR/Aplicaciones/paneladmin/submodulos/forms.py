@@ -8,17 +8,24 @@ class PaisForm(forms.ModelForm):
         model = Pais
         fields = ['pais']
         widgets = {
-            'pais': forms.TextInput(attrs={'class':'form-control', 'placeholder':'INGRESE EL PAIS'})
+            'pais': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Seleccione un país en el mapa', 
+                'readonly': 'readonly'
+            })
         }
         labels = {
-            'pais':'PAIS',
+            'pais': 'País',
         }
-    
+
     def clean_pais(self):
-        pais = self.cleaned_data['pais'].upper()  # Asegúrate de convertir a mayúsculas aquí
+        pais = self.cleaned_data.get('pais', '').strip().upper()
+        if not pais:
+            raise forms.ValidationError('El campo del país no puede estar vacío.')
         if Pais.objects.filter(pais=pais).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError('EL PAIS INGRESADO YA EXISTE.')
+            raise forms.ValidationError('El país ingresado ya existe.')
         return pais
+
 #####
 
 class CualidadForm(forms.ModelForm):

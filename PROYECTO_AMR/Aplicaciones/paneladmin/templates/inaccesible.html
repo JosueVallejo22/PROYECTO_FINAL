@@ -2,18 +2,22 @@
 
 {% load static %}
 
-{% block title %} MENÚ ADMIN {% endblock %}
+{% block title %} Acceso Denegado {% endblock %}
 
 {% block content %}
-<main class="d-flex justify-content-center align-items-center">
-    <div class="container-fluid">
-        <div class="card mt-5">
-            <div class="card-header bg-danger text-white">
-                <h1 class="mb-0 text-center">Acceso Denegado</h1>
+<main class="d-flex justify-content-center align-items-center mt-5">
+    <div class="container text-center">
+        <div class="card shadow-lg" style="background-color: #2c1a2b; border: 2px solid #ffc107;">
+            <div class="card-header" style="background-color: #711a1b;">
+                <h1 class="text-warning fw-bold mb-0">Acceso Denegado</h1>
             </div>
-            <div class="card-body text-center">
-                <p>No tienes permiso para acceder a esta página.</p>
-                <a href="{% url 'core:menu' %}" class="btn btn-success fw-bold">Regresar al Menu</a>
+            <div class="card-body text-white">
+                <p class="fs-5">
+                    Solo personal autorizado puede acceder a esta página.
+                </p>
+                <a href="{% url 'core:menu' %}" class="btn btn-warning btn-lg fw-bold">
+                    Regresar al Menú Principal
+                </a>
             </div>
         </div>
     </div>

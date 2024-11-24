@@ -9,4 +9,6 @@ def usuario_context_processor(request):
         return {}  # Si no hay usuario, retorna un contexto vacío
 
     usuario = get_object_or_404(Usuario, id=user_id)
-    return {'usuario': usuario}  # Retorna el usuario en el contexto
+    es_admin = usuario.rol.rol == "ADMINISTRADOR"  # Verifica si el usuario es administrador
+    return {'usuario': usuario, 'es_admin': es_admin}  # Agrega 'es_admin' al contexto
+

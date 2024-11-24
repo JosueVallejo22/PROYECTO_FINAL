@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Página no encontrada{% endblock %}
+
+{% block content %}
+<div class="container-404">
+    <div class="error-box">
+        <h1 class="error-title">404</h1>
+        <h2 class="error-subtitle">Página no encontrada</h2>
+        <p class="error-message">Lo sentimos, la página que buscas no existe o fue movida.</p>
+        <a href="{% url 'core:menu' %}" class="btn btn-warning">Regresar al Menú Principal</a>
+    </div>
+</div>
+{% endblock %}

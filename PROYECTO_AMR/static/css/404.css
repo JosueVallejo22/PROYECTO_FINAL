@@ -1,0 +1,64 @@
+/* Estilo principal de la página 404 */
+.container-404 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* Ocupa la mayor parte de la pantalla */
+    background: linear-gradient(180deg, #8b0000, #2c003e);
+    text-align: center;
+    color: #fff;
+}
+
+/* Caja que contiene el mensaje de error */
+.error-box {
+    border: 3px solid #ffdd00; /* Borde amarillo */
+    border-radius: 10px;
+    background: rgba(62, 10, 10, 0.9); /* Fondo semi-transparente */
+    padding: 40px;
+    max-width: 600px; /* Ajusta el ancho */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra */
+}
+
+/* Estilo del título grande (404) */
+.error-title {
+    font-size: 8rem;
+    font-weight: bold;
+    color: #ffdd00;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+/* Subtítulo de la página */
+.error-subtitle {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+/* Mensaje explicativo */
+.error-message {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #ccc;
+}
+
+/* Botón */
+.btn {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    background: #ffdd00;
+    color: #3e0a0a;
+    text-decoration: none;
+    transition: background 0.3s ease-in-out, transform 0.2s ease;
+}
+
+/* Efecto hover para el botón */
+.btn:hover {
+    background: #ffd700;
+    transform: scale(1.05);
+    color: #3e0a0a;
+}

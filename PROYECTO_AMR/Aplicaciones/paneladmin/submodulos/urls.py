@@ -11,6 +11,7 @@ urlpatterns = [
     path('registrar_pais/', PaisCreateView.as_view(), name= 'registrar_pais'),
     path('editar_pais/<int:pk>/', PaisUpdateView.as_view(), name= 'editar_pais'),
     path('activar-inactivar-pais/<int:pk>/', ActivarInactivarPais.as_view(), name= 'activar-inactivar-pais'),
+    path('api/paises', api_paises, name='api_paises'),
     #MANTENIMIENTO CUALIDADES
     path('mantenimiento_cualidades/', CualidadListView.as_view(), name='mantenimiento_cualidades'),
     path('registrar_cualidad/', CualidadCreateView.as_view(), name='registrar_cualidad'),

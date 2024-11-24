@@ -16,6 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponseNotFound
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,3 +30,5 @@ urlpatterns = [
     path('',include('Aplicaciones.paneladmin.submodulos.urls')),
     path('', include('Aplicaciones.core.valoraciones.urls')),
 ]
+if not settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

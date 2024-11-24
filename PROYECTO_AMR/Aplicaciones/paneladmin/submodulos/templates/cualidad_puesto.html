@@ -8,7 +8,7 @@
 <div class="container mt-5">
     <div class="row">
         <!-- Título principal -->
-        <h1 class="text-center text-white fw-bold">Mantenimiento Puesto-Cualidad</h1>
+        <h1 class="text-center text-warning fw-bold">Mantenimiento Puesto-Cualidad</h1>
 
         <!-- Botón regresar -->
         <div class="d-flex justify-content-end mb-3">
@@ -20,7 +20,7 @@
         <!-- Tarjeta para el formulario -->
         <div class="col-md-4">
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success">
+                <div class="card-header bg-dark">
                     <h2 class="mb-0 fw-bold text-center text-white">
                         {% if object %}Editar Puesto-Cualidad{% else %}Registrar Nuevo Puesto-Cualidad{% endif %}
                     </h2>
@@ -70,7 +70,7 @@
         <!-- Tabla de puestos-cualidades -->
         <div class="col-md-8">
             <div class="card shadow-sm mb-5">
-                <div class="card-header bg-success">
+                <div class="card-header bg-dark">
                     <h2 class="mb-0 fw-bold text-center text-white">Puestos-Cualidades Registrados</h2>
                 </div>
             
@@ -147,9 +147,6 @@
             
                 <!-- Paginación -->
                 {% include "paginacion_base.html" %}
-
-            </div>
-            
         </div>
     </div>
 </div>

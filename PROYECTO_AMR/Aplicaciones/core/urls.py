@@ -14,8 +14,10 @@ urlpatterns = [
     path('editjugadores/<int:pk>', jugadoresUpdateView.as_view(), name='editjugadores'),
     path('eliminar/<int:pk>/', ActivarInactivarJugador.as_view(), name='eliminar_jugador'),
 
-    path('comparar/', CompararJugadoresView.as_view(), name='comparar_jugadores'),
-    path('api/jugadores/', BuscarJugadoresView.as_view(), name='buscar_jugadores'),
-    path('api/comparar/', CompararJugadoresStatsView.as_view(), name='comparar_jugadores_stats'),
+    path('comparar/', CompararJugadoresView.as_view(), name='comparar'),
+    path('api/jugadores/', JugadoresConValoracionView.as_view(), name='jugadores_con_valoracion'),
+    path('api/comparar-jugadores/', CompararValoresJugadoresView.as_view(), name='comparar_jugadores'),
+
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

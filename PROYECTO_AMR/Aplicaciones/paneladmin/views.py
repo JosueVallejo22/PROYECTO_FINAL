@@ -14,6 +14,10 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator
 from Aplicaciones.Auditoria.utils import save_audit
+from django.template.loader import render_to_string
+from django.utils.timezone import now
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 # Decorador para verificar si el usuario es administrador
 def admin_required(view_func):
@@ -157,11 +161,18 @@ class UsuarioListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['roles'] = Rol.objects.filter(estado=True).order_by('rol')  # Opciones para el filtro de rol
-        context['rol_selected'] = self.request.GET.get('rol', '')  # Rol seleccionado
-        context['search'] = self.request.GET.get('search', '')  # Valor del campo de búsqueda
-        context['clear_url'] = self.request.path  # URL para el botón "Limpiar"
+        context['roles'] = Rol.objects.filter(estado=True).order_by('rol')
+        context['rol_selected'] = self.request.GET.get('rol', '')
+        context['search'] = self.request.GET.get('search', '')
+        context['clear_url'] = self.request.path
+
+        # Obtener detalles del usuario si se proporciona el parámetro `detalle`
+        detalle_id = self.request.GET.get('detalle')
+        if detalle_id:
+            context['detalle_usuario'] = Usuario.objects.filter(id=detalle_id).first()
+
         return context
+
 
 
 
@@ -169,7 +180,7 @@ class UsuarioListView(ListView):
 class UsuarioDetailView(DetailView):
     """Vista para mostrar detalles de un usuario"""
     model = Usuario
-    template_name = 'detalle_usuario.html'
+    template_name = 'mantenimiento_usuario.html'
     context_object_name = 'usuario'
 
 @method_decorator(admin_required, name='dispatch')
@@ -188,22 +199,31 @@ class CrearUsuarios(CreateView):
         usuario.save()
         save_audit(self.request, usuario, action='A')
         self.enviar_correo_bienvenida(usuario.correo, usuario.nombre_usuario, clave_temporal)
+        messages.success(self.request, 'Usuario creado exitosamente.')
         return super().form_valid(form)
+
+
 
     def enviar_correo_bienvenida(self, correo, nombre_usuario, clave_temporal):
         """Función para enviar correo de bienvenida al nuevo usuario"""
+        # Renderizar el correo con la plantilla
         mensaje_html = render_to_string('correo_bienvenida.html', {
             'nombre_usuario': nombre_usuario,
-            'clave': clave_temporal
+            'clave': clave_temporal,
+            'login_url': settings.LOGIN_URL,  # Define la URL de inicio de sesión en settings.py
+            'current_year': now().year
         })
+        # Crear y enviar el correo
         email = EmailMessage(
-            "Bienvenido/a a la plataforma",
-            mensaje_html,
-            settings.EMAIL_HOST_USER,
-            [correo]
+            subject="Bienvenido/a a la Plataforma",  # Asunto
+            body=mensaje_html,  # Cuerpo del correo
+            from_email=settings.EMAIL_HOST_USER,  # Dirección de correo del remitente
+            to=[correo],  # Dirección de correo del destinatario
         )
-        email.content_subtype = 'html'
+        email.content_subtype = 'html'  # Establecer el formato del correo a HTML
         email.send(fail_silently=False)
+
+
 
 @method_decorator(admin_required, name='dispatch')
 class ActualizarUsuario(UpdateView):
@@ -216,7 +236,7 @@ class ActualizarUsuario(UpdateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         save_audit(self.request, self.object, action='M')
-        messages.success(self.request, 'Usuario Modificado exitosamente.')
+        messages.success(self.request, 'Usuario modificado exitosamente.')
         return response
 
 @method_decorator(admin_required, name='dispatch')

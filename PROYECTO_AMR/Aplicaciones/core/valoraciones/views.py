@@ -268,9 +268,13 @@ class ObtenerDatosValoracionView(View):
 class ObtenerDatosDistribucionView(View):
     def get(self, request, *args, **kwargs):
         """
-        Devuelve la cantidad de jugadores por puesto en formato JSON.
+        Devuelve la cantidad de jugadores por puesto en formato JSON,
+        considerando solo los jugadores activos.
         """
-        puestos = Puesto.objects.filter(estado=True).annotate(total_jugadores=Count('jugador'))
+        # Filtrar puestos activos y contar solo jugadores activos
+        puestos = Puesto.objects.filter(estado=True).annotate(
+            total_jugadores=Count('jugador', filter=Q(jugador__estado=True))
+        )
         datos = {
             "puestos": [{"puesto": p.puesto, "total_jugadores": p.total_jugadores} for p in puestos]
         }

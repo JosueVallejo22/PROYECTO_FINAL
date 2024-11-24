@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from Aplicaciones.core.views import login_required
 from django.utils.decorators import method_decorator
+from django.utils.timezone import now
 
 # Vistas de Restablecimiento de Contraseña
 def verifica_correo(request):
@@ -42,7 +43,10 @@ def solicitar_restablecimiento(request):
         reset_url = request.build_absolute_uri(reverse('Login:form_nueva_clave') + f'?token={reset_token}')
         email_html_content = render_to_string('plantilla_correo.html', {
             'url_restablecimiento': reset_url,
-            'nombre': usuario.nombre
+            'nombre': usuario.nombre,
+            'current_year': now().year
+
+            
         })
 
         email = EmailMultiAlternatives(

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}Comparar Jugadores{% endblock %}
 
 {% block extra_css %}
@@ -7,74 +8,67 @@
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <!-- Encabezado -->
+<div class="container mt-4 comparar-container">
+    <h2 class="text-center text-warning mb-4">Comparar Jugadores</h2>
+
+    <!-- Botón para agregar jugadores -->
     <div class="text-center mb-4">
-        <h1 class="fw-bold display-5 gradient-text">Comparar Jugadores</h1>
-        <p class="text-muted fs-6">Selecciona jugadores para visualizar y comparar sus estadísticas de forma dinámica.</p>
+        <button id="btn-agregar-jugador" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-buscar-jugador">Buscar Jugador</button>
+        <button id="btn-comparar" class="btn btn-success">Comparar</button>
+        <a class="btn btn-warning" href="{% url 'core:comparar' %}">Limpiar</a>
     </div>
 
-    <!-- Botón principal -->
-    <div class="text-center mb-4">
-        <button id="btn-add-players" class="btn btn-primary btn-lg rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#modal-buscar-jugadores">
-            <i class="bi bi-plus-circle fs-5"></i> Añadir jugador(es)
-        </button>
-    </div>
-
-    <!-- Contenedor principal -->
-    <div class="row g-4">
-        <!-- Tarjetas de jugadores -->
-        <div class="col-lg-4">
-            <div class="card shadow p-3" id="selected-players-container">
-                <h5 class="text-center mb-3">Jugadores Seleccionados</h5>
-                <div id="selected-players" class="d-flex flex-wrap gap-2 justify-content-center">
-                    <!-- Las tarjetas se renderizan dinámicamente aquí -->
+    <!-- Sección de comparación -->
+    <div class="row justify-content-center">
+        <!-- Jugador 1 -->
+        <div class="col-lg-3 col-md-4 col-sm-6 comparar-box">
+            <div class="jugador-box text-center">
+                <h5 class="text-warning">Jugador 1</h5>
+                <!-- Div para contener el renderizado del jugador -->
+                <div id="jugador-1" class="jugador-placeholder">
+                    Selecciona un jugador
                 </div>
             </div>
+            <div id="valores-jugador-1" class="valores-placeholder"></div>
+        </div>
+        
+        <!-- Espacio para el gráfico -->
+        <div class="col-md-5 d-flex align-items-center justify-content-center">
+            <canvas id="grafico-hexagonal" width="500" height="500"></canvas>
         </div>
 
-        <!-- Gráfico radar -->
-        <div class="col-lg-8">
-            <div id="radar-container" class="card shadow p-4">
-                <h5 class="text-center mb-3">Estadísticas Comparadas</h5>
-                <!-- Ajustado el tamaño del gráfico -->
-                <canvas id="player-radar" width="300" height="300"></canvas>
+        <!-- Jugador 2 -->
+        <div class="col-lg-3 col-md-4 col-sm-6 comparar-box">
+            <div class="jugador-box text-center">
+                <h5 class="text-warning">Jugador 2</h5>
+                <!-- Div para contener el renderizado del jugador -->
+                <div id="jugador-2" class="jugador-placeholder">
+                    Selecciona un jugador
+                </div>
             </div>
+            <div id="valores-jugador-2" class="valores-placeholder"></div>
         </div>
     </div>
 
-    <!-- Resultados de comparación -->
-    <div id="comparison-results" class="mt-4">
-        <div class="card shadow p-3">
-            <h5 class="text-center mb-3">Resultados de Comparación</h5>
-            <div class="table-responsive">
-                <p class="text-muted text-center fs-6">Añade jugadores para comenzar la comparación.</p>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
-<!-- Modal para buscar jugadores -->
-<div class="modal fade" id="modal-buscar-jugadores" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<!-- Modal de búsqueda -->
+<div id="modal-buscar-jugador" class="modal fade" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Buscar Jugadores</h5>
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="modalTitle">Buscar Jugador</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Input para búsqueda -->
-                <input type="text" id="search-input" class="form-control mb-3" placeholder="Escribe el nombre del jugador...">
-                <!-- Resultados -->
-                <div id="search-results" class="list-group"></div>
-            </div>
-            <div class="modal-footer">
-                <button id="clear-selection" class="btn btn-secondary rounded-pill">Limpiar selección</button>
-                <button id="add-selection" class="btn btn-primary rounded-pill">Añadir selección</button>
+                <input type="text" id="input-buscar-jugador" class="form-control" placeholder="Buscar jugador...">
+                <ul id="lista-jugadores" class="list-group mt-3"></ul>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block js %}

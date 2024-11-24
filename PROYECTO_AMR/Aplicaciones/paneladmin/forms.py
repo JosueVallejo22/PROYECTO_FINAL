@@ -19,6 +19,8 @@ class RolForm(forms.ModelForm):
             raise forms.ValidationError('EL ROL INGRESADO YA EXISTE.')
         return rol
 
+from django.forms.widgets import DateInput
+
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
@@ -36,10 +38,13 @@ class UsuarioForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre'}),
             'apellido': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese apellido'}),
             'nombre_usuario': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre de usuario'}),
-            'correo': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese correo'}),
-            'numero_telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese número de teléfono'}),
-            'fecha_nacimiento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'format': '%Y-%m-%d'}),
-            'sexo': forms.Select(attrs={'class': 'form-control'}, choices=[('M', 'Masculino'), ('F', 'Femenino')]),
+            'correo': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese correo electrónico'}),
+            'numero_telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese número de teléfono', 'maxlength': '15'}),
+            'fecha_nacimiento': forms.DateInput(
+                attrs={'class': 'form-control', 'type': 'text', 'id': 'id_fecha_nacimiento'}
+            ),
+
+            'sexo': forms.Select(attrs={'class': 'form-control'}),
             'rol': forms.Select(attrs={'class': 'form-control'}),
         }
         labels = {
@@ -52,25 +57,21 @@ class UsuarioForm(forms.ModelForm):
             'sexo': 'Sexo',
             'rol': 'Rol',
         }
+
     def __init__(self, *args, **kwargs):
-        super(UsuarioForm, self).__init__(*args, **kwargs)
-        # Filtrar roles activos
+        super().__init__(*args, **kwargs)
         self.fields['rol'].queryset = Rol.objects.filter(estado=True)
 
     def clean_correo(self):
         correo = self.cleaned_data.get('correo')
         if Usuario.objects.filter(correo=correo).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError("El correo ingresado ya se encuentra registrado")
+            raise forms.ValidationError("El correo ingresado ya se encuentra registrado.")
         return correo
 
     def clean_numero_telefono(self):
         numero = self.cleaned_data.get('numero_telefono')
-        
         if not numero.isdigit():
             raise forms.ValidationError("El número de teléfono solo debe contener dígitos.")
-        
-        # Validación para verificar si ya existe un usuario con el mismo número de teléfono
         if Usuario.objects.filter(numero_telefono=numero).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("Ya existe un Usuario con este número de teléfono.")
-        
         return numero

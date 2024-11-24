@@ -1,115 +1,146 @@
 {% extends 'base.html' %}
 
-{% load static %} 
+{% load static %}
 
-{% block title %} REGISTRO DE JUGADORES {% endblock %}
+{% block title %} Registro de Jugadores {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <div class="row">
-        <div class="col md-12 mb-3">
-            <div class="card">
-                <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center mt-2 text-white"> 
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <!-- Encabezado -->
+                <div class="card-header bg-dark text-white text-center">
+                    <h2 class="mb-0 fw-bold">
                         {% if is_editing %}
                             Editar Jugador
                         {% else %}
-                        Agregar Jugador
+                            Agregar Jugador
                         {% endif %}
                     </h2>
                 </div>
+                <!-- Contenido -->
                 <div class="card-body">
-                    <h4 class="card-title">Datos de jugadores</h4>
+                    <h5 class="text-secondary fw-bold mb-4">Datos del Jugador</h5>
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
+                        <!-- Mostrar errores generales -->
                         {% if form.non_field_errors %}
                             <div class="alert alert-danger">{{ form.non_field_errors }}</div>
                         {% endif %}
 
-                        <!--campos del formulario-->
-                        <div class="row">
-                            <div class="col-6 mt-2 form-group">
-                                {{ form.nombre.label_tag}}
-                                {{ form.nombre}}
-                                {% if form.nombre.errors %}
-                                    <div class="alert alert-danger">{{ form.nombre.errors }}</div>
-                                {% endif %}
+                        <!-- Campos del formulario -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.nombre.label_tag }}
+                                    {{ form.nombre }}
+                                    {% if form.nombre.errors %}
+                                        <div class="text-danger small">{{ form.nombre.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="col-6 mt-2 form-group">
-                                {{ form.apellido.label_tag}}
-                                {{ form.apellido}}
-                                {% if form.apellido.errors %}
-                                    <div class="alert alert-danger">{{ form.apellido.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-4 mt-2 form-group">
-                                {{ form.pais.label_tag}}
-                                {{ form.pais}}
-                                {% if form.pais.errors %}
-                                    <div class="alert alert-danger">{{ form.pais.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class=" col-4 mt-2 form-group">
-                                {{ form.fecha_nac.label_tag}}
-                                {{ form.fecha_nac}}
-                                {% if form.fecha_nac.errors %}
-                                    <div class="alert alert-danger">{{ form.fecha_nac.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-4 mt-2 form-group">
-                                {{ form.correo.label_tag}}
-                                {{ form.correo}}
-                                {% if form.correo.errors %}
-                                    <div class="alert alert-danger">{{ form.correo.errors }}</div>
-                                {% endif %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.apellido.label_tag }}
+                                    {{ form.apellido }}
+                                    {% if form.apellido.errors %}
+                                        <div class="text-danger small">{{ form.apellido.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-3 mt-2 form-group">
-                                {{ form.puesto.label_tag}}
-                                {{ form.puesto}}
-                                {% if form.puesto.errors %}
-                                    <div class="alert alert-danger">{{ form.puesto.errors }}</div>
-                                {% endif %}
-                            </div> 
-                            <div class="col-3 mt-2 form-group">
-                                {{ form.altura.label_tag}}
-                                {{ form.altura}}
-                                {% if form.altura.errors %}
-                                    <div class="alert alert-danger">{{ form.altura.errors }}</div>
-                                {% endif %}
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.pais.label_tag }}
+                                    {{ form.pais }}
+                                    {% if form.pais.errors %}
+                                        <div class="text-danger small">{{ form.pais.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="col-3 mt-2 form-group">
-                                {{ form.peso.label_tag}}
-                                {{ form.peso}}
-                                {% if form.peso.errors %}
-                                    <div class="alert alert-danger">{{ form.peso.errors }}</div>
-                                {% endif %}
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.fecha_nac.label_tag }}
+                                    {{ form.fecha_nac }}
+                                    {% if form.fecha_nac.errors %}
+                                        <div class="text-danger small">{{ form.fecha_nac.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="col-3 mt-2 form-group">
-                                {{ form.pierna_habil.label_tag}}
-                                {{ form.pierna_habil}}
-                                {% if form.pierna_habil.errors %}
-                                    <div class="alert alert-danger">{{ form.pierna_habil.errors }}</div>
-                                {% endif %}
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.correo.label_tag }}
+                                    {{ form.correo }}
+                                    {% if form.correo.errors %}
+                                        <div class="text-danger small">{{ form.correo.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            {{ form.foto.label_tag}}
-                            {{ form.foto}}
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form.puesto.label_tag }}
+                                    {{ form.puesto }}
+                                    {% if form.puesto.errors %}
+                                        <div class="text-danger small">{{ form.puesto.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form.altura.label_tag }}
+                                    {{ form.altura }}
+                                    {% if form.altura.errors %}
+                                        <div class="text-danger small">{{ form.altura.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form.peso.label_tag }}
+                                    {{ form.peso }}
+                                    {% if form.peso.errors %}
+                                        <div class="text-danger small">{{ form.peso.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form.pierna_habil.label_tag }}
+                                    {{ form.pierna_habil }}
+                                    {% if form.pierna_habil.errors %}
+                                        <div class="text-danger small">{{ form.pierna_habil.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="fw-bold text-secondary">{{ form.foto.label }}</label>
+                            {{ form.foto }}
                             {% if form.foto.errors %}
-                                <div class="alert alert-danger">{{ form.foto.errors }}</div>
+                                <div class="text-danger small">{{ form.foto.errors|join:", " }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-success">Guardar</button>
-                            <a href="{% url 'core:listjugadores' %}" class="btn btn-danger">cancelar</a>
+                        <!-- Botones -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success fw-bold">
+                                {% if is_editing %}
+                                    <i class="bi bi-pencil"></i> Actualizar
+                                {% else %}
+                                    <i class="bi bi-plus-circle"></i> Guardar
+                                {% endif %}
+                            </button>
+                            <a href="{% url 'core:listjugadores' %}" class="btn btn-danger fw-bold ms-3">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
                         </div>
                     </form>
                 </div>

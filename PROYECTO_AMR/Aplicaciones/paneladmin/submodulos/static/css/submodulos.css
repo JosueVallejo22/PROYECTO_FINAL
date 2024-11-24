@@ -1,0 +1,42 @@
+/* General */
+#map {
+    height: 300px;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Autocompletado */
+.ui-autocomplete {
+    position: absolute;
+    z-index: 1050;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ui-menu-item {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.ui-menu-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Tarjetas */
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 15px;
+}
+
+.card-body {
+    padding: 20px;
+}

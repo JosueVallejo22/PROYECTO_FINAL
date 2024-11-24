@@ -2,14 +2,98 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Bienvenido/a</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a la Plataforma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a0630;
+            color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #2c1a2b;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border: 2px solid #ffc107;
+            text-align: center;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #ffc107;
+            font-size: 24px;
+            margin: 0;
+        }
+        .content {
+            line-height: 1.6;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .content p {
+            margin: 10px 0;
+            color: #f8f9fa;
+        }
+        .content ul {
+            padding-left: 20px;
+        }
+        .content ul li {
+            margin-bottom: 10px;
+            color: #f8f9fa;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ffc107;
+            color: #2c1a2b;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #e0a800;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #868e96;
+        }
+    </style>
 </head>
 <body>
-    <h2>Hola, {{ nombre_usuario }}!</h2>
-    <p>Te damos la bienvenida a la plataforma. Aquí tienes tus credenciales de acceso:</p>
-    <p><strong>Usuario:</strong> {{ nombre_usuario }}</p>
-    <p><strong>Contraseña:</strong> {{ clave }}</p>
-    <p>Por favor, te recomendamos restablecer tu contraseña después de iniciar sesión por primera vez.</p>
-    <p>¡Gracias por unirte!</p>
+    <div class="container">
+        <div class="header">
+            <h1>¡Bienvenido a la Plataforma!</h1>
+        </div>
+        <div class="content">
+            <p>Hola <strong>{{ nombre_usuario }}</strong>,</p>
+            <p>Te damos la bienvenida a nuestra plataforma. Aquí están tus credenciales de acceso:</p>
+            <ul>
+                <li><strong>Usuario:</strong> {{ nombre_usuario }}</li>
+                <li><strong>Contraseña temporal:</strong> {{ clave }}</li>
+            </ul>
+            <p>Te recomendamos cambiar tu contraseña después de iniciar sesión.</p>
+        </div>
+        <div class="button-container">
+            <a href="{{ login_usuario }}" class="button">Iniciar Sesión</a>
+        </div>
+        <div class="footer">
+            <p>© {{ current_year }} - VV Enterprises</p>
+            <p>Este es un correo generado automáticamente, por favor no responder.</p>
+        </div>
+    </div>
 </body>
 </html>

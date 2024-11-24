@@ -2,43 +2,57 @@
 {% load static %}
 
 {% block title %}Mantenimiento Países{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="{% static 'css/submodulos.css' %}">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <!-- Botones superiores -->
-        <div class="col-md-12 mb-3 d-flex justify-content-between">
-            <h2 class="text-white fw-bold">Mantenimiento de Paises</h2>
-            <div>
-                <a href="{% url 'submodulos:menu_submodulos' %}" class="btn btn-danger fw-bold">
-                    <i class="bi bi-arrow-left-circle me-2"></i> Regresar
-                </a>
-            </div>
+        <!-- Título y botón regresar -->
+        <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="text-warning fw-bold">Mantenimiento de Países</h1>
+            <a href="{% url 'submodulos:menu_submodulos' %}" class="btn btn-danger fw-bold">
+                <i class="bi bi-arrow-left-circle me-2"></i> Regresar
+            </a>
         </div>
 
-        <!-- Tarjeta para el formulario -->
+        <!-- Formulario -->
         <div class="col-md-4">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center text-white">
+            <div class="card shadow rounded-4">
+                <div class="card-header bg-dark text-center">
+                    <h2 class="text-white fw-bold mb-0">
                         {% if object %}Editar País{% else %}Registrar País{% endif %}
                     </h2>
                 </div>
                 <div class="card-body">
                     <form method="post" action="{% if object %}{% url 'submodulos:editar_pais' object.pk %}{% else %}{% url 'submodulos:registrar_pais' %}{% endif %}">
                         {% csrf_token %}
+                        <!-- Campo para nombre del país -->
                         <div class="form-group mb-3">
                             <label for="id_pais" class="fw-bold">Nombre del País</label>
-                            <input type="text" name="pais" class="form-control" id="id_pais" placeholder="Ingrese el nombre del país" value="{{ object.pais }}" required>
-                            {% for error in form.non_field_errors %}
-                                <div class="alert alert-danger mt-2">{{ error }}</div>
-                            {% endfor %}
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <div class="alert alert-danger mt-2">{{ error }}</div>
-                                {% endfor %}
-                            {% endfor %}
+                            <input 
+                                type="text" 
+                                name="pais" 
+                                class="form-control form-control-lg" 
+                                id="id_pais" 
+                                placeholder="Seleccione o escriba un país" 
+                                value="{{ object.pais }}" 
+                                data-countries="{{ paises|join:',' }}"
+                                required
+                            />
                         </div>
+
+                        <!-- Mapa interactivo -->
+                        <div id="map" style="height: 300px;" class="mb-3" 
+                            data-latitude="{{ latitude|default:'' }}" 
+                            data-longitude="{{ longitude|default:'' }}">
+                        </div>
+                        <p class="text-muted small">Seleccione un país en el mapa para rellenar automáticamente el campo.</p>
+
+                        <!-- Botones -->
                         <button type="submit" class="btn btn-success w-100 fw-bold">
                             {% if object %}<i class="bi bi-pencil"></i> Actualizar{% else %}<i class="bi bi-save"></i> Registrar{% endif %}
                         </button>
@@ -54,15 +68,12 @@
 
         <!-- Tabla de países -->
         <div class="col-md-8">
-            <div class="card shadow-sm mb-5">
-                <div class="card-header bg-success">
-                    <h2 class="mb-0 fw-bold text-center text-white">Países Registrados</h2>
+            <div class="card shadow rounded-4">
+                <div class="card-header bg-dark text-center">
+                    <h2 class="text-white fw-bold mb-0">Países Registrados</h2>
                 </div>
                 <div class="card-body">
-                    <!-- Formulario para buscar -->
                     {% include "form_busqueda.html" with clear_url=request.path %}
-                    
-                    <!-- Tabla -->
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-success text-center">
@@ -102,13 +113,17 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <!-- Paginación -->
                     {% include "paginacion_base.html" %}
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{% static 'js/paises.js' %}"></script>
 {% endblock %}
