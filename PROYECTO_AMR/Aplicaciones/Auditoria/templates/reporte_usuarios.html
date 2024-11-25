@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reporte de Usuarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .encabezado {
+            display: flex;
+            flex-direction: column;
+            border-bottom: 3px solid #4CAF50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .encabezado-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .encabezado-top img {
+            width: 80px;
+            height: auto;
+        }
+        .encabezado-top .titulo {
+            text-align: center;
+            flex-grow: 1;
+        }
+        .encabezado-top .titulo h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #711a1b;
+        }
+        .encabezado-top .titulo p {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+        .encabezado-bottom {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .usuario {
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .usuario-header {
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+        .usuario-detalle {
+            padding: 10px;
+        }
+        .usuario-detalle p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .usuario-detalle span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado -->
+    <div class="encabezado">
+        <div class="encabezado-top">
+            <!-- <img src="https://via.placeholder.com/80" alt="Logotipo"> Cambia esto por tu logotipo -->
+            <div class="titulo">
+                <h1>Reporte de Usuarios</h1>
+                <p>Sistema de Gestión - Nombre de tu Empresa</p>
+            </div>
+            <div class="fecha">
+                <p>Fecha: {{ fecha }}</p>
+            </div>
+        </div>
+        <div class="encabezado-bottom">
+            <p><strong>Total de Usuarios:</strong> {{ total_usuarios }}</p>
+        </div>
+    </div>
+
+    {% for usuario in usuarios %}
+    <div class="usuario">
+        <div class="usuario-header">
+            {{ usuario.nombre }} {{ usuario.apellido }}
+        </div>
+        <div class="usuario-detalle">
+            <p><span>Edad:</span> {{ usuario.edad }}</p>
+            <p><span>Sexo:</span> {{ usuario.get_sexo_display }}</p>
+            <p><span>Rol:</span> {{ usuario.rol.rol }}</p>
+            <p><span>Usuario:</span> {{ usuario.nombre_usuario }}</p>
+            <p><span>Correo:</span> {{ usuario.correo }}</p>
+            <p><span>Teléfono:</span> {{ usuario.numero_telefono }}</p>
+            <p><span>Estado:</span> {{ usuario.estado|yesno:"Activo,Inactivo" }}</p>
+            <p><span>Fecha de Creación:</span> {{ usuario.fecha_creacion|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>

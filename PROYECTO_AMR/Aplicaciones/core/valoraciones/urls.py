@@ -1,5 +1,7 @@
 from django.urls import path
+from Aplicaciones.core.valoraciones import views
 from Aplicaciones.core.valoraciones.views import *
+
 
 app_name = "valoraciones"
 
@@ -22,5 +24,8 @@ urlpatterns = [
     path('dashboards/distribucion/', ObtenerDatosDistribucionView.as_view(), name='api_distribucion'),
     path('dashboards/penales/', ObtenerDatosPenalesView.as_view(), name='api_penales'),
     path('dashboards/penales/<int:jugador_id>/', ObtenerDatosPenalesView.as_view(), name='api_penales_jugador'),
+    ###############################################
+    path('reporte-pdf/', views.generar_pdf_xhtml2pdf, name='reporte_pdf'),
+    path('enviar-reporte-pdf/', views.enviar_pdf_correo, name='enviar_reporte_pdf'),
 
 ]

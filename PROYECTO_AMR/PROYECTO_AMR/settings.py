@@ -154,4 +154,3 @@ EMAIL_HOST_PASSWORD = '0957310550'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # settings.py
-WKHTMLTOPDF_CMD = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'

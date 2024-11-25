@@ -342,3 +342,71 @@ class ObtenerDatosPenalesView(View):
             datos = {"jugadores": jugadores_datos}
 
         return JsonResponse(datos)
+#################################
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+
+def generar_pdf_xhtml2pdf(request):
+    # Datos para pasar al HTML
+    context = {
+        'titulo': 'Reporte Generado con xhtml2pdf',
+        'contenido': 'Este PDF fue generado utilizando xhtml2pdf en Django.',
+    }
+
+    # Renderizar el HTML con los datos
+    html = render_to_string('pruebaPDF.html', context)
+
+    # Crear respuesta HTTP con tipo de contenido PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+
+    # Convertir HTML a PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    # Manejar errores durante la conversión
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=500)
+
+    return response
+
+
+from django.core.mail import EmailMessage
+import tempfile
+
+def enviar_pdf_correo(request):
+    # Datos para pasar al HTML
+    context = {
+        'titulo': 'Reporte Enviado por Correo',
+        'contenido': 'Este PDF fue generado y enviado como adjunto por correo.',
+    }
+
+    # Renderiza la plantilla HTML
+    html = render_to_string('pruebaPDF.html', context)
+
+    # Crear un archivo PDF temporal
+    with tempfile.NamedTemporaryFile(delete=True, suffix=".pdf") as temp_pdf:
+        # Convertir el HTML en un archivo PDF
+        pisa_status = pisa.CreatePDF(html, dest=temp_pdf)
+
+        if pisa_status.err:
+            return HttpResponse('Error al generar el PDF', status=500)
+
+        # Asegúrate de que el archivo esté listo para ser leído
+        temp_pdf.seek(0)
+
+        # Configurar el correo
+        email = EmailMessage(
+            subject='Tu Reporte en PDF',
+            body='Adjunto encontrarás tu reporte generado.',
+            from_email='svallejos@unemi.edu.ec',  # Cambia esto por tu email
+            to=['svallejos@unemi.edu.ec'],   # Cambia esto por el destinatario
+        )
+
+        # Adjuntar el PDF
+        email.attach('reporte.pdf', temp_pdf.read(), 'application/pdf')
+
+        # Enviar el correo
+        email.send()
+
+    return HttpResponse('Correo enviado con éxito.')
