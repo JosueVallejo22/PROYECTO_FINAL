@@ -15,13 +15,13 @@
             <h2 class="text-warning fw-bold">Mantenimiento de Usuarios</h2>
             <div class="d-flex gap-2">
                 <a href="{% url 'paneladmin:crear_usuario' %}" class="btn btn-success fw-bold">
-                    <i class="bi bi-plus-circle me-2"></i> Registrar Nuevo Usuario
-                </a>
-                <a href="{% url 'paneladmin:menu_modulo_usuarios' %}" class="btn btn-danger fw-bold">
-                    <i class="bi bi-arrow-left-circle me-2"></i> Regresar
+                    <i class="bi bi-plus-circle fs-5"></i> REGISTRAR NUEVO USUARIO
                 </a>
                 <a href="{% url 'Auditoria:reporte_usuarios' %}" class="btn btn-warning fw-bold">
-                    <i class="bi bi-arrow-left-circle me-2"></i> GENERAR REPORTE DE USUARIOS
+                    <i class="bi bi-filetype-pdf fs-5"></i> GENERAR REPORTE DE USUARIOS
+                </a>
+                <a href="{% url 'paneladmin:menu_modulo_usuarios' %}" class="btn btn-danger fw-bold">
+                    <i class="bi bi-arrow-left-circle fs-5"></i> REGRESAR
                 </a>
             </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-dark">
-                        <tr>
+                        <tr class="text-center">
                             <th style="width: 12%;">Nombre</th>
                             <th style="width: 12%;">Apellido</th>
                             <th style="width: 12%;">Usuario</th>
@@ -53,7 +53,7 @@
                             <th style="width: 20%;">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="small">
+                    <tbody class="small fw-bold">
                         {% for usuario in usuarios %}
                         <tr>
                             <td>{{ usuario.nombre }}</td>

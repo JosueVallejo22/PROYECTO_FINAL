@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reporte de Usuarios</title>
+    <title>Reporte de Jugadores</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,7 +37,7 @@
         .encabezado-top .titulo p {
             margin: 0;
             font-size: 15px;
-            color: #555;
+            color: #000000;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         }
         .encabezado-bottom {
@@ -46,14 +46,14 @@
             margin-top: 10px;
             font-size: 14px;
         }
-        .usuario {
+        .jugador {
             border: 1px solid #ddd;
             margin-bottom: 10px;
             border-radius: 8px;
             padding: 10px;
             background-color: #f9f9f9;
         }
-        .usuario-header {
+        .jugador-header {
             background-color: #e0e0e0;
             padding: 10px;
             border-radius: 8px 8px 0 0;
@@ -61,14 +61,15 @@
             font-size: 16px;
             text-align: center;
         }
-        .usuario-detalle {
+        .jugador-detalle {
             padding: 5px;
+            font-size: 16px;
         }
-        .usuario-detalle p {
+        .jugador-detalle p {
             margin: 0;
             font-size: 12px;
         }
-        .usuario-detalle span {
+        .jugador-detalle span {
             font-weight: bold;
         }
     </style>
@@ -80,7 +81,7 @@
         <div class="encabezado-top">
             <!-- Título -->
             <div class="titulo">
-                <h1>REPORTE DE USUARIOS REGISTRADOS</h1>
+                <h1>REPORTE DE JUGADORES REGISTRADOS</h1>
                 <p>AMR SOFTWARE - © VV Enterprises</p>
             </div>
             <!-- Fecha -->
@@ -89,14 +90,14 @@
             </div>
         </div>
 
-        <!-- Parte Inferior: Total de Usuarios y Conteo por Rol -->
+        <!-- Parte Inferior: Total de Jugadores y Conteo por Puesto -->
         <div class="encabezado-bottom">
-            <p><strong>Total de Usuarios:</strong> {{ total_usuarios }}</p>
+            <p><strong>Total de Jugadores:</strong> {{ total_jugadores }}</p>
             <div class="conteo-roles">
-                <strong>Usuarios por Rol:</strong>
+                <strong>Jugadores por Puesto:</strong>
                 <div class="roles">
-                    {% for rol in conteo_por_rol %}
-                    <span>{{ rol.rol__rol }}: {{ rol.total }}</span>{% if not forloop.last %} | {% endif %}
+                    {% for puesto in conteo_por_puesto %}
+                    <span>{{ puesto.puesto__puesto }}: {{ puesto.total }}</span>{% if not forloop.last %} | {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -104,21 +105,17 @@
     </div>
 
 
-    {% for usuario in usuarios %}
-    <div class="usuario">
-        <div class="usuario-header">
-            Usuario: {{ usuario.nombre }} {{ usuario.apellido }} - Estado: {{ usuario.estado|yesno:"Activo,Inactivo" }}
+    {% for jugador in jugadores %}
+    <div class="jugador">
+        <div class="jugador-header">
+            Jugador: {{ jugador.nombre }} {{ jugador.apellido }} {{ jugador.puesto.abreviatura}} - Estado: {{ jugador.estado|yesno:"Activo,Inactivo" }}
         </div>
-        <div class="usuario-detalle">
+        <div class="jugador-detalle">
             <p>
-                <span>Edad:</span> {{ usuario.edad }} &nbsp;&nbsp;&nbsp;
-                <span>Sexo:</span> {{ usuario.get_sexo_display }} &nbsp;&nbsp;&nbsp;
-                <span>Rol:</span> {{ usuario.rol.rol }} &nbsp;&nbsp;&nbsp;
-                <span>Fecha de Registro:</span> {{ usuario.fecha_creacion|date:"d/m/Y" }}
-            </p>
-            <p><span>Usuario:</span> {{ usuario.nombre_usuario }} &nbsp;&nbsp;&nbsp;
-                <span>Correo:</span> {{ usuario.correo }} &nbsp;&nbsp;&nbsp;
-                <span>Teléfono:</span> {{ usuario.numero_telefono }} &nbsp;&nbsp;&nbsp;
+                <span>Correo:</span> {{ jugador.correo }} &nbsp;&nbsp;&nbsp;
+                <span>Edad:</span> {{ jugador.edad }} &nbsp;&nbsp;&nbsp;
+                <span>Puesto:</span> {{ jugador.puesto.puesto }} &nbsp;&nbsp;&nbsp;
+                <span>Fecha de Registro:</span> {{ jugador.fecha_creacion|date:"d/m/Y" }}
             </p>
         </div>
     </div>
