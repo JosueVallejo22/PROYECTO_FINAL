@@ -153,5 +153,5 @@ EMAIL_HOST_USER = 'svallejos@unemi.edu.ec'
 EMAIL_HOST_PASSWORD = '0957310550'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
-HANDLER404 = 'Aplicaciones.core.views.handler404'
+# settings.py
+WKHTMLTOPDF_CMD = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'

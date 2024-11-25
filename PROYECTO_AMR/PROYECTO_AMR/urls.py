@@ -19,8 +19,8 @@ from django.urls import path, include
 from django.http import HttpResponseNotFound
 from django.conf import settings
 from django.conf.urls.static import static
-
-
+from PROYECTO_AMR import views
+from PROYECTO_AMR.views import prueba_pdf
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,7 @@ urlpatterns = [
     path('',include('Aplicaciones.paneladmin.urls')),
     path('',include('Aplicaciones.paneladmin.submodulos.urls')),
     path('', include('Aplicaciones.core.valoraciones.urls')),
+    path('prueba-pdf/', views.prueba_pdf, name='prueba_pdf'),    
 ]
 if not settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
