@@ -71,7 +71,7 @@
                                     <td>{{ valoracion.valoracion_total|floatformat:1 }}</td>
                                     <td>
                                         <!-- Alerta según el valor de valoración_total -->
-                                        {% if valoracion.valoracion_total < 80 %}
+                                        {% if valoracion.valoracion_total < 70 %}
                                             <span class="badge bg-danger">Bajo</span>
                                         {% else %}
                                             <span class="badge bg-success">Adecuado</span>
@@ -81,6 +81,9 @@
                                         <div class="d-flex justify-content-center gap-2">
                                             <a href="?detalle={{ valoracion.id }}" class="btn btn-info btn-sm fw-bold">
                                                 <i class="bi bi-eye"></i> Detalles
+                                            </a>
+                                            <a href="{% url 'Auditoria:valoracion_pdf' valoracion.id %}" class="btn btn-danger">
+                                                <i class="bi bi-filetype-pdf"></i> Generar Reporte
                                             </a>
                                         </div>
                                     </td>
@@ -139,7 +142,7 @@
                                         <i class="bi bi-graph-up-arrow text-muted me-2"></i>
                                         <span class="fw-bold text-muted">Valoración Total:</span>
                                     </div>
-                                    <span class="{% if detalle_valoracion.valoracion_total >= 80 %}text-success fw-bold{% else %}text-danger fw-bold{% endif %}">
+                                    <span class="{% if detalle_valoracion.valoracion_total >= 70 %}text-success fw-bold{% else %}text-danger fw-bold{% endif %}">
                                         {{ detalle_valoracion.valoracion_total|floatformat:1 }} %
                                     </span>
                                 </div>

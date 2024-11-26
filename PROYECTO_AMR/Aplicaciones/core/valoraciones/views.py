@@ -15,6 +15,9 @@ from django.db.models import Q, Count, Sum
 from Aplicaciones.core.views import login_required
 from django.utils.decorators import method_decorator
 from Aplicaciones.Auditoria.utils import save_audit
+from django.core.mail import EmailMessage
+from xhtml2pdf import pisa
+from io import BytesIO
 
 @method_decorator(login_required, name='dispatch')
 class ModuloValoracionesView(ListView):
@@ -212,6 +215,13 @@ class GuardarValoracionView(FormView):
 
                 # Guardar auditoría
                 save_audit(self.request, valoracion, action='A')  # Acción 'A' para agregar
+                
+                #Enviar PDF
+                pdf_content = self.generar_pdf(valoracion)
+                self.enviar_correo(jugador, pdf_content)
+
+                if valoracion.valoracion_total < 70:
+                    self.enviar_correo_administradores(jugador, valoracion)
 
                 messages.success(self.request, "Valoración guardada exitosamente.")
                 return redirect(self.success_url)
@@ -224,6 +234,71 @@ class GuardarValoracionView(FormView):
     def form_invalid(self, form):
         messages.error(self.request, "Formulario inválido. Verifique los datos ingresados.")
         return redirect(self.success_url)
+    
+    def generar_pdf(self, valoracion):
+        """Generar el PDF con xhtml2pdf usando el HTML específico."""
+        # Filtrar cualidades asociadas al puesto del jugador
+        cualidades_asociadas = PuestoCualidad.objects.filter(puesto=valoracion.jugador.puesto).select_related('cualidad')
+
+        # Crear una lista dinámica de las cualidades con sus valores
+        cualidades = []
+        for puesto_cualidad in cualidades_asociadas:
+            cualidad_nombre = puesto_cualidad.cualidad.cualidad.lower()
+            valor_cualidad = getattr(valoracion, f"valoracion_{cualidad_nombre}", None)
+            cualidades.append({'nombre': puesto_cualidad.cualidad.cualidad, 'valor': valor_cualidad})
+
+        # Contexto para la plantilla
+        context = {
+            'valoracion': valoracion,
+            'jugador': valoracion.jugador,
+            'cualidades': cualidades,
+            'estadisticas': valoracion.detalles.all(),
+            'fecha': date.today(),
+            'current_year': date.today().year,
+        }
+
+        # Renderizar el HTML del PDF
+        html = render_to_string('reporte_valoraciones_detalle.html', context)
+        pdf = BytesIO()
+        pisa.CreatePDF(BytesIO(html.encode('utf-8')), dest=pdf)
+
+        return pdf.getvalue()
+
+    def enviar_correo(self, jugador, pdf_content):
+        """Enviar el correo con el PDF adjunto."""
+        email = EmailMessage(
+            subject="Reporte de Valoración",
+            body=f"Hola {jugador.nombre},\n\nSe te ha evaluado, a continuacion te adjuntamos el reporte de tu valoracion.",
+            from_email="svallejos@unemi.edu.ec",
+            to=[jugador.correo],
+        )
+        email.attach(f"valoracion_{jugador.nombre}.pdf", pdf_content, "application/pdf")
+        email.send()
+
+    def enviar_correo_administradores(self, jugador, valoracion):
+        """Enviar el correo a los administradores si el rendimiento es deficiente."""
+        # Obtener correos de los administradores
+        administradores = Usuario.objects.filter(rol__rol='ADMINISTRADOR').values_list('correo', flat=True)
+
+        # Generar PDF
+        pdf_content = self.generar_pdf(valoracion)
+
+        # Cuerpo del correo
+        body = (
+            f"El jugador {jugador.nombre} {jugador.apellido} ha obtenido un rendimiento deficiente "
+            f"con una valoración total de {valoracion.valoracion_total}.\n\n"
+            "Se adjunta el reporte de la evaluación para más detalles."
+        )
+
+        # Enviar el correo
+        email = EmailMessage(
+            subject="Alerta: Rendimiento Deficiente",
+            body=body,
+            from_email="svallejos@unemi.edu.ec",
+            to=list(administradores),
+        )
+        email.attach(f"reporte_rendimiento_{jugador.nombre}.pdf", pdf_content, "application/pdf")
+        email.send()
     
 #######################
 #DASHBOARDS#

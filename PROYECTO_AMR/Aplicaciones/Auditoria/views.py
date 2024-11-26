@@ -1,13 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from Aplicaciones.Login.models import *
 from Aplicaciones.core.models import *
+from Aplicaciones.core.valoraciones.models import *
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
+from xhtml2pdf.pisa import CreatePDF
 import datetime
 from django.views import *
 from django.db.models import Count  # Importar Count para el conteo
 from reportlab.pdfgen import canvas
+from io import BytesIO
+
 
 # Create your views here.
 
@@ -96,46 +100,80 @@ class GenerarReporteJugadoresPDF(View):
 class ReporteJugadorPDF(View):
     def get(self, request, pk, *args, **kwargs):
         # Obtener el jugador
-        jugador = Jugador.objects.get(pk=pk)
+        jugador = get_object_or_404(Jugador, pk=pk)
 
         # Calcular la edad del jugador
         hoy = date.today()
         edad = hoy.year - jugador.fecha_nac.year - ((hoy.month, hoy.day) < (jugador.fecha_nac.month, jugador.fecha_nac.day))
 
-        # Configurar la respuesta como PDF
+        # Construir URL absoluta para la foto del jugador
+        foto_url = request.build_absolute_uri(jugador.foto.url) if jugador.foto else None
+
+        # Contexto para el template
+        context = {
+            'detjugadores': jugador,
+            'edad': edad,
+            'foto_url': foto_url,  # Agregamos la URL completa de la foto
+            'fecha': datetime.date.today()
+        }
+
+        # Renderizar el HTML
+        template_path = 'reporte_detalle_jugador.html'
+        html = render_to_string(template_path, context)
+
+        # Configurar la respuesta HTTP
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="reporte_{jugador.nombre}_{jugador.apellido}.pdf"'
 
-        # Crear el PDF
-        p = canvas.Canvas(response)
+        # Generar el PDF usando xhtml2pdf
+        pisa_status = CreatePDF(html, dest=response)
 
-        # Título del reporte
-        p.setFont("Helvetica-Bold", 16)
-        p.drawString(200, 800, "Reporte Individual del Jugador")
+        # Verificar errores
+        if pisa_status.err:
+            return HttpResponse(f"Error al generar el PDF: {pisa_status.err}", content_type="text/plain")
+        return response
 
-        # Información del jugador
-        p.setFont("Helvetica", 12)
-        p.drawString(50, 750, f"Nombre: {jugador.nombre}")
-        p.drawString(50, 730, f"Apellido: {jugador.apellido}")
-        p.drawString(50, 710, f"Nacionalidad: {jugador.pais.pais}")
-        p.drawString(50, 690, f"Puesto: {jugador.puesto.puesto}")
-        p.drawString(50, 670, f"Fecha de Nacimiento: {jugador.fecha_nac.strftime('%d/%m/%Y')}")
-        p.drawString(50, 650, f"Edad: {edad} años")
-        p.drawString(50, 630, f"Correo: {jugador.correo}")
-        p.drawString(50, 610, f"Pierna Hábil: {jugador.get_pierna_habil_display()}")
-        p.drawString(50, 590, f"Altura: {jugador.altura} cm")
-        p.drawString(50, 570, f"Peso: {jugador.peso} kg")
-        p.drawString(50, 550, f"Estado: {'Activo' if jugador.estado else 'Inactivo'}")
+class ReporteValoracionPDF(View):
+    def get(self, request, *args, **kwargs):
+        # Obtener el ID de la valoración desde la URL
+        valoracion_id = self.kwargs.get('pk')
 
-        # Información de auditoría
-        p.setFont("Helvetica-Bold", 12)
-        p.drawString(50, 520, "Información de Auditoría:")
-        p.setFont("Helvetica", 12)
-        p.drawString(50, 500, f"Usuario: {jugador.usuario}")
-        p.drawString(50, 480, f"Fecha de Creación: {jugador.fecha_creacion.strftime('%d/%m/%Y %H:%M')}")
-        p.drawString(50, 460, f"Última Actualización: {jugador.fecha_actualizacion.strftime('%d/%m/%Y %H:%M')}")
+        # Obtener la valoración y sus detalles
+        valoracion = get_object_or_404(Valoracion, id=valoracion_id)
+        jugador = valoracion.jugador
 
-        # Finalizar el documento
-        p.showPage()
-        p.save()
+        # Filtrar cualidades asociadas al puesto del jugador
+        cualidades_asociadas = PuestoCualidad.objects.filter(puesto=jugador.puesto).select_related('cualidad')
+
+        # Crear una lista dinámica de las cualidades con sus valores
+        cualidades = []
+        for puesto_cualidad in cualidades_asociadas:
+            cualidad_nombre = puesto_cualidad.cualidad.cualidad.lower()
+            valor_cualidad = getattr(valoracion, f"valoracion_{cualidad_nombre}", None)  # Obtener el valor dinámicamente
+            cualidades.append({'nombre': puesto_cualidad.cualidad.cualidad, 'valor': valor_cualidad})
+
+        # Contexto para la plantilla
+        context = {
+            'valoracion': valoracion,
+            'jugador': jugador,
+            'cualidades': cualidades,  # Solo las cualidades asociadas al puesto
+            'estadisticas': valoracion.detalles.all(),  # Detalle de estadísticas
+            'fecha': date.today(),
+            'current_year': date.today().year,
+        }
+
+        # Renderizar la plantilla HTML
+        html = render(request, 'reporte_valoraciones_detalle.html', context).content.decode('utf-8')
+
+        # Crear el archivo PDF
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="valoracion_{valoracion.jugador.nombre}.pdf"'
+
+        # Convertir HTML a PDF usando xhtml2pdf
+        pisa_status = pisa.CreatePDF(BytesIO(html.encode('utf-8')), dest=response)
+
+        # Manejar errores
+        if pisa_status.err:
+            return HttpResponse(f"Hubo un error al generar el PDF: {pisa_status.err}", status=400)
+
         return response

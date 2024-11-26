@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte del Jugador</title>
+    <style>
+        body {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .encabezado {
+            display: flex;
+            flex-direction: column;
+            border-bottom: 3px solid #4CAF50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .encabezado-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .encabezado-top .titulo {
+            text-align: center;
+            flex-grow: 1;
+        }
+        .encabezado-top .titulo h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #000000;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .encabezado-top .titulo p {
+            margin: 0;
+            font-size: 15px;
+            color: #555;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .card {
+            width: 700px;
+            margin: 40px auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .card-header {
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+        }
+
+        .card-body {
+            padding: 18px;
+        }
+
+        .img-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .img-container img {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .section {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+            border-radius: 5px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            color: #000000;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .info-row strong {
+            font-weight: bold;
+            color: #000000;
+            min-width: 150px;
+        }
+
+        .info-row span {
+            color: #3f3f3f;
+        }
+
+        .card-footer {
+            background-color: #f1f3f5;
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="encabezado">
+        <!-- Parte Superior: Título, Logotipo y Fecha -->
+        <div class="encabezado-top">
+            <!-- Título -->
+            <div class="titulo">
+                <h1>REPORTE DE JUGADORES REGISTRADOS</h1>
+                <p>AMR SOFTWARE - © VV Enterprises</p>
+            </div>
+            <!-- Fecha -->
+            <div class="fecha">
+                <p style="text-align: right;">Fecha: {{ fecha }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            DETALLES DEL JUGADOR
+        </div>
+        <div class="card-body">
+            <div class="img-container">
+                {% if foto_url %}
+                <img src="{{ foto_url }}" alt="Foto de {{ detjugadores.nombre }}">
+                {% else %}
+                <div style="width: 100%; height: 100%; border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; font-size: 50px; color: #fff;">?</div>
+                {% endif %}
+            </div>
+            <div class="section">
+                <h3 class="section-title">INFORMACIÓN GENERAL</h3>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Nombre:</strong> <span>{{ detjugadores.nombre }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Apellido:</strong> <span>{{ detjugadores.apellido }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Edad:</strong> <span>{{ edad }}</span>
+                </div>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Nacionalidad:</strong> <span>{{ detjugadores.pais }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Puesto:</strong> <span>{{ detjugadores.puesto }}</span>
+                </div>
+            </div>
+            <div class="section">
+                <h3 class="section-title">DETALLES ADICIONALES</h3>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Fecha de Nacimiento:</strong><span>{{ detjugadores.fecha_nac }}</span>
+                </div>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Correo:</strong> <span>{{ detjugadores.correo }}</span>
+                </div>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Pierna Hábil:</strong> <span>{{ detjugadores.get_pierna_habil_display }}</span>
+                </div>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Peso:</strong> <span>{{ detjugadores.peso }} Kg</span>
+                </div>
+                <div class="info-row">
+                    <strong>Altura:</strong> <span>{{ detjugadores.altura }} cm</span>
+                </div>
+            </div>
+            <div class="section">
+                <h3 class="section-title">INFORMACIÓN DE AUDITORÍA</h3>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Última Modificación por:</strong> <span>{{ detjugadores.usuario }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Estado:</strong>
+                    <strong>
+                        <span>
+                            {% if detjugadores.estado %}
+                            <span class="text-success">Activo</span>
+                            {% else %}
+                            <span class="text-danger">Inactivo</span>
+                            {% endif %}
+                        </span>
+                    </strong>
+                </div>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Fecha de Creación:</strong> <span>{{ detjugadores.fecha_creacion }}</span>
+                </div>
+                <br>
+                <br>
+                <div class="info-row">
+                    <strong>Última Actualización:</strong> <span>{{ detjugadores.fecha_actualizacion }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            Reporte generado automáticamente.
+        </div>
+    </div>
+</body>
+</html>
