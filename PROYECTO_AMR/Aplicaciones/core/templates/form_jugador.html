@@ -64,7 +64,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    {{ form.fecha_nac.label_tag }}
+                                    <label class="fw-bold">{{ form.fecha_nac.label }}</label>
                                     {{ form.fecha_nac }}
                                     {% if form.fecha_nac.errors %}
                                         <div class="text-danger small">{{ form.fecha_nac.errors|join:", " }}</div>
@@ -148,4 +148,19 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#id_fecha_nac", {
+            dateFormat: "Y-m-d",  // Formato enviado al backend
+            altInput: true,
+            altFormat: "d/m/Y",  // Formato amigable para el usuario
+            locale: "es",  // Cambiar a español
+            defaultDate: "{{ form.fecha_nac.value|default:'' }}"  // Precargar fecha en edición
+        });
+    });
+</script>
 {% endblock %}

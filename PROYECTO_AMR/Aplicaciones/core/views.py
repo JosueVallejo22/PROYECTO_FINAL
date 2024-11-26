@@ -11,10 +11,11 @@ from Aplicaciones.paneladmin.submodulos.models import Puesto
 from django.http import JsonResponse
 from Aplicaciones.paneladmin.submodulos.models import *
 from Aplicaciones.core.valoraciones.models import *
+from django.db.models import OuterRef, Subquery, Exists, Q
+from django.http import JsonResponse
+from django.views import View
+
 ##########################################################################################
-
-
-
 
 def login_required(view_func):
     """Decorador para permitir solo el acceso a usuarios autenticados."""
@@ -152,14 +153,9 @@ class ActivarInactivarJugador(View):
         return redirect('core:listjugadores')
 
 ##########################################################################################
+@method_decorator(login_required, name='dispatch')
 class CompararJugadoresView(TemplateView):
     template_name = 'comparar_jugadores.html'
-
-from django.db.models import OuterRef, Subquery, Exists
-
-from django.db.models import OuterRef, Subquery, Exists, Q
-from django.http import JsonResponse
-from django.views import View
 
 class JugadoresConValoracionView(View):
     """
@@ -269,9 +265,3 @@ class CompararValoresJugadoresView(View):
         }
 
         return JsonResponse(data)
-    
-
-from django.shortcuts import render
-
-def handler404(request, exception):
-    return render(request, '404.html', status=404)

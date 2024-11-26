@@ -25,7 +25,5 @@ urlpatterns = [
     path('dashboards/penales/', ObtenerDatosPenalesView.as_view(), name='api_penales'),
     path('dashboards/penales/<int:jugador_id>/', ObtenerDatosPenalesView.as_view(), name='api_penales_jugador'),
     ###############################################
-    path('reporte-pdf/', views.generar_pdf_xhtml2pdf, name='reporte_pdf'),
-    path('enviar-reporte-pdf/', views.enviar_pdf_correo, name='enviar_reporte_pdf'),
 
 ]

@@ -66,11 +66,20 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">{{ form.numero_telefono.label }}</label>
-                                <input type="tel" class="form-control shadow-sm" name="numero_telefono" value="{{ form.numero_telefono.value|default:'' }}" pattern="[0-9]+" maxlength="10" required>
+                                <input 
+                                    type="text" 
+                                    class="form-control shadow-sm" 
+                                    name="numero_telefono" 
+                                    id="id_numero_telefono" 
+                                    value="{{ form.numero_telefono.value|default:'' }}" 
+                                    maxlength="10"
+                                    pattern="^(?:09\d{8}|0[2-7]\d{7})$" 
+                                    title="Ingrese un número de teléfono ecuatoriano válido (Ejemplo: 0991234567 o 022345678)" 
+                                    required>
                                 {% if form.numero_telefono.errors %}
                                     <div class="text-danger small">{{ form.numero_telefono.errors|join:", " }}</div>
                                 {% endif %}
-                            </div>
+                            </div>                            
                         </div>
 
                         <div class="mb-3">

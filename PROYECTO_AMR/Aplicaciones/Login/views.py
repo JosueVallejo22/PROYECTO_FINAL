@@ -142,8 +142,15 @@ class LoginView(View):
         # Redirigir a usuarios ya autenticados
         user_id = request.session.get('user_id')
         if user_id:
-            rol_usuario = Usuario.objects.get(id=user_id).rol.rol
-            return redirect('paneladmin:menu_admin' if rol_usuario == "ADMINISTRADOR" else 'core:menu')
+            usuario = Usuario.objects.get(id=user_id)
+            if usuario.rol.estado:  # Verificar que el rol del usuario esté activo
+                rol_usuario = usuario.rol.rol
+                return redirect('paneladmin:menu_admin' if rol_usuario == "ADMINISTRADOR" else 'core:menu')
+            else:
+                # Si el rol está inactivo, cerrar sesión y mostrar mensaje
+                request.session.flush()
+                messages.error(request, 'Su rol se encuentra inactivo. Comuníquese con el administrador.')
+                return redirect('login')
 
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
@@ -157,8 +164,13 @@ class LoginView(View):
             try:
                 usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
 
+                # Verificar si el usuario está inactivo
                 if not usuario.estado:
                     form.add_error(None, 'ESTE USUARIO SE ENCUENTRA INACTIVO.')
+                # Verificar si el rol del usuario está inactivo
+                elif not usuario.rol.estado:
+                    form.add_error(None, 'SU ROL ESTÁ INACTIVO. CONTACTE AL ADMINISTRADOR.')
+                # Verificar las credenciales
                 elif usuario.check_password(clave):
                     # Guardar el ID del usuario en la sesión y registrar el inicio de sesión
                     request.session['user_id'] = usuario.id
@@ -171,6 +183,7 @@ class LoginView(View):
                 form.add_error(None, 'USUARIO NO REGISTRADO.')
 
         return render(request, self.template_name, {'form': form})
+
 
 
 # Cierre de Sesión

@@ -23,7 +23,12 @@ class JugadorForm(ModelForm):
         'apellido': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el apellido', 'required': False}),
         'pais': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Ingrese el Pais', 'required': False}),
         'correo': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese correo'}),
-        'fecha_nac': forms.DateInput(attrs={ 'class': 'form-control','placeholder': 'Ingrese la fecha (YYYY-MM-DD)', 'required': False, 'type': 'date'}),
+        'fecha_nac': forms.DateInput(attrs={
+                        'class': 'form-control',
+                        'id': 'id_fecha_nac',  # ID único para inicializar con flatpickr
+                        'placeholder': 'Seleccione la fecha',
+                        'type': 'text'  # Necesario para evitar conflictos con los navegadores
+                    }),        
         'puesto': forms.Select(attrs={'class': 'form-control', 'placeholder': '', 'required': False}),
         'pierna_habil': forms.Select(attrs={'class': 'form-control', 'placeholder': '', 'required': False}),
         'peso': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Peso en KG','required': False}),
@@ -53,3 +58,10 @@ class JugadorForm(ModelForm):
         if peso is not None and peso < 0:
             raise ValidationError("El peso no puede ser negativo.")
         return peso
+
+    def clean_numero_telefono(self):
+        numero = self.cleaned_data.get('numero_telefono')
+        import re
+        if not re.match(r'^(?:09\d{8}|0[2-7]\d{7})$', numero):
+            raise forms.ValidationError("Ingrese un número de teléfono ecuatoriano válido (móvil o fijo).")
+        return numero

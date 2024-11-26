@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 import random
 import string
+from django.core.validators import RegexValidator
 
 
 
@@ -27,7 +28,17 @@ class Usuario(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     correo = models.EmailField(unique=True)
-    numero_telefono = models.CharField(max_length=10, unique=True)
+    numero_telefono = models.CharField(
+            max_length=10,
+            unique=True,
+            validators=[
+                RegexValidator(
+                    regex=r'^(?:09\d{8}|0[2-7]\d{7})$',
+                    message="Ingrese un número de teléfono ecuatoriano válido (móvil o fijo)."
+                )
+            ],
+            help_text="Ejemplo: 0991234567 para móvil o 022345678 para fijo."
+        )    
     fecha_nacimiento = models.DateField()
     sexo = models.CharField(max_length=10, choices=[('M', 'Masculino'), ('F', 'Femenino')])
     rol = models.ForeignKey(Rol, on_delete=models.PROTECT)

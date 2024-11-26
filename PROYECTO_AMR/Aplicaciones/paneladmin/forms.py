@@ -40,8 +40,13 @@ class UsuarioForm(forms.ModelForm):
             'nombre_usuario': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese nombre de usuario'}),
             'correo': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese correo electrónico'}),
             'numero_telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese número de teléfono', 'maxlength': '15'}),
-            'fecha_nacimiento': forms.DateInput(
-                attrs={'class': 'form-control', 'type': 'text', 'id': 'id_fecha_nacimiento'}
+            'fecha_nacimiento': forms.DateInput(attrs={
+                'class': 'form-control', 
+                'type': 
+                'text', 
+                'placeholder': 'Seleccione la fecha',
+                'id': 
+                'id_fecha_nacimiento'}
             ),
 
             'sexo': forms.Select(attrs={'class': 'form-control'}),
