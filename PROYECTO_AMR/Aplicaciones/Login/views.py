@@ -125,6 +125,7 @@ class CambiarContrasenaView(View):
                     messages.error(request, "La contraseña actual es incorrecta.")
                 else:
                     usuario.clave = nueva_contrasena
+                    usuario.cambio_pass = False
                     usuario.save()
                     messages.success(request, "Contraseña cambiada exitosamente.")
                     return redirect('Login:login_usuario')  # Redirige a donde desees
@@ -172,9 +173,15 @@ class LoginView(View):
                     form.add_error(None, 'SU ROL ESTÁ INACTIVO. CONTACTE AL ADMINISTRADOR.')
                 # Verificar las credenciales
                 elif usuario.check_password(clave):
+                    # Verificar si el usuario debe cambiar su contraseña
+                    if usuario.cambio_pass:
+                        request.session['user_id'] = usuario.id  # Guardar usuario en sesión
+                        messages.warning(request, 'Debes cambiar tu contraseña antes de continuar.')
+                        return redirect('Login:cambiar_contrasena')  # Ruta a la vista de cambio de contraseña
+
                     # Guardar el ID del usuario en la sesión y registrar el inicio de sesión
                     request.session['user_id'] = usuario.id
-                    usuario.ultimo_inicio_sesion = timezone.now()
+                    usuario.ultimo_inicio_sesion = now()
                     usuario.save()
                     return redirect('paneladmin:menu_admin' if usuario.rol.rol == "ADMINISTRADOR" else 'core:menu')
                 else:

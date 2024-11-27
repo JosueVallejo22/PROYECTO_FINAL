@@ -127,6 +127,14 @@ class ActivarInactivarRol(View):
     """Vista para activar/inactivar un rol"""
     def get(self, request, pk):
         rol = get_object_or_404(Rol, pk=pk)
+
+        user_id_sesion = request.session.get('user_id')
+        usuario = get_object_or_404(Usuario, pk = user_id_sesion)
+
+        if usuario.rol == rol:
+            messages.error(request, "No puedes inactivar tu propio rol.")
+            return redirect('paneladmin:mantenimiento_roles')
+        
         rol.estado = not rol.estado
         rol.save()
         save_audit(self.request, rol, action='M')
@@ -194,6 +202,7 @@ class CrearUsuarios(CreateView):
     def form_valid(self, form):
         usuario = form.save(commit=False)
         usuario.estado = True  # Activo por defecto
+        usuario.cambiar_pass = True
         clave_temporal = usuario.generar_contrasena_temporal()
         usuario.clave = clave_temporal
         usuario.save()

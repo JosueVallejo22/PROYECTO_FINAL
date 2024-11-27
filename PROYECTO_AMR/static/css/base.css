@@ -15,7 +15,7 @@ body {
 /* Navbar */
 .navbar {
     background-color: #1a0630;
-    position: relative; /* Asegura que el pseudo-elemento esté posicionado respecto al navbar */
+    position: relative;
     z-index: 1030;
 }
 
@@ -25,8 +25,8 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 4px; /* Grosor de la línea */
-    background: linear-gradient(to right, #0036FF, #FF0036); /* Degradado azul a rojo */
+    height: 4px;
+    background: linear-gradient(to right, #0036FF, #FF0036);
 }
 
 /* Navbar Brand */
@@ -53,30 +53,60 @@ body {
     color: #ffc107;
 }
 
-/* Navbar Toggler */
-.navbar-toggler {
-    background-color: #711a1b;
+/* Dropdown Styling */
+/* Sobrescribir Estilo de Dropdown Bootstrap */
+.navbar .dropdown-menu {
+    background-color: #292929 !important; /* Fondo oscuro igual al navbar */
+    border: none !important; /* Quitar bordes predeterminados de Bootstrap */
+    box-shadow: none !important; /* Quitar sombra de Bootstrap */
+    border-radius: 6px; /* Opcional: Bordes redondeados */
+    padding: 0; /* Eliminar espaciado interno */
+    margin-top: 5px; /* Espaciado entre el navbar y el menú */
 }
 
-.navbar-toggler-icon {
-    color: #ffc107;
+/* Estilo de los Items del Dropdown */
+.navbar .dropdown-menu .dropdown-item {
+    color: #ffc107 !important; /* Texto amarillo */
+    background-color: transparent !important; /* Fondo transparente */
+    border-left: 3px solid transparent; /* Inicialmente sin borde */
+    padding: 10px 15px; /* Espaciado */
+    transition: background-color 0.3s ease, border-left 0.3s ease, color 0.3s ease; /* Efectos de transición */
 }
 
-/* Dropdown */
-.dropdown-menu {
-    background-color: #1a0630;
-    border: none;
+/* Hover en Items del Dropdown */
+.navbar .dropdown-menu .dropdown-item:hover {
+    border-left: 3px solid #ffc107 !important; /* Indicador amarillo */
+    color: #ffffff !important; /* Texto blanco en hover */
 }
 
-.dropdown-item {
-    color: #fff;
-    transition: color 0.3s ease, background-color 0.3s ease;
+/* Íconos dentro de los Items */
+.navbar .dropdown-menu .dropdown-item i {
+    margin-right: 10px; /* Espaciado entre ícono y texto */
+    transition: color 0.3s ease; /* Transición de color */
 }
+
+.navbar .dropdown-menu .dropdown-item:hover i {
+    color: #ffc107 !important; /* Ícono amarillo en hover */
+}
+
+
 
 .dropdown-item:hover {
     background-color: #ffc107;
     color: #1a0630;
 }
+
+/* Dropdown Toggle */
+.dropdown-toggle::after {
+    margin-left: 5px;
+    color: #ffc107;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-toggle[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+}
+
 
 /* Footer */
 .footer {

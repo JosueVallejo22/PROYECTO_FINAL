@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'Aplicaciones.Login.middleware.SessionUpdateMiddleware',
+    'Aplicaciones.Login.middleware.CambioContrasenaMiddleware',
 ]
 
 ROOT_URLCONF = 'PROYECTO_AMR.urls'

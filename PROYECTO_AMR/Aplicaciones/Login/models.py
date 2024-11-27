@@ -49,6 +49,7 @@ class Usuario(models.Model):
     reset_token = models.CharField(max_length=100, null=True, blank=True)
     reset_token_used = models.BooleanField(default=False)
     ultimo_inicio_sesion = models.DateTimeField(null=True, blank=True)
+    cambio_pass = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         if self.clave and not self.clave.startswith('pbkdf2_sha256$'):

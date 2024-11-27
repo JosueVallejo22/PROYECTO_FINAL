@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .input-group {
             width: 100%; /* Asegura que la entrada ocupe todo el ancho disponible */
@@ -27,12 +28,12 @@
     </style>
 </head>
 <body>
-    <header class="fixed-top">
-        <nav class="navbar navbar-expand-lg bg-dark">
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top bg-dark">
             <div class="container">
-                <a class="navbar-brand fw-bold" href="{% url 'core:menu' %}">LOGO</a>
+                <a class="navbar-brand fw-bold" href="{% url 'core:menu' %}"><img src="{% static 'img/LOGO5.png' %}" alt="LOGO" style="width: 70px;"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <i class="bi bi-list text-warning"></i>
                 </button>
                 <div class="collapse navbar-collapse sticky-top" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
@@ -138,7 +139,7 @@
     
     
     <!-- Footer -->
-    <footer class="text-center text-white py-3 bg-dark sticky-bottom">
+    <footer class="text-center text-white py-3 bg-dark">
         <div class="container">
             <p class="mb-0 text-warning">© 2024 VV Enterprises. Todos los derechos reservados.</p>
         </div>
@@ -180,3 +181,4 @@
     </script>
 </body>
 </html>
+
