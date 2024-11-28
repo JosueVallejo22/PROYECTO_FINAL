@@ -263,6 +263,9 @@ class ActivarInactivarUsuario(View):
             return redirect('paneladmin:mantenimiento_usuarios')
 
         usuario.estado = not usuario.estado
+        if usuario.estado:
+            usuario.contador_intentos = 0
+            
         usuario.save()
         save_audit(self.request, usuario, action='M')
         messages.success(request, "Estado del usuario actualizado exitosamente.")

@@ -48,6 +48,7 @@ class Usuario(models.Model):
     clave = models.CharField(max_length=128 )    
     reset_token = models.CharField(max_length=100, null=True, blank=True)
     reset_token_used = models.BooleanField(default=False)
+    contador_intentos = models.IntegerField(default=0)
     ultimo_inicio_sesion = models.DateTimeField(null=True, blank=True)
     cambio_pass = models.BooleanField(default=True)
 

@@ -173,12 +173,14 @@ class LoginView(View):
             else:
                 # Verificar si el usuario está inactivo
                 if not usuario.estado:
-                    form.add_error(None, 'ESTE USUARIO SE ENCUENTRA INACTIVO.')
+                    form.add_error(None, 'ESTA CUENTA SE ENCUENTRA INACTIVA. CONTACTE AL ADMINISTRADOR')
                 # Verificar si el rol del usuario está inactivo
                 elif not usuario.rol.estado:
                     form.add_error(None, 'SU ROL ESTÁ INACTIVO. CONTACTE AL ADMINISTRADOR.')
                 # Verificar las credenciales
                 elif usuario.check_password(clave):
+                    usuario.contador_intentos = 0
+                    usuario.save
                     # Verificar si el usuario debe cambiar su contraseña
                     if usuario.cambio_pass:
                         request.session['user_id'] = usuario.id  # Guardar usuario en sesión
@@ -191,8 +193,15 @@ class LoginView(View):
                     usuario.save()
                     return redirect('paneladmin:menu_admin' if usuario.rol.rol == "ADMINISTRADOR" else 'core:menu')
                 else:
-                    form.add_error(None, 'LAS CREDENCIALES INGRESADAS SON INCORRECTAS.')
+                    usuario.contador_intentos += 1
 
+                    if usuario.contador_intentos >= 3:
+                        usuario.estado = False
+                        usuario.save()
+                        form.add_error(None, 'LA CUENTA HA SIDO INACTIVADA POR MULTIPLES INTENTOS FALLIDOS.')
+                    else:
+                        usuario.save()
+                        form.add_error(None, f'LAS CREDENCIALES INGRESADAS SON INCORRECTAS. INTENTO {usuario.contador_intentos}/3.')
         return render(request, self.template_name, {'form': form})
 
 
