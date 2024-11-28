@@ -123,11 +123,25 @@
 
                         <div class="form-group mb-4">
                             <label class="fw-bold text-secondary">{{ form.foto.label }}</label>
+                            
+                            <!-- Mostrar vista previa de la imagen actual si existe -->
+                            {% if object.foto and object.foto.url %}
+                                <div class="mb-3 text-center">
+                                    <img src="{{ object.foto.url }}" alt="Foto del jugador" style="max-width: 150px; max-height: 150px; border: 1px solid #ddd; border-radius: 5px;">
+                                    <p class="text-muted small mt-2">Imagen actual. Puedes cargar una nueva para reemplazarla.</p>
+                                </div>
+                            {% else %}
+                                <p class="text-muted small">No hay imagen cargada actualmente. Puedes subir una nueva.</p>
+                            {% endif %}
+                            
+                            <!-- Campo de subida de archivo -->
                             {{ form.foto }}
                             {% if form.foto.errors %}
                                 <div class="text-danger small">{{ form.foto.errors|join:", " }}</div>
                             {% endif %}
                         </div>
+                        
+                        
 
                         <!-- Botones -->
                         <div class="text-center">

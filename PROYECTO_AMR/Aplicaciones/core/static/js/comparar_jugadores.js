@@ -48,6 +48,20 @@ function actualizarListaJugadores(jugadores) {
 
 // Seleccionar un jugador
 function seleccionarJugador(jugador) {
+
+    // Validar que no sea el mismo jugador seleccionado
+    if ((jugadorSeleccionado1 && jugadorSeleccionado1.id === jugador.id) || 
+        (jugadorSeleccionado2 && jugadorSeleccionado2.id === jugador.id)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Jugador duplicado',
+                text: 'No puedes seleccionar al mismo jugador dos veces.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
     if (!jugadorSeleccionado1) {
         jugadorSeleccionado1 = jugador;
         renderJugador('jugador-1', jugador);
@@ -55,7 +69,13 @@ function seleccionarJugador(jugador) {
         jugadorSeleccionado2 = jugador;
         renderJugador('jugador-2', jugador);
     } else {
-        alert('Solo puedes comparar dos jugadores.');
+        Swal.fire({
+            icon: 'error', // Ícono de error
+            title: 'Límite alcanzado',
+            text: 'Solo puedes comparar dos jugadores.',
+            confirmButtonColor: '#3085d6', // Color del botón
+            confirmButtonText: 'Aceptar'
+        });        
         return;
     }
 
@@ -101,7 +121,13 @@ function removerJugador(id) {
 // Comparar jugadores
 document.getElementById('btn-comparar').addEventListener('click', () => {
     if (!jugadorSeleccionado1 || !jugadorSeleccionado2) {
-        alert('Selecciona dos jugadores para comparar.');
+        Swal.fire({
+            icon: 'warning', // Ícono de advertencia
+            title: 'Faltan jugadores',
+            text: 'Selecciona dos jugadores para comparar.',
+            confirmButtonColor: '#f39c12', // Color del botón (naranja para advertencias)
+            confirmButtonText: 'Aceptar'
+        });
         return;
     }
 
@@ -237,3 +263,8 @@ function generarGraficoHexagonal(cualidades, jugador1, jugador2) {
         },         
     });
 }
+document.getElementById('modal-buscar-jugador').addEventListener('show.bs.modal', function () {
+    // Limpiar el campo de búsqueda y la lista de jugadores
+    document.getElementById('input-buscar-jugador').value = '';
+    document.getElementById('lista-jugadores').innerHTML = '';
+});

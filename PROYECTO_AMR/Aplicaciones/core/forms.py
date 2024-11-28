@@ -31,8 +31,20 @@ class JugadorForm(ModelForm):
                     }),        
         'puesto': forms.Select(attrs={'class': 'form-control', 'placeholder': '', 'required': False}),
         'pierna_habil': forms.Select(attrs={'class': 'form-control', 'placeholder': '', 'required': False}),
-        'peso': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Peso en KG','required': False}),
-        'altura': forms.NumberInput(attrs={'class': 'form-control','placeholder': 'Altura en CM', 'required': False}),
+        'peso': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Peso en KG',
+                'required': False,
+                'min': '0',  # Validación del lado del cliente
+                'step': 'any',  # Permitir decimales si es necesario
+            }),
+        'altura': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Altura en CM',
+                'required': False,
+                'min': '0',  # Validación del lado del cliente
+                'step': 'any',  # Permitir decimales si es necesario
+            }),
         'foto': forms.FileInput(attrs={'class': 'form-control', 'required': False}),
         }
         labels = {
@@ -43,8 +55,8 @@ class JugadorForm(ModelForm):
             'fecha_nac':'Fecha de Nacimiento',
             'puesto':'Puesto',
             'pierna_habil':'Pierna Habil',
-            'altura':'Altura',
-            'peso':'Peso',
+            'altura':'Altura CM',
+            'peso':'Peso KG',
             'imagen':'Foto',
         }
     def clean_altura(self):

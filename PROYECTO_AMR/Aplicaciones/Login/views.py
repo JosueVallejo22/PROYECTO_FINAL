@@ -17,6 +17,8 @@ from Aplicaciones.core.views import login_required
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
 
+from django.db import models
+
 # Vistas de Restablecimiento de Contraseña
 def verifica_correo(request):
     return render(request, 'verifica_correo.html')
@@ -162,9 +164,13 @@ class LoginView(View):
             nombre_usuario = form.cleaned_data['nombre_usuario']
             clave = form.cleaned_data['clave']
 
-            try:
-                usuario = Usuario.objects.get(nombre_usuario=nombre_usuario)
+            # Buscar el usuario por nombre de usuario o correo
+            usuario = Usuario.objects.filter(models.Q(nombre_usuario=nombre_usuario) | models.Q(correo=nombre_usuario)).first()
 
+            if usuario is None:
+                # Si el usuario no existe, mostrar error
+                form.add_error(None, 'USUARIO NO REGISTRADO.')
+            else:
                 # Verificar si el usuario está inactivo
                 if not usuario.estado:
                     form.add_error(None, 'ESTE USUARIO SE ENCUENTRA INACTIVO.')
@@ -186,8 +192,6 @@ class LoginView(View):
                     return redirect('paneladmin:menu_admin' if usuario.rol.rol == "ADMINISTRADOR" else 'core:menu')
                 else:
                     form.add_error(None, 'LAS CREDENCIALES INGRESADAS SON INCORRECTAS.')
-            except Usuario.DoesNotExist:
-                form.add_error(None, 'USUARIO NO REGISTRADO.')
 
         return render(request, self.template_name, {'form': form})
 

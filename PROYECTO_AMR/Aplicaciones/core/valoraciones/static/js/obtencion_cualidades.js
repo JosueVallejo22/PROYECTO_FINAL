@@ -67,7 +67,10 @@ document.getElementById("jugador").addEventListener("change", function () {
                         const estadisticasHTML = cualidad.estadisticas.map((estadistica, idx) => `
                             <tr>
                                 <td class="text-center fw-bold">${idx + 1}</td>
-                                <td class="text-muted">${estadistica.nombre}</td>
+                                <td class="text-muted">
+                                    ${estadistica.nombre}
+                                    <small class="d-block text-secondary fst-italic">${estadistica.descripcion}</small> <!-- Mostrar descripción -->
+                                </td>
                                 <td>
                                     <input type="number" name="estadistica_${estadistica.nombre}" class="form-control estadistica-input">
                                 </td>
@@ -126,9 +129,4 @@ document.getElementById("jugador").addEventListener("change", function () {
 
     // Validar formulario después de cambio
     validarFormulario();
-});
-
-// Sobrescribir el evento de actualización con cálculos y validaciones dinámicas
-document.getElementById("valoracion-form").addEventListener("input", function () {
-    validarFormulario(); // Validar el formulario en cada input
 });

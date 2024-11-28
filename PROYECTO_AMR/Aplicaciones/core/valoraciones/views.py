@@ -138,7 +138,7 @@ class CargarCualidadesView(View):
                 cualidades.append({
                     "cualidad": pc.cualidad.cualidad,  # Nombre de la cualidad
                     "peso": float(pc.peso),  # Convertir peso a float para el frontend
-                    "estadisticas": [{"id": est.id, "nombre": est.estadistica, "clave": est.estadistica.upper()} for est in estadisticas]
+                    "estadisticas": [{"id": est.id, "nombre": est.estadistica, "descripcion": est.descripcion, "clave": est.estadistica.upper()} for est in estadisticas]
                 })
 
             # Preparar respuesta JSON

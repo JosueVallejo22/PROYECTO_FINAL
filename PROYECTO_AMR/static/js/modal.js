@@ -13,5 +13,3 @@ function openModal(button) {
 
 
 
-
-    // <script src="{% static 'js/modal.js' %}"></script>

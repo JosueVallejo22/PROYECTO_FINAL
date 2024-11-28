@@ -69,9 +69,8 @@
                                             <a href="{% url 'core:detjugadores' jugador.pk %}" class="btn btn-info btn-sm fw-bold">
                                                 <i class="bi bi-eye"></i> Detalles
                                             </a>
-                                            <a href="{% url 'core:eliminar_jugador' jugador.pk %}" class="btn btn-danger btn-sm fw-bold">
+                                            <a href="#" class="btn btn-danger btn-sm fw-bold delete-button" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-delete-url="{% url 'core:eliminar_jugador' jugador.pk %}">
                                                 <i class="bi bi-trash"></i> Eliminar
-                                                
                                             </a>
                                             <a href="{% url 'Auditoria:reporte_jugador' jugador.id %}" class="btn btn-danger">
                                                 <i class="bi bi-filetype-pdf"></i> Generar Reporte
@@ -101,5 +100,42 @@
             </div>
         </div>
     </div>
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">¿Estás seguro de que deseas eliminar este jugador? Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="#" id="confirmDeleteButton" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
+        confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+            // Obtener el botón que activó el modal
+            const button = event.relatedTarget;
+            // Obtener la URL de eliminación del atributo data-delete-url
+            const deleteUrl = button.getAttribute('data-delete-url');
+            // Actualizar el href del botón "Eliminar" en el modal
+            confirmDeleteButton.setAttribute('href', deleteUrl);
+        });
+    });
+</script>
+
+
 {% endblock %}

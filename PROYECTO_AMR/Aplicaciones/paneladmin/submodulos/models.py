@@ -91,6 +91,7 @@ class Estadistica(models.Model):
     estadistica = models.CharField(max_length=128, choices=ESTADISTICA_CHOICES, unique=True)
     cualidad = models.ForeignKey(Cualidad, on_delete=models.PROTECT)
     estado = models.BooleanField(default=True)
+    descripcion = models.CharField(max_length=120, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 

@@ -31,11 +31,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('id_pais').value = data.address.country; // Asignar país al input
                 setMarker(lat, lng); // Actualizar marcador en el mapa
             } else {
-                alert('No se pudo determinar el país en esta ubicación. Intente de nuevo.');
-            }
+                Swal.fire({
+                    icon: 'error', // Ícono de error
+                    title: 'Error de ubicación',
+                    text: 'No se pudo determinar el país en esta ubicación. Intente de nuevo.',
+                    confirmButtonColor: '#d33', // Color del botón (rojo para errores)
+                    confirmButtonText: 'Aceptar'
+                });
+                            }
         } catch (error) {
             console.error('Error al obtener datos del país:', error);
-            alert('Error al consultar el país. Intente más tarde.');
+            Swal.fire({
+                icon: 'error', // Ícono de error
+                title: 'Consulta fallida',
+                text: 'Error al consultar el país. Intente más tarde.',
+                confirmButtonColor: '#d33', // Color del botón (rojo para errores)
+                confirmButtonText: 'Aceptar'
+            });
         }
     });
 
