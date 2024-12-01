@@ -16,8 +16,8 @@ from django.template.loader import render_to_string
 from Aplicaciones.core.views import login_required
 from django.utils.decorators import method_decorator
 from django.utils.timezone import now
-
 from django.db import models
+from django.core.mail import send_mail
 
 # Vistas de Restablecimiento de Contraseña
 def verifica_correo(request):
@@ -198,6 +198,23 @@ class LoginView(View):
                     if usuario.contador_intentos >= 3:
                         usuario.estado = False
                         usuario.save()
+
+                        try:
+                            send_mail(
+                                subject='Cuenta Desactivada por Intentos Fallidos',
+                                message=(
+                                    f"Hola {usuario.nombre} {usuario.apellido},\n\n"
+                                    "Tu cuenta ha sido desactivada debido a múltiples intentos fallidos de inicio de sesión. "
+                                    "Por favor, contacta al administrador para reactivar tu cuenta.\n\n"
+                                    "Saludos,\nEquipo de Soporte"
+                                ),
+                                from_email='tu_correo@example.com',
+                                recipient_list=[usuario.correo],
+                                fail_silently=False,
+                            )
+                        except Exception as e:
+                            form.add_error(None, 'No se pudo enviar el correo de notificación. Por favor, contacte al administrador.')
+
                         form.add_error(None, 'LA CUENTA HA SIDO INACTIVADA POR MULTIPLES INTENTOS FALLIDOS.')
                     else:
                         usuario.save()

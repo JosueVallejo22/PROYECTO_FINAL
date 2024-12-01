@@ -219,7 +219,6 @@ class CrearUsuarios(CreateView):
         mensaje_html = render_to_string('correo_bienvenida.html', {
             'nombre_usuario': nombre_usuario,
             'clave': clave_temporal,
-            'login_url': settings.LOGIN_URL,  # Define la URL de inicio de sesión en settings.py
             'current_year': now().year
         })
         # Crear y enviar el correo
