@@ -55,6 +55,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                            {% if rol.rol|upper != 'ADMINISTRADOR' %}
                                             <button 
                                                 class="btn btn-warning btn-sm fw-bold editRoleButton" 
                                                 data-bs-toggle="modal" 
@@ -63,11 +64,12 @@
                                                 data-rol="{{ rol.rol }}">
                                                 <i class="bi bi-pencil"></i> Editar
                                             </button>
+                                            {% endif %}
                                             <a href="{% url 'paneladmin:activar-inactivar-rol' rol.id %}" class="btn btn-{{ rol.estado|yesno:'danger,success' }} btn-sm fw-bold">
                                                 {% if rol.estado %}<i class="bi bi-x-circle"></i> Inactivar{% else %}<i class="bi bi-check-circle"></i> Activar{% endif %}
                                             </a>
                                         </div>
-                                    </td>
+                                    </td>                                    
                                 </tr>
                                 {% empty %}
                                 <tr>
